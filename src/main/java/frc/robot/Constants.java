@@ -14,6 +14,14 @@ package frc.robot;
  * constants are needed, to reduce verbosity.
  */
 public final class Constants {
+
+    public static class Camera {
+        public static final String CAMERA_NAME = "photoncamera";
+        public static final double CAMERA_HEIGHT_METERS = 0.60;
+        public static final double TARGET_HEIGHT_METERS = 0.60;
+        public static final double CAMERA_PITCH = 0;
+    }
+
     /**
      * This {@link Chassis} class is designed to store values regarding Driving the robot. This includes any offsets
      * for Absolute Driving, dead-zones, and ports regarding the motors. Note that these motors usually <b>do not</b>

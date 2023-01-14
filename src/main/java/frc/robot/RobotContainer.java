@@ -6,10 +6,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
+import frc.robot.commands.GoToAprilTagCommand;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
 import static frc.robot.subsystems.SwerveDriveSubsystem.deadzone;
@@ -53,7 +55,10 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-
+        xbox.a().whileTrue(new GoToAprilTagCommand(10, 0));
+        xbox.x().onTrue(Robot.swerveDrive.runOnce(() -> {
+            Robot.swerveDrive.resetPosition();
+        }));
     }
 
 
