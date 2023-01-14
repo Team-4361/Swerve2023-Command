@@ -3,20 +3,16 @@ package frc.robot.util.swerve;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
+import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import me.wobblyyyy.pathfinder2.geometry.Translation;
-import me.wobblyyyy.pathfinder2.math.Average;
-import me.wobblyyyy.pathfinder2.robot.Drive;
 
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.function.Function;
 
 import static frc.robot.Constants.Chassis.*;
 
-
-@SuppressWarnings("unused")
-public class SwerveChassis implements Drive {
+public class SwerveChassis {
     private static final Translation2d SWERVE_FR_POSITION =
             new Translation2d(SWERVE_CHASSIS_SIDE_LENGTH / 2, SWERVE_CHASSIS_SIDE_LENGTH / 2);
     private static final Translation2d SWERVE_FL_POSITION =
@@ -33,6 +29,10 @@ public class SwerveChassis implements Drive {
                     SWERVE_BL_POSITION
             );
 
+    private static double average(double... vals)  {
+        return Arrays.stream(vals).sum() / vals.length;
+    }
+
     private static final String NAME_FR = "FR";
     private static final String NAME_FL = "FL";
     private static final String NAME_BR = "BR";
@@ -43,8 +43,6 @@ public class SwerveChassis implements Drive {
     private final SwerveModule backRight;
     private final SwerveModule backLeft;
 
-    private Function<Translation, Translation> modifier = (t) -> t;
-    private Translation translation;
     private double chassisSpeed = 0.0;
     private double maxChassisSpeed = 0.0;
     private final double metersDriven = 0.0;
@@ -131,6 +129,15 @@ public class SwerveChassis implements Drive {
         ));
     }
 
+    public SwerveModulePosition[] getSwerveModulePositions() {
+        return new SwerveModulePosition[] {
+                getFrontRight().getPosition(),
+                getFrontLeft().getPosition(),
+                getBackRight().getPosition(),
+                getBackLeft().getPosition()
+        };
+    }
+
     public void drive(ChassisSpeeds speeds) {
         SwerveModuleState[] states = SWERVE_KINEMATICS.toSwerveModuleStates(speeds);
 
@@ -139,7 +146,10 @@ public class SwerveChassis implements Drive {
         SwerveModuleState backRightState = states[2];
         SwerveModuleState backLeftState = states[3];
 
-        robotMoving = frontLeftState.speedMetersPerSecond != 0 && frontRightState.speedMetersPerSecond != 0 && backLeftState.speedMetersPerSecond != 0 && backRightState.speedMetersPerSecond != 0;
+        robotMoving = frontLeftState.speedMetersPerSecond != 0 &&
+                frontRightState.speedMetersPerSecond != 0 &&
+                backLeftState.speedMetersPerSecond != 0 &&
+                backRightState.speedMetersPerSecond != 0;
 
         frontRight.setState(frontRightState);
         frontLeft.setState(frontLeftState);
@@ -148,40 +158,21 @@ public class SwerveChassis implements Drive {
 
         updateDashboard();
 
-        chassisSpeed = Average.of(frontLeft.velocityMilesPerHour(), frontRight.velocityMilesPerHour(), backLeft.velocityMilesPerHour(), backRight.velocityMilesPerHour());
+        chassisSpeed = average(
+                frontLeft.getDriveMPH(),
+                frontRight.getDriveMPH(),
+                backLeft.getDriveMPH(),
+                backRight.getDriveMPH()
+        );
 
         if (chassisSpeed > maxChassisSpeed) {
             maxChassisSpeed = chassisSpeed;
         }
     }
 
-    public boolean isRobotMoving() {
-        return robotMoving;
-    }
-
-    @Override
-    public void setDriveModifier(Function<Translation, Translation> modifier) {
-        this.modifier = modifier;
-    }
-
-    @Override
-    public Function<Translation, Translation> getDriveModifier() {
-        return modifier;
-    }
-
-    @Override
-    public void setTranslation(Translation translation) {
-        this.translation = translation;
-    }
-
-    @Override
-    public Translation getTranslation() {
-        return translation;
-    }
-
     /** @return The total amount of Meters driven since last reset. */
     public double getMetersDriven() {
-        return Average.of(
+        return average(
                 frontLeft.getMetersDriven(),
                 frontRight.getMetersDriven(),
                 backLeft.getMetersDriven(),

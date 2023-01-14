@@ -11,6 +11,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
 
+import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
+import static frc.robot.subsystems.SwerveDriveSubsystem.deadzone;
+
 
 /**
  * This class is where the bulk of the robot should be declared. Since Command-based is a
@@ -19,8 +22,8 @@ import frc.robot.Constants.Control;
  * subsystems, commands, and trigger mappings) should be declared here.
  */
 public class RobotContainer {
-    private final CommandJoystick leftStick = new CommandJoystick(Control.LEFT_STICK_ID);
-    private final CommandJoystick rightStick = new CommandJoystick(Control.RIGHT_STICK_ID);
+    private final CommandJoystick xyStick = new CommandJoystick(Control.LEFT_STICK_ID);
+    private final CommandJoystick zStick = new CommandJoystick(Control.RIGHT_STICK_ID);
     private final CommandXboxController xbox = new CommandXboxController(Control.XBOX_CONTROLLER_ID);
 
     /**
@@ -29,6 +32,14 @@ public class RobotContainer {
     public RobotContainer() {
         // Configure the trigger bindings
         configureBindings();
+
+        Robot.swerveDrive.setDefaultCommand(Robot.swerveDrive.run(() ->  {
+            Robot.swerveDrive.autoDrive(
+                    deadzone(xyStick.getX(), DRIVE_DEAD_ZONE),
+                    -deadzone(xyStick.getY(), DRIVE_DEAD_ZONE),
+                    -deadzone(zStick.getTwist(), DRIVE_DEAD_ZONE)
+            );
+        }));
     }
 
 

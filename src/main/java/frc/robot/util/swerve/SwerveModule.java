@@ -55,10 +55,8 @@ public class SwerveModule {
         this.errorFactor = errorFactor;
     }
 
-
-
     /** @return The current meters per second of the robot. */
-    public double velocityMetersPerSecond() {
+    private double velocityMetersPerSecond() {
         // rpm -> rps -> mps
         double rotationsPerMinute = driveEncoder.getVelocity();
         double rotationsPerSecond = rotationsPerMinute / 60;
@@ -66,7 +64,7 @@ public class SwerveModule {
         return rotationsPerSecond * SWERVE_WHEEL_CIRCUMFERENCE;
     }
 
-    public double velocityMilesPerHour() {
+    public double getDriveMPH() {
         return (velocityMetersPerSecond() * 2.237);
     }
 
@@ -81,12 +79,13 @@ public class SwerveModule {
     public void setState(SwerveModuleState state) {
         state = SwerveModuleState.optimize(state, getTurnAngle());
 
-        driveMotor.set(state.speedMetersPerSecond * errorFactor);
-
-        turnMotor.set(turnController.calculate(
+        double turnPower = turnController.calculate(
                 turnAngleRadians(),
                 state.angle.getRadians()
-        ));
+        );
+
+        driveMotor.set(state.speedMetersPerSecond * errorFactor);
+        turnMotor.set(turnPower);
     }
 
     /**
@@ -104,7 +103,7 @@ public class SwerveModule {
         );
     }
 
-    public SwerveModulePosition getPosition() {
+    public SwerveModulePosition getPosition()  {
         return new SwerveModulePosition(
                 getMetersDriven(),
                 getTurnAngle()
@@ -117,7 +116,7 @@ public class SwerveModule {
         String turnPower = prefix + ": turn pow";
         String turnPosition = prefix + ": turn rad";
 
-        SmartDashboard.putNumber(driveVelocity, velocityMilesPerHour());
+        SmartDashboard.putNumber(driveVelocity, getDriveMPH());
         SmartDashboard.putNumber(turnPower, turnMotor.get());
         SmartDashboard.putNumber(turnPosition, turnAngleRadians());
         SmartDashboard.putNumber(drivePower, driveMotor.get());

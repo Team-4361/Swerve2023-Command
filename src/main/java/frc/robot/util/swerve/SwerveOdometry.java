@@ -2,20 +2,15 @@ package frc.robot.util.swerve;
 
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveDriveKinematics;
 import edu.wpi.first.math.kinematics.SwerveDriveOdometry;
 import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.interfaces.Gyro;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import frc.robot.Constants;
-import me.wobblyyyy.pathfinder2.geometry.PointXYZ;
-import me.wobblyyyy.pathfinder2.robot.AbstractOdometry;
-import me.wobblyyyy.pathfinder2.time.Time;
-import me.wobblyyyy.pathfinder2.utils.StringUtils;
-import me.wobblyyyy.pathfinder2.wpilib.WPIAdapter;
 
+import java.text.MessageFormat;
 import java.util.function.Supplier;
+
+import static frc.robot.Constants.Chassis.ODOMETRY_MS_INTERVAL;
 
 /**
  * the chassis' swerve drive odometry system. this uses encoders on each
@@ -27,7 +22,8 @@ import java.util.function.Supplier;
  * of the wheels won't be accounted for properly, which will also make
  * the robot's position wrong
  */
-public class SwerveOdometry extends AbstractOdometry {
+public class SwerveOdometry {
+
     private final SwerveChassis chassis;
     private final Supplier<Rotation2d> gyroSupplier;
     private final Supplier<SwerveModulePosition[]> positionSupplier;
@@ -35,17 +31,14 @@ public class SwerveOdometry extends AbstractOdometry {
     private Pose2d pose;
     private double lastUpdateTimeMs;
 
-    /**
-     * Creates a new {@link SwerveOdometry} system, combined with the supplied values.
-     *
-     * @param chassis The {@link SwerveChassis} to be used for the {@link SwerveDriveKinematics}.
-     * @param gyroSupplier The {@link Supplier<Rotation2d>} to be used for the Gyroscope.
-     */
-    public SwerveOdometry(SwerveChassis chassis, Supplier<Rotation2d> gyroSupplier, Supplier<SwerveModulePosition[]> positionSupplier) {
+    public SwerveOdometry(SwerveChassis chassis,
+                          Supplier<Rotation2d> gyroSupplier,
+                          Supplier<SwerveModulePosition[]> positionSupplier,
+                          Pose2d pose) {
         this.chassis = chassis;
         this.gyroSupplier = gyroSupplier;
         this.positionSupplier = positionSupplier;
-
+        this.pose = pose;
         odometry = new SwerveDriveOdometry(
                 chassis.getSwerveKinematics(),
                 gyroSupplier.get(),
@@ -54,33 +47,14 @@ public class SwerveOdometry extends AbstractOdometry {
         );
     }
 
-    /**
-     * Formats the {@link SwerveModuleState} into readable values, containing m/s velocity and wheel rotation
-     * in degrees.
-     *
-     * @param state The {@link SwerveModuleState} to use for readings.
-     * @return A parsed {@link String} containing m/s and wheel rotation. (v: () a: () deg)
-     */
     private static String formatState(SwerveModuleState state) {
-        return StringUtils.format(
-                "v: %s a: %s deg",
+        return MessageFormat.format(
+                "v: {1} a: {2} deg",
                 state.speedMetersPerSecond,
                 state.angle.getDegrees()
         );
     }
 
-    /**
-     * @return The {@link Rotation2d} drive heading reported by the {@link SwerveOdometry}. This should be the
-     * only Gyro reading <b>robot-wide</b>, other than reading from the reported {@link Pose2d}.
-     */
-    public Rotation2d getDriveHeading() {
-        return pose.getRotation();
-    }
-
-    /**
-     * Updates the {@link SwerveOdometry} using each individual {@link SwerveModuleState}, adding the values to
-     * the {@link SmartDashboard}, and resetting the time that was last updated.
-     */
     public void update() {
         // each of these states is m per sec and omega rad per sec
         SwerveModuleState frontRightState = chassis.getFrontRight().getState();
@@ -98,32 +72,20 @@ public class SwerveOdometry extends AbstractOdometry {
                 positionSupplier.get()
         );
 
-        lastUpdateTimeMs = Time.ms();
+        lastUpdateTimeMs = System.currentTimeMillis();
     }
 
-    /**
-     * Resets the Odometry position, using a default {@link Pose2d}, and the Gyro supplier. Note that the Gyroscope
-     * <b>should not be reset</b>, as the Gyroscope reading in the Odometry would be offset (becomes 0).
-     */
     public void reset() {
-        odometry.resetPosition(gyroSupplier.get(), positionSupplier.get(), pose);
+        odometry.resetPosition(gyroSupplier.get(), positionSupplier.get(), new Pose2d());
     }
 
-    /** @return The reported {@link Pose2d} from the {@link SwerveOdometry} */
     public Pose2d getPose() {
         return pose;
     }
 
-    /** @return If the last updated time was greater than {@link Constants.Chassis#ODOMETRY_MS_INTERVAL} */
     public boolean shouldUpdate() {
         // only update the odometry every X milliseconds
         // updating it too frequently may cause very inaccurate results
-        double updateInterval = Constants.Chassis.ODOMETRY_MS_INTERVAL;
-        return Time.ms() - updateInterval >= lastUpdateTimeMs;
-    }
-
-    @Override
-    public PointXYZ getRawPosition() {
-        return new PointXYZ();
+        return System.currentTimeMillis() - ODOMETRY_MS_INTERVAL >= lastUpdateTimeMs;
     }
 }
