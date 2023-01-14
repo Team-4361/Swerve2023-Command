@@ -2,12 +2,14 @@ package frc.robot.commands;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Transform3d;
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import static edu.wpi.first.math.MathUtil.clamp;
 import static frc.robot.Constants.Camera.*;
 import static frc.robot.Robot.camera;
 
@@ -18,6 +20,7 @@ public class GoToAprilTagCommand extends CommandBase {
 
     public GoToAprilTagCommand(double targetDistance, double targetYaw) {
         this.aprilTagController = new PIDController(0, 0, 0);
+
         this.targetDistance = targetDistance;
         this.targetYaw = targetYaw;
 
@@ -46,10 +49,12 @@ public class GoToAprilTagCommand extends CommandBase {
                     trackedTarget.getPitch()
             );
 
-            Robot.swerveDrive.autoDrive(
+
+            Robot.swerveDrive.robotDrive(
                     0,
-                    aprilTagController.calculate(currentDistance, targetDistance),
-                    aprilTagController.calculate(currentYaw, targetYaw)
+                    clamp(aprilTagController.calculate(currentDistance, targetDistance), -0.4, 0.4),
+                    clamp(aprilTagController.calculate(currentYaw, targetYaw), -0.4, 0.4),
+                    0
             );
         }
     }

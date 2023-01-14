@@ -91,6 +91,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, vY, omega, robotHeading));
     }
 
+    public void robotDrive(double vX, double vY, double omega, double heading) {
+        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, vY, omega, new Rotation2d(heading)));
+    }
+
     /** Drives the robot to the right direction at 0.8 m/s (possibly?) */
     public void driveRight() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0.8, 0, 0, Rotation2d.fromDegrees(0))); }
 
