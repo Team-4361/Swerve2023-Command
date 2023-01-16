@@ -15,7 +15,11 @@ package frc.robot;
  */
 public final class Constants {
 
-    public static class Camera {
+    /**
+     * This {@link FrontCamera} class is designed to contain the required values for the PhotonVision
+     * AprilTag tracking system.
+     */
+    public static class FrontCamera {
         public static final String CAMERA_NAME = "photoncamera";
         public static final double CAMERA_HEIGHT_METERS = 0.60;
         public static final double TARGET_HEIGHT_METERS = 0.60;

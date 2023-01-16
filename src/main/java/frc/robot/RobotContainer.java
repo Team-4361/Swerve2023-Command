@@ -5,13 +5,15 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
-import frc.robot.commands.GoToAprilTagCommand;
+import frc.robot.commands.auto.PIDAprilTagCommand;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
 import static frc.robot.subsystems.SwerveDriveSubsystem.deadzone;
@@ -38,8 +40,8 @@ public class RobotContainer {
         Robot.swerveDrive.setDefaultCommand(Robot.swerveDrive.run(() ->  {
             Robot.swerveDrive.autoDrive(
                     deadzone(xyStick.getX(), DRIVE_DEAD_ZONE),
-                    -deadzone(xyStick.getY(), DRIVE_DEAD_ZONE),
-                    -deadzone(zStick.getTwist(), DRIVE_DEAD_ZONE)
+                    deadzone(xyStick.getY(), DRIVE_DEAD_ZONE),
+                    deadzone(zStick.getTwist(), DRIVE_DEAD_ZONE)
             );
         }));
     }
@@ -55,7 +57,11 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xbox.a().whileTrue(new GoToAprilTagCommand(10, 0));
+        xbox.a().whileTrue(new PIDAprilTagCommand()
+                .setMaxDrivePower(0.4)
+                .setMaxTurnPower(0.6)
+        );
+
         xbox.x().onTrue(Robot.swerveDrive.runOnce(() -> {
             Robot.swerveDrive.resetPosition();
         }));
@@ -68,6 +74,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return null; // TODO: add auto
+        // test moving to april tag ID #1
+        return new PIDAprilTagCommand(PIDAprilTagCommand.DEFAULT_POSE, 1);
     }
 }

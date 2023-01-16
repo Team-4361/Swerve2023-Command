@@ -34,7 +34,7 @@ public class Robot extends TimedRobot {
         // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
         // autonomous chooser on the dashboard.
         swerveDrive = new SwerveDriveSubsystem();
-        camera = new PhotonCamera(Constants.Camera.CAMERA_NAME);
+        camera = new PhotonCamera(Constants.FrontCamera.CAMERA_NAME);
 
         // Call this method at the very end!
         robotContainer = new RobotContainer();

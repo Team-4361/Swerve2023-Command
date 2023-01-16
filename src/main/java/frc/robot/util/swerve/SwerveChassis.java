@@ -170,16 +170,6 @@ public class SwerveChassis {
         }
     }
 
-    /** @return The total amount of Meters driven since last reset. */
-    public double getMetersDriven() {
-        return average(
-                frontLeft.getMetersDriven(),
-                frontRight.getMetersDriven(),
-                backLeft.getMetersDriven(),
-                backRight.getMetersDriven()
-        );
-    }
-
     public double getDriveMPH() {
         return this.chassisSpeed;
     }

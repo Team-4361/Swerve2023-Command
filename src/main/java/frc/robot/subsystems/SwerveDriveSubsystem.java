@@ -4,12 +4,11 @@ import com.kauailabs.navx.frc.AHRS;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.util.swerve.SwerveChassis;
 import frc.robot.util.swerve.SwerveOdometry;
 
@@ -41,8 +40,13 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         gyro.reset();
         gyro.calibrate();
+
+        Robot.swerveDrive.resetPosition();
     }
 
+    /**
+     * @return A {@link Rotation2d} containing the current rotation of the robot
+     */
     public Rotation2d getRobotHeading() {
         return robotHeading;
     }
@@ -59,7 +63,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Robot MPH", swerveChassis.getDriveMPH());
         SmartDashboard.putNumber("Robot Max MPH", swerveChassis.getMaxDriveMPH());
         SmartDashboard.putString("Robot Actual Heading", robotHeading.toString());
-        SmartDashboard.putString("Robot Position", odometry.getPose().toString());
+        SmartDashboard.putString("Robot Position", odometry.getRobotPose().toString());
+        SmartDashboard.putBoolean("Gyro Calibrating", gyro.isCalibrating());
     }
 
     /** @return A {@link HashMap} containing {@link SwerveModuleState} of the robot. */
@@ -81,18 +86,29 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     /**
      * Drives the Robot using specific speeds, which is converted to field-relative or robot-relative
-     * automatically. Unlike {@link #drive(ChassisSpeeds)}, it will compensate for the angle of the Robot.
+     * automatically. Unlike {@link #drive(ChassisSpeeds)}, it will compensate for the angle of the Robot, and
+     * adds flips the value of {@code vY} and {@code omega} to convert into "robot geometry"
      *
      * @param vX X-direction m/s (+ right, - left)
      * @param vY Y-direction m/s (+ forward, - reverse)
      * @param omega Yaw rad/s (+ right, - left)
      */
     public void autoDrive(double vX, double vY, double omega) {
-        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, vY, omega, robotHeading));
+        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, -vY, -omega, odometry.getRobotPose().getRotation()));
     }
 
+    /**
+     * Drives the Robot using specific speeds and a manually
+     * specified Robot "heading".
+     * Unlike {@link #drive(ChassisSpeeds)}, it will compensate for the angle of the Robot, and
+     * adds flips the value of {@code vY} and {@code omega} to convert into "robot geometry"
+     *
+     * @param vX X-direction m/s (+ right, - left)
+     * @param vY Y-direction m/s (+ forward, - reverse)
+     * @param omega Yaw rad/s (+ right, - left)
+     */
     public void robotDrive(double vX, double vY, double omega, double heading) {
-        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, vY, omega, new Rotation2d(heading)));
+        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, -vY, -omega, new Rotation2d(heading)));
     }
 
     /** Drives the robot to the right direction at 0.8 m/s (possibly?) */
@@ -124,7 +140,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * being referenced, essentially resetting the gyroscope.
      */
     public void resetPosition() {
-        odometry.reset();
+        odometry.resetOdometry();
     }
 
     /** @return The currently used {@link SwerveChassis} */

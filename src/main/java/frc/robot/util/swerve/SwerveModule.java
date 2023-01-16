@@ -1,6 +1,7 @@
 package frc.robot.util.swerve;
 
 import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -8,14 +9,16 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DigitalInput;
 import edu.wpi.first.wpilibj.DutyCycleEncoder;
+import edu.wpi.first.wpilibj.motorcontrol.Talon;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+
 import static frc.robot.Constants.Chassis.SWERVE_WHEEL_CIRCUMFERENCE;
 import static frc.robot.Constants.Chassis.SWERVE_WHEEL_RADIUS;
 
 /**
- * A {@code SwerveModule} is composed of two motors and two encoders:
+ * A {@link SwerveModule} is composed of two motors and two encoders:
  * a drive motor/encoder and a turn motor/encoder. The turn motor is
  * responsible for controlling the direction the drive motor faces, essentially
  * allowing the robot to move in any direction.
@@ -28,7 +31,6 @@ public class SwerveModule {
 
     private final double offset;
     private final double errorFactor;
-
     private final PIDController turnController = new PIDController(
             0.5,
             0.0,
@@ -38,6 +40,7 @@ public class SwerveModule {
 
     /**
      * Creates a new {@link SwerveModule} instance, using the specified parameters.
+     * 
      * @param driveMotorId The Motor ID used for driving the wheel.
      * @param turnMotorId The Motor ID used for turning the wheel.
      * @param digitalEncoderPort The {@link DigitalInput} ID used for the Encoder.
@@ -45,8 +48,8 @@ public class SwerveModule {
      * @param errorFactor The maximum error factor that is acceptable.
      */
     public SwerveModule(int driveMotorId, int turnMotorId, int digitalEncoderPort, double offset, double errorFactor) {
-        driveMotor = new CANSparkMax(driveMotorId, kBrushless);
-        turnMotor = new CANSparkMax(turnMotorId, kBrushless);
+        driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
+        turnMotor = new CANSparkMax(turnMotorId, MotorType.kBrushless);
 
         driveEncoder = driveMotor.getEncoder();
         rotationPWMEncoder = new DutyCycleEncoder(digitalEncoderPort);
@@ -89,10 +92,10 @@ public class SwerveModule {
     }
 
     /**
-     * get the swerve module's state based on the drive motor's velocity
+     * Get the {@link SwerveModuleState} based on the drive motor's velocity
      * (meters/sec) and the turn encoder's angle.
      *
-     * @return a new {@code SwerveModuleState}, representing the module's
+     * @return a new {@link SwerveModuleState}, representing the module's
      * current state, based on the module's drive motor velocity (m/s)
      * and the turn encoder's angle.
      */
@@ -103,6 +106,15 @@ public class SwerveModule {
         );
     }
 
+    /**
+     * Get the {@link SwerveModulePosition} based on the drive motor's
+     * distance travelled (in meters), and turn encoder's angle. This
+     * is required for {@link SwerveOdometry} to work correctly.
+     *
+     * @return A {@link SwerveModulePosition}, representing the module's
+     * current position, based on the module's drive motor distance and
+     * the turn encoder's angle.
+     */
     public SwerveModulePosition getPosition()  {
         return new SwerveModulePosition(
                 getMetersDriven(),
@@ -132,7 +144,9 @@ public class SwerveModule {
         return driveEncoder.getPosition();
     }
 
-    /** @return The total amount of meters the individual {@link SwerveModule} has travelled. */
+    /** 
+     * @return The total amount of meters the individual {@link SwerveModule} has travelled.
+     */
     public double getMetersDriven() {
         // The formula for calculating meters from total rotation is:
         // (Total Rotations * 2PI * Wheel Radius)

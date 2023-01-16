@@ -23,31 +23,30 @@ import static frc.robot.Constants.Chassis.ODOMETRY_MS_INTERVAL;
  * the robot's position wrong
  */
 public class SwerveOdometry {
-
     private final SwerveChassis chassis;
     private final Supplier<Rotation2d> gyroSupplier;
     private final Supplier<SwerveModulePosition[]> positionSupplier;
     private final SwerveDriveOdometry odometry;
-    private Pose2d pose;
+    private Pose2d robotPose;
     private double lastUpdateTimeMs;
 
     public SwerveOdometry(SwerveChassis chassis,
                           Supplier<Rotation2d> gyroSupplier,
                           Supplier<SwerveModulePosition[]> positionSupplier,
-                          Pose2d pose) {
+                          Pose2d robotPose) {
         this.chassis = chassis;
         this.gyroSupplier = gyroSupplier;
         this.positionSupplier = positionSupplier;
-        this.pose = pose;
+        this.robotPose = robotPose;
         odometry = new SwerveDriveOdometry(
                 chassis.getSwerveKinematics(),
                 gyroSupplier.get(),
                 positionSupplier.get(),
-                pose
+                robotPose
         );
     }
 
-    private static String formatState(SwerveModuleState state) {
+    public static String formatDashboard(SwerveModuleState state) {
         return MessageFormat.format(
                 "v: {1} a: {2} deg",
                 state.speedMetersPerSecond,
@@ -62,12 +61,12 @@ public class SwerveOdometry {
         SwerveModuleState backRightState = chassis.getBackRight().getState();
         SwerveModuleState backLeftState = chassis.getBackLeft().getState();
 
-        SmartDashboard.putString("FR State", formatState(frontRightState));
-        SmartDashboard.putString("FL State", formatState(frontLeftState));
-        SmartDashboard.putString("BR State", formatState(backRightState));
-        SmartDashboard.putString("BL State", formatState(backLeftState));
+        SmartDashboard.putString("FR State", formatDashboard(frontRightState));
+        SmartDashboard.putString("FL State", formatDashboard(frontLeftState));
+        SmartDashboard.putString("BR State", formatDashboard(backRightState));
+        SmartDashboard.putString("BL State", formatDashboard(backLeftState));
 
-        pose = odometry.update(
+        robotPose = odometry.update(
                 gyroSupplier.get(),
                 positionSupplier.get()
         );
@@ -75,12 +74,12 @@ public class SwerveOdometry {
         lastUpdateTimeMs = System.currentTimeMillis();
     }
 
-    public void reset() {
+    public void resetOdometry() {
         odometry.resetPosition(gyroSupplier.get(), positionSupplier.get(), new Pose2d());
     }
 
-    public Pose2d getPose() {
-        return pose;
+    public Pose2d getRobotPose() {
+        return robotPose;
     }
 
     public boolean shouldUpdate() {
