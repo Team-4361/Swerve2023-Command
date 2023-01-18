@@ -24,6 +24,18 @@ public final class Constants {
         public static final double CAMERA_HEIGHT_METERS = 0.60;
         public static final double TARGET_HEIGHT_METERS = 0.60;
         public static final double CAMERA_PITCH = 0;
+
+        public static final int APRIL_TAG_PIPELINE = 0;
+        public static final int CUBE_PIPELINE = 1;
+        public static final int CONE_PIPELINE = 2;
+        public static final int DRIVER_PIPELINE = 3;
+    }
+
+    public static class AutoValues {
+        // fancy calculus type stuff, not sure what to do with it but play with the numbers ;)
+        public static final double PID_PROPORTIONAL = 0.2;
+        public static final double PID_INTEGRAL = 0;
+        public static final double PID_DERIVATIVE = 0;
     }
 
     /**

@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
@@ -8,11 +9,14 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Constants;
 import frc.robot.Robot;
 import frc.robot.util.swerve.SwerveChassis;
 import frc.robot.util.swerve.SwerveOdometry;
 
 import java.util.HashMap;
+
+import static frc.robot.Constants.AutoValues.*;
 
 /**
  * This {@link SwerveDriveSubsystem} is designed to be used for controlling the {@link SwerveChassis}, and utilizing
@@ -24,10 +28,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private final SwerveChassis swerveChassis;
     private final SwerveOdometry odometry;
     private Rotation2d robotHeading;
+    private final PIDController controller;
 
     /** Initializes a new {@link SwerveDriveSubsystem}, and resets the Gyroscope. */
     public SwerveDriveSubsystem() {
         swerveChassis = new SwerveChassis();
+        controller = new PIDController(PID_PROPORTIONAL, PID_INTEGRAL, PID_DERIVATIVE);
         gyro = new AHRS(SPI.Port.kMXP);
         robotHeading = new Rotation2d(0);
 
@@ -42,6 +48,34 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         gyro.calibrate();
 
         Robot.swerveDrive.resetPosition();
+    }
+
+    /**
+     * Checks if the actual value is within a specified tolerance of the expected value
+     * @param expected The value to be expected.
+     * @param actual The actual value.
+     * @param tolerance The maximum error or tolerance that the value can be offset to still be true.
+     * @return True/false depending on tolerance.
+     */
+    private static boolean inTolerance(double expected, double actual, double tolerance) {
+        return Math.abs(expected - actual) <= tolerance;
+    }
+
+    public void driveToPose(Pose2d currentPose, Pose2d desiredPose) {
+        robotDrive(
+                controller.calculate(currentPose.getX(), desiredPose.getX()),
+                controller.calculate(currentPose.getY(), desiredPose.getY()),
+                controller.calculate(currentPose.getRotation().getDegrees(), desiredPose.getRotation().getDegrees()),
+                0 // 0 degree heading is used to disable field-relative temporarily
+        );
+    }
+
+    public static boolean isCorrectPose(Pose2d currentPose, Pose2d desiredPose) {
+        return (
+                inTolerance(currentPose.getX(), desiredPose.getX(), 0.5) &&
+                inTolerance(currentPose.getY(), desiredPose.getY(), 0.5) &&
+                inTolerance(currentPose.getRotation().getDegrees(), desiredPose.getRotation().getDegrees(), 2)
+        );
     }
 
     /**
