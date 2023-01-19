@@ -45,17 +45,18 @@ public final class Constants {
      */
     public static class Chassis {
         /** The offset of the Front Right Motor */
-        public static final double FR_OFFSET = -2.38 - (2 * Math.PI) + (Math.PI);
+        //public static final double FR_OFFSET = 0;
+         public static final double FR_OFFSET = -2.38 - (2 * Math.PI) + (Math.PI);
 
         /** The offset of the Front Left Motor */
-        public static final double FL_OFFSET = -9.401 - (Math.PI / 2);
-
+       public static final double FL_OFFSET = -9.401 - (Math.PI / 2);
+        //public static final double FL_OFFSET = 0;
         /** The offset of the Back Right Motor */
-        public static final double BR_OFFSET = -3.345 - (Math.PI / 2) - (2 * Math.PI);
-
+       public static final double BR_OFFSET = -3.345 - (Math.PI / 2) - (2 * Math.PI);
+        //public static final double BR_OFFSET = 0;
         /** The offset of the Back Left Motor */
         public static final double BL_OFFSET = -6.12 - (2 * Math.PI) - (Math.PI / 2);
-
+        //public static final double BL_OFFSET = 0;
         /** The dead-zone where anything below this value, nothing will happen. */
         public static final double DRIVE_DEAD_ZONE = 0.15;
 
@@ -71,6 +72,7 @@ public final class Constants {
         /** The Motor ID used for the Back Right Drive Motor. */
         public static final int BR_DRIVE_ID = 8;
 
+        
         /** The Motor ID used for the Back Left Drive Motor. */
         public static final int BL_DRIVE_ID = 6;
 
@@ -87,16 +89,16 @@ public final class Constants {
         public static final int BL_TURN_ID = 5;
 
         /** The ID used for the Front Right Absolute Encoder. */
-        public static final int FR_DIO_ENCODER_PORT = 3;
+        public static final int FR_DIO_ENCODER_PORT = 1;
 
         /** The ID used for the Front Left Absolute Encoder. */
         public static final int FL_DIO_ENCODER_PORT = 0;
 
         /** The ID used for the Back Right Absolute Encoder. */
-        public static final int BR_DIO_ENCODER_PORT = 2;
+        public static final int BR_DIO_ENCODER_PORT = 3;
 
         /** The ID used for the Back Left Absolute Encoder. */
-        public static final int BL_DIO_ENCODER_PORT = 1;
+        public static final int BL_DIO_ENCODER_PORT = 2;
 
         /** The Radius of each of the Swerve Drive Wheels in <b>meters.</b> */
         public static final double SWERVE_WHEEL_RADIUS = 0.0508;

@@ -34,13 +34,16 @@ public class RobotContainer {
         // Configure the trigger bindings
         configureBindings();
 
+        
         Robot.swerveDrive.setDefaultCommand(Robot.swerveDrive.run(() ->  {
-            Robot.swerveDrive.autoDrive(
+            Robot.swerveDrive.robotDrive(
                     deadzone(xyStick.getX(), DRIVE_DEAD_ZONE),
                     deadzone(xyStick.getY(), DRIVE_DEAD_ZONE),
-                    deadzone(zStick.getTwist(), DRIVE_DEAD_ZONE)
+                    deadzone(zStick.getTwist(), DRIVE_DEAD_ZONE),
+                    0
             );
         }));
+        
     }
 
 
@@ -54,11 +57,11 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xbox.a().whileTrue(new PIDTargetCommand());
+        //xbox.a().whileTrue(new PIDTargetCommand());
 
-        xbox.x().onTrue(Robot.swerveDrive.runOnce(() -> {
-            Robot.swerveDrive.resetPosition();
-        }));
+        //xbox.x().onTrue(Robot.swerveDrive.runOnce(() -> {
+        //    Robot.swerveDrive.resetPosition();
+        //}));
     }
 
 
@@ -69,6 +72,7 @@ public class RobotContainer {
      */
     public Command getAutonomousCommand() {
         // test moving to april tag ID #1
-        return new PIDTargetCommand(1);
+        //return new PIDTargetCommand(1);
+        return null;
     }
 }

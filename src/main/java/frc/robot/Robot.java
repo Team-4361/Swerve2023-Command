@@ -22,8 +22,8 @@ public class Robot extends TimedRobot {
     private Command autonomousCommand;
     private RobotContainer robotContainer;
 
-    public static SwerveDriveSubsystem swerveDrive;
-    public static PhotonCamera camera;
+    public static SwerveDriveSubsystem swerveDrive = new SwerveDriveSubsystem();
+    public static PhotonCamera camera = new PhotonCamera(Constants.FrontCamera.CAMERA_NAME);
 
     /**
      * This method is run when the robot is first started up and should be used for any
@@ -31,11 +31,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        // Instantiate our RobotContainer.  This will perform all our button bindings, and put our
-        // autonomous chooser on the dashboard.
-        swerveDrive = new SwerveDriveSubsystem();
-        camera = new PhotonCamera(Constants.FrontCamera.CAMERA_NAME);
-
         // Call this method at the very end!
         robotContainer = new RobotContainer();
     }

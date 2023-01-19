@@ -47,7 +47,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         gyro.reset();
         gyro.calibrate();
 
-        Robot.swerveDrive.resetPosition();
+        resetPosition();
     }
 
     /**
