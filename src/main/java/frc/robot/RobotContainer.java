@@ -57,7 +57,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        //xbox.a().whileTrue(new PIDTargetCommand());
+        xbox.a().whileTrue(new PIDTargetCommand());
 
         //xbox.x().onTrue(Robot.swerveDrive.runOnce(() -> {
         //    Robot.swerveDrive.resetPosition();

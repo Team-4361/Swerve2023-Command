@@ -1,6 +1,8 @@
 package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
+
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -63,9 +65,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public void driveToPose(Pose2d currentPose, Pose2d desiredPose) {
         robotDrive(
-                controller.calculate(currentPose.getX(), desiredPose.getX()),
-                controller.calculate(currentPose.getY(), desiredPose.getY()),
-                controller.calculate(currentPose.getRotation().getDegrees(), desiredPose.getRotation().getDegrees()),
+                0, //controller.calculate(currentPose.getY(), desiredPose.getY()),
+                -MathUtil.clamp(controller.calculate(currentPose.getX(), desiredPose.getX()), -0.5, 0.5),
+                0, //-controller.calculate(currentPose.getRotation().getDegrees(), desiredPose.getRotation().getDegrees()),
                 0 // 0 degree heading is used to disable field-relative temporarily
         );
     }

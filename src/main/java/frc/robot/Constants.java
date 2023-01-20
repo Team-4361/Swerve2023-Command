@@ -33,7 +33,7 @@ public final class Constants {
 
     public static class AutoValues {
         // fancy calculus type stuff, not sure what to do with it but play with the numbers ;)
-        public static final double PID_PROPORTIONAL = 0.2;
+        public static final double PID_PROPORTIONAL = 0.5;
         public static final double PID_INTEGRAL = 0;
         public static final double PID_DERIVATIVE = 0;
     }
