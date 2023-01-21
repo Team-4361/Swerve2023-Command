@@ -76,9 +76,9 @@ public class RobotContainer {
         // test moving to april tag ID #1
         //return new PIDTargetCommand(1);
         return Robot.swerveDrive.resetGyroCommand()
-                .andThen(
-                        Robot.swerveDrive.followTrajectoryCommand(PathPlanner.loadPath("Test Path", new PathConstraints(3, 3)))
-                )
+                ////.andThen(
+                     //   Robot.swerveDrive.followTrajectoryCommand(PathPlanner.loadPath("Test Path", new PathConstraints(3, 3)))
+                //)
                 .andThen(new PIDTargetCommand());
 
     }

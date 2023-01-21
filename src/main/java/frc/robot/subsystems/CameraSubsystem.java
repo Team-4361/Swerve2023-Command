@@ -4,6 +4,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
+import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
@@ -48,8 +49,8 @@ public class CameraSubsystem extends SubsystemBase {
             trackedTarget = result.getBestTarget();
             targetTransform = trackedTarget.getBestCameraToTarget();
             trackedPose = new Pose2d(
-                    new Translation2d(targetTransform.getY(), targetTransform.getX()),
-                    new Rotation2d((180-trackedTarget.getYaw())%360)
+                    new Translation2d(targetTransform.getY(), -targetTransform.getX()),
+                    new Rotation2d((Units.degreesToRadians(180)-Units.degreesToRadians(trackedTarget.getYaw()))%Units.degreesToRadians(360))
             );
             lastFoundMillis = System.currentTimeMillis();
         } else if (System.currentTimeMillis() >= lastFoundMillis+CAMERA_BUFFER_MILLIS){

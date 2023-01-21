@@ -23,7 +23,7 @@ import static edu.wpi.first.math.MathUtil.clamp;
  */
 public class PIDTargetCommand extends CommandBase {
     public static final Pose2d DEFAULT_POSE = new Pose2d(
-            new Translation2d(10, 0),
+            new Translation2d(0, 2),
             new Rotation2d(0)
     );
     private final Pose2d tagOffset;
