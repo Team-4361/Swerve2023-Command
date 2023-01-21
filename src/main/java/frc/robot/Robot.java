@@ -20,7 +20,7 @@ import org.photonvision.PhotonCamera;
  * project.
  */
 public class Robot extends TimedRobot {
-    private Command autonomousCommand;
+    private Command autonomousCommand, testCommand;
     private RobotContainer robotContainer;
 
     public static SwerveDriveSubsystem swerveDrive = new SwerveDriveSubsystem();
@@ -58,6 +58,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void disabledInit() {
+        CommandScheduler.getInstance().cancelAll();
     }
 
 
@@ -90,13 +91,7 @@ public class Robot extends TimedRobot {
 
     @Override
     public void teleopInit() {
-        // This makes sure that the autonomous stops running when
-        // teleop starts running. If you want the autonomous to
-        // continue until interrupted by another command, remove
-        // this line or comment it out.
-        if (autonomousCommand != null) {
-            autonomousCommand.cancel();
-        }
+        CommandScheduler.getInstance().cancelAll();
     }
 
 
@@ -112,6 +107,13 @@ public class Robot extends TimedRobot {
     public void testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
+
+        testCommand = robotContainer.getTestCommand();
+
+        // schedule the autonomous command (example)
+        if (testCommand != null) {
+            testCommand.schedule();
+        }
     }
 
 

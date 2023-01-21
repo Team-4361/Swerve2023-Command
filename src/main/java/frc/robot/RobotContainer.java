@@ -39,10 +39,11 @@ public class RobotContainer {
 
         
         Robot.swerveDrive.setDefaultCommand(Robot.swerveDrive.run(() ->  {
-            Robot.swerveDrive.autoDrive(
+            Robot.swerveDrive.robotDrive(
                     deadzone(xyStick.getX(), DRIVE_DEAD_ZONE),
                     deadzone(xyStick.getY(), DRIVE_DEAD_ZONE),
-                    deadzone(zStick.getTwist(), DRIVE_DEAD_ZONE)
+                    deadzone(zStick.getTwist(), DRIVE_DEAD_ZONE),
+                    0
             );
         }));
         
@@ -61,9 +62,7 @@ public class RobotContainer {
     private void configureBindings() {
         xbox.a().whileTrue(new PIDTargetCommand());
 
-        //xbox.x().onTrue(Robot.swerveDrive.runOnce(() -> {
-        //    Robot.swerveDrive.resetPosition();
-        //}));
+        xbox.a().onTrue(Robot.swerveDrive.resetGyroCommand());
     }
 
 
@@ -81,5 +80,15 @@ public class RobotContainer {
                 //)
                 .andThen(new PIDTargetCommand());
 
+    }
+
+    public Command getTestCommand() {
+        return Commands.run(() -> {
+            Robot.swerveDrive.robotDrive(0, 0.5, 0, 0);
+        }).andThen(Commands.waitSeconds(5)).andThen(
+                Commands.run(() -> {
+                    Robot.swerveDrive.stop();
+                })
+        );
     }
 }

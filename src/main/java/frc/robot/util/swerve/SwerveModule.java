@@ -133,6 +133,7 @@ public class SwerveModule {
         SmartDashboard.putNumber(turnPosition, turnAngleRadians());
         SmartDashboard.putNumber(drivePower, driveMotor.get());
         SmartDashboard.putNumber(prefix + " pwm encoder:", rotationPWMEncoder.get());
+        SmartDashboard.putNumber(prefix + "drive encoder: ", driveEncoder.getPosition());
     }
 
     /**

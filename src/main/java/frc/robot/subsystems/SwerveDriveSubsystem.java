@@ -89,18 +89,18 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public void driveToPose(Pose2d currentPose, Pose2d desiredPose) {
         robotDrive(
-                MathUtil.clamp(controller.calculate(currentPose.getX(), desiredPose.getX()), -0.5, 0.5),
-                -MathUtil.clamp(controller.calculate(currentPose.getY(), desiredPose.getY()), -0.5, 0.5),
-                MathUtil.clamp(controller.calculate(currentPose.getRotation().getDegrees(), 180), -0.4, 0.4),
+                MathUtil.clamp(controller.calculate(currentPose.getX(), desiredPose.getX()), -0.25, 0.25),
+                -MathUtil.clamp(controller.calculate(currentPose.getY(), desiredPose.getY()), -0.25, 0.25),
+                MathUtil.clamp(controller.calculate(currentPose.getRotation().getDegrees(), 180), -0.05, 0.05),
                 0 // 0 degree heading is used to disable field-relative temporarily
         );
     }
 
     public static boolean isCorrectPose(Pose2d currentPose, Pose2d desiredPose) {
         return (
-                inTolerance(currentPose.getX(), desiredPose.getX(), 0.5) &&
-                inTolerance(currentPose.getY(), desiredPose.getY(), 0.5) &&
-                inTolerance(currentPose.getRotation().getDegrees(), 180, 4)
+                inTolerance(currentPose.getX(), desiredPose.getX(), 2) &&
+                inTolerance(currentPose.getY(), desiredPose.getY(), 4)
+                //inTolerance(currentPose.getRotation().getDegrees(), 180, 4)
         );
     }
 
