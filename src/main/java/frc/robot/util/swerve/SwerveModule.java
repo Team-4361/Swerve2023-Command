@@ -122,18 +122,23 @@ public class SwerveModule {
         );
     }
 
+    public double getRPM() {
+        return driveEncoder.getVelocity();
+    }
+
     public void updateDashboard(String prefix) {
-        String driveVelocity = prefix + ": mph";
+        String driveVelocity = prefix + ": rpm";
         String drivePower = prefix + ": pow";
         String turnPower = prefix + ": turn pow";
         String turnPosition = prefix + ": turn rad";
 
-        SmartDashboard.putNumber(driveVelocity, getDriveMPH());
+        SmartDashboard.putNumber(driveVelocity, getRPM());
         SmartDashboard.putNumber(turnPower, turnMotor.get());
         SmartDashboard.putNumber(turnPosition, turnAngleRadians());
         SmartDashboard.putNumber(drivePower, driveMotor.get());
         SmartDashboard.putNumber(prefix + " pwm encoder:", rotationPWMEncoder.get());
         SmartDashboard.putNumber(prefix + "drive encoder: ", driveEncoder.getPosition());
+
     }
 
     /**

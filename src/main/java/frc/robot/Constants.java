@@ -46,17 +46,20 @@ public final class Constants {
     public static class Chassis {
         /** The offset of the Front Right Motor */
         //public static final double FR_OFFSET = 0;
-         public static final double FR_OFFSET = -2.38 - (2 * Math.PI) + (Math.PI);
 
+        public static final double FR_OFFSET = -2.38 - (2 * Math.PI) + (Math.PI);
         /** The offset of the Front Left Motor */
-       public static final double FL_OFFSET = -9.401 - (Math.PI / 2);
-        //public static final double FL_OFFSET = 0;
+        public static final double FL_OFFSET = -9.401 - (Math.PI / 2);
+
         /** The offset of the Back Right Motor */
-       public static final double BR_OFFSET = -3.345 - (Math.PI / 2) - (2 * Math.PI);
-        //public static final double BR_OFFSET = 0;
+        public static final double BR_OFFSET =  -3.345 - (Math.PI / 2) - (2 * Math.PI);
+
+
+
         /** The offset of the Back Left Motor */
         public static final double BL_OFFSET = -6.12 - (2 * Math.PI) - (Math.PI / 2);
-        //public static final double BL_OFFSET = 0;
+
+
         /** The dead-zone where anything below this value, nothing will happen. */
         public static final double DRIVE_DEAD_ZONE = 0.15;
 
