@@ -7,7 +7,6 @@ import edu.wpi.first.math.kinematics.SwerveModulePosition;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
-import java.text.MessageFormat;
 import java.util.function.Supplier;
 
 import static frc.robot.Constants.Chassis.ODOMETRY_MS_INTERVAL;
@@ -82,7 +81,7 @@ public class SwerveOdometry {
         odometry.resetPosition(gyroSupplier.get(), positionSupplier.get(), new Pose2d());
     }
 
-    public Pose2d getRobotPose() {
+    public Pose2d getPose() {
         return robotPose;
     }
 

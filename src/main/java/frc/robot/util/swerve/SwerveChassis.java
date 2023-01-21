@@ -138,23 +138,16 @@ public class SwerveChassis {
         };
     }
 
+    public void setStates(SwerveModuleState[] states) {
+        frontRight.setState(states[0]);
+        frontLeft.setState(states[1]);
+        backRight.setState(states[2]);
+        backLeft.setState(states[3]);
+    }
+
     public void drive(ChassisSpeeds speeds) {
         SwerveModuleState[] states = SWERVE_KINEMATICS.toSwerveModuleStates(speeds);
-
-        SwerveModuleState frontRightState = states[0];
-        SwerveModuleState frontLeftState = states[1];
-        SwerveModuleState backRightState = states[2];
-        SwerveModuleState backLeftState = states[3];
-
-        robotMoving = frontLeftState.speedMetersPerSecond != 0 &&
-                frontRightState.speedMetersPerSecond != 0 &&
-                backLeftState.speedMetersPerSecond != 0 &&
-                backRightState.speedMetersPerSecond != 0;
-
-        frontRight.setState(frontRightState);
-        frontLeft.setState(frontLeftState);
-        backRight.setState(backRightState);
-        backLeft.setState(backLeftState);
+        this.setStates(states);
 
         updateDashboard();
 

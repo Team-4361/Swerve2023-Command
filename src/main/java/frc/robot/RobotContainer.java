@@ -5,7 +5,10 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -36,11 +39,10 @@ public class RobotContainer {
 
         
         Robot.swerveDrive.setDefaultCommand(Robot.swerveDrive.run(() ->  {
-            Robot.swerveDrive.robotDrive(
+            Robot.swerveDrive.autoDrive(
                     deadzone(xyStick.getX(), DRIVE_DEAD_ZONE),
                     deadzone(xyStick.getY(), DRIVE_DEAD_ZONE),
-                    deadzone(zStick.getTwist(), DRIVE_DEAD_ZONE),
-                    0
+                    deadzone(zStick.getTwist(), DRIVE_DEAD_ZONE)
             );
         }));
         
@@ -73,6 +75,11 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // test moving to april tag ID #1
         //return new PIDTargetCommand(1);
-        return null;
+        return Robot.swerveDrive.resetGyroCommand()
+                .andThen(
+                        Robot.swerveDrive.followTrajectoryCommand(PathPlanner.loadPath("Test Path", new PathConstraints(3, 3)))
+                )
+                .andThen(Robot.swerveDrive.resetGyroCommand());
+
     }
 }

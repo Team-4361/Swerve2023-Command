@@ -1,6 +1,7 @@
 package frc.robot.subsystems;
 
 import edu.wpi.first.math.geometry.Pose2d;
+import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Transform3d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -11,12 +12,12 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class CameraSubsystem extends SubsystemBase {
-    private PhotonCamera camera;
+    private final PhotonCamera camera;
+
     private PhotonTrackedTarget trackedTarget;
     private Transform3d targetTransform;
     private Pose2d trackedPose;
     public boolean targetFound = false;
-
 
     public CameraSubsystem() {
         this.camera = new PhotonCamera(Constants.FrontCamera.CAMERA_NAME);
@@ -43,7 +44,7 @@ public class CameraSubsystem extends SubsystemBase {
             targetTransform = trackedTarget.getBestCameraToTarget();
             trackedPose = new Pose2d(
                     new Translation2d(targetTransform.getY(), targetTransform.getX()),
-                    targetTransform.getRotation().toRotation2d()
+                    new Rotation2d((180-trackedTarget.getYaw())%360)
             );
         } else {
             targetTransform = new Transform3d();
@@ -53,6 +54,4 @@ public class CameraSubsystem extends SubsystemBase {
         SmartDashboard.putString("Camera Pose", trackedPose.toString());
         SmartDashboard.putString("Camera Transform", targetTransform.toString());
     }
-
-
 }

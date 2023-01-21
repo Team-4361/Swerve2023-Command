@@ -26,8 +26,7 @@ public class PIDTargetCommand extends CommandBase {
             new Translation2d(10, 0),
             new Rotation2d(0)
     );
-    private Pose2d tagOffset;
-
+    private final Pose2d tagOffset;
     private long foundTime = System.currentTimeMillis();
 
     public PIDTargetCommand(Pose2d tagOffset) {

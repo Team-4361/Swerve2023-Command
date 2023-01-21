@@ -2,6 +2,9 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import com.pathplanner.lib.PathPlannerTrajectory;
+import com.pathplanner.lib.commands.PPSwerveControllerCommand;
+import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
@@ -10,13 +13,13 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Constants;
-import frc.robot.Robot;
 import frc.robot.util.swerve.SwerveChassis;
 import frc.robot.util.swerve.SwerveOdometry;
 
 import java.util.HashMap;
+import java.util.function.Supplier;
 
 import static frc.robot.Constants.AutoValues.*;
 
@@ -32,12 +35,30 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private Rotation2d robotHeading;
     private final PIDController controller;
 
+    public Command followTrajectoryCommand(PathPlannerTrajectory trajectory) {
+        return new PPSwerveControllerCommand(
+                trajectory,
+                odometry::getPose,
+                swerveChassis.getSwerveKinematics(),
+                new PIDController(0,0,0),
+                new PIDController(0,0,0),
+                new PIDController(0,0,0),
+                swerveChassis::setStates
+        );
+    }
+
+    public Command resetGyroCommand() {
+        return this.runOnce(this::resetPosition);
+    }
+
     /** Initializes a new {@link SwerveDriveSubsystem}, and resets the Gyroscope. */
     public SwerveDriveSubsystem() {
         swerveChassis = new SwerveChassis();
         controller = new PIDController(PID_PROPORTIONAL, PID_INTEGRAL, PID_DERIVATIVE);
         gyro = new AHRS(SPI.Port.kMXP);
         robotHeading = new Rotation2d(0);
+
+        PathPlannerServer.startServer(5811);
 
         odometry = new SwerveOdometry(
                 swerveChassis,
@@ -99,7 +120,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Robot MPH", swerveChassis.getDriveMPH());
         SmartDashboard.putNumber("Robot Max MPH", swerveChassis.getMaxDriveMPH());
         SmartDashboard.putString("Robot Actual Heading", robotHeading.toString());
-        SmartDashboard.putString("Robot Position", odometry.getRobotPose().toString());
+        SmartDashboard.putString("Robot Position", odometry.getPose().toString());
         SmartDashboard.putBoolean("Gyro Calibrating", gyro.isCalibrating());
     }
 
@@ -130,7 +151,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * @param omega Yaw rad/s (+ right, - left)
      */
     public void autoDrive(double vX, double vY, double omega) {
-        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, -vY, -omega, odometry.getRobotPose().getRotation()));
+        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, -vY, -omega, odometry.getPose().getRotation()));
     }
 
     /**
