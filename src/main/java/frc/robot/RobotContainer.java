@@ -79,7 +79,7 @@ public class RobotContainer {
                 .andThen(
                         Robot.swerveDrive.followTrajectoryCommand(PathPlanner.loadPath("Test Path", new PathConstraints(3, 3)))
                 )
-                .andThen(Robot.swerveDrive.resetGyroCommand());
+                .andThen(new PIDTargetCommand());
 
     }
 }

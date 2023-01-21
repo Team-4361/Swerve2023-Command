@@ -11,6 +11,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -58,7 +59,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         gyro = new AHRS(SPI.Port.kMXP);
         robotHeading = new Rotation2d(0);
 
-        PathPlannerServer.startServer(5811);
+        // Don't run the PathPlannerServer during a competition to save bandwidth.
+        if (!DriverStation.isFMSAttached())
+            PathPlannerServer.startServer(5811);
 
         odometry = new SwerveOdometry(
                 swerveChassis,

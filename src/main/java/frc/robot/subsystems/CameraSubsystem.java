@@ -14,16 +14,21 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 public class CameraSubsystem extends SubsystemBase {
     private final PhotonCamera camera;
 
+    public static final int CAMERA_BUFFER_MILLIS = 500;
+
     private PhotonTrackedTarget trackedTarget;
     private Transform3d targetTransform;
     private Pose2d trackedPose;
     public boolean targetFound = false;
+
+    private long lastFoundMillis;
 
     public CameraSubsystem() {
         this.camera = new PhotonCamera(Constants.FrontCamera.CAMERA_NAME);
         this.trackedPose = new Pose2d();
         this.targetTransform = new Transform3d();
         this.trackedTarget = new PhotonTrackedTarget();
+        this.lastFoundMillis = System.currentTimeMillis();
     }
 
     public Pose2d getTrackedPose() {
@@ -37,21 +42,24 @@ public class CameraSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         PhotonPipelineResult result = camera.getLatestResult();
-        targetFound = result.hasTargets();
 
         if (result.hasTargets()) {
+            targetFound = true;
             trackedTarget = result.getBestTarget();
             targetTransform = trackedTarget.getBestCameraToTarget();
             trackedPose = new Pose2d(
                     new Translation2d(targetTransform.getY(), targetTransform.getX()),
                     new Rotation2d((180-trackedTarget.getYaw())%360)
             );
-        } else {
+            lastFoundMillis = System.currentTimeMillis();
+        } else if (System.currentTimeMillis() >= lastFoundMillis+CAMERA_BUFFER_MILLIS){
             targetTransform = new Transform3d();
             trackedPose = new Pose2d();
+            targetFound = false;
         }
 
         SmartDashboard.putString("Camera Pose", trackedPose.toString());
         SmartDashboard.putString("Camera Transform", targetTransform.toString());
+        SmartDashboard.putBoolean("Camera Target Found", targetFound);
     }
 }

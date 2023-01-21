@@ -45,9 +45,8 @@ public class PIDTargetCommand extends CommandBase {
     @Override
     public void execute() {
         if (Robot.cameraSubsystem.isTargetFound()) {
-            foundTime = System.currentTimeMillis();
             Robot.swerveDrive.driveToPose(Robot.cameraSubsystem.getTrackedPose(), tagOffset);
-        } else if (foundTime+500 >= System.currentTimeMillis()){
+        } else {
             Robot.swerveDrive.stop();
         }
     }
