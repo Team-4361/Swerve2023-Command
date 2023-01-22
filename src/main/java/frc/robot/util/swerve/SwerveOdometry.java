@@ -46,14 +46,6 @@ public class SwerveOdometry {
     }
 
     public static String formatDashboard(SwerveModuleState state) {
-        /*
-        return MessageFormat.format(
-                "v: {1} a: {2} deg",
-                state.speedMetersPerSecond,
-                state.angle.getDegrees()
-        );
-
-         */
         return "v: " + state.speedMetersPerSecond + " a: " + state.angle.getDegrees();
     }
 

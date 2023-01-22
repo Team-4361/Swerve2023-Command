@@ -2,25 +2,31 @@ package frc.robot.subsystems;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.pathplanner.lib.server.PathPlannerServer;
-import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.math.controller.HolonomicDriveController;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.filter.SlewRateLimiter;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.util.swerve.SwerveChassis;
 import frc.robot.util.swerve.SwerveOdometry;
 
 import java.util.HashMap;
-import java.util.function.Supplier;
 
 import static frc.robot.Constants.AutoValues.*;
 
@@ -30,11 +36,14 @@ import static frc.robot.Constants.AutoValues.*;
  * purposes (or for simple autonomous) as it allows driving in a specific direction.
  */
 public class SwerveDriveSubsystem extends SubsystemBase {
-    public final AHRS gyro;
     private final SwerveChassis swerveChassis;
     private final SwerveOdometry odometry;
+
+    private final HolonomicDriveController trajectoryController;
+    private final SlewRateLimiter driveRateLimiter;
+
     private Rotation2d robotHeading;
-    private final PIDController controller;
+    public final AHRS gyro;
 
     public Command followTrajectoryCommand(PathPlannerTrajectory trajectory) {
         return new PPSwerveControllerCommand(
@@ -48,6 +57,32 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         );
     }
 
+    public Command followTrajectoryCommand(String pathName) {
+
+        PathPlannerTrajectory trajectory = PathPlanner.loadPath(pathName, new PathConstraints(MAXIMUM_TURN_VELOCITY, MAXIMUM_DRIVE_VELOCITY));
+
+        return (trajectory != null) ? followTrajectoryCommand(trajectory) : Commands.run(() -> {});
+    }
+
+    public Command followCameraTargetCommand(Pose2d targetOffset) {
+        return Robot.swerveDrive.runEnd(() -> {
+            if (Robot.camera.isTargetFound())
+                Robot.swerveDrive.driveToPose(Robot.camera.getTrackedPose(), targetOffset);
+            else
+                Robot.swerveDrive.stop();
+        }, Robot.swerveDrive::stop).until(
+                () -> SwerveDriveSubsystem.inTolerance(Robot.camera.getTrackedPose(), targetOffset)
+        );
+    }
+
+    public Command followCameraTargetCommand() {
+        return this.followCameraTargetCommand(CameraSubsystem.DEFAULT_POSE_OFFSET);
+    }
+    
+    public Pose2d getRobotPose() {
+        return odometry.getPose();
+    }
+
     public Command resetGyroCommand() {
         return this.runOnce(this::resetPosition);
     }
@@ -55,13 +90,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     /** Initializes a new {@link SwerveDriveSubsystem}, and resets the Gyroscope. */
     public SwerveDriveSubsystem() {
         swerveChassis = new SwerveChassis();
-        controller = new PIDController(PID_PROPORTIONAL, PID_INTEGRAL, PID_DERIVATIVE);
         gyro = new AHRS(SPI.Port.kMXP);
         robotHeading = new Rotation2d(0);
-
-        // Don't run the PathPlannerServer during a competition to save bandwidth.
-        if (!DriverStation.isFMSAttached())
-            PathPlannerServer.startServer(5811);
 
         odometry = new SwerveOdometry(
                 swerveChassis,
@@ -69,6 +99,21 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                 swerveChassis::getSwerveModulePositions,
                 new Pose2d()
         );
+
+        trajectoryController = new HolonomicDriveController(
+                new PIDController(PID_PROPORTIONAL, PID_INTEGRAL, PID_DERIVATIVE),
+                new PIDController(PID_PROPORTIONAL, PID_INTEGRAL, PID_DERIVATIVE),
+                new ProfiledPIDController(PID_PROPORTIONAL, PID_INTEGRAL, PID_DERIVATIVE,
+                        new TrapezoidProfile.Constraints(MAXIMUM_TURN_VELOCITY, MAXIMUM_TURN_ACC)
+                )
+        );
+
+        // Limits the drive system to (100/X)% throttle change per second (2 = 50% change/sec)
+        driveRateLimiter = new SlewRateLimiter(2);
+
+        // Don't run the PathPlannerServer during a competition to save bandwidth.
+        if (!DriverStation.isFMSAttached())
+            PathPlannerServer.startServer(5811);
 
         gyro.reset();
         gyro.calibrate();
@@ -88,19 +133,27 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     public void driveToPose(Pose2d currentPose, Pose2d desiredPose) {
+        /*
         robotDrive(
                 MathUtil.clamp(controller.calculate(currentPose.getX(), desiredPose.getX()), -0.25, 0.25),
                 -MathUtil.clamp(controller.calculate(currentPose.getY(), desiredPose.getY()), -0.25, 0.25),
                 MathUtil.clamp(controller.calculate(currentPose.getRotation().getDegrees(), 180), -0.05, 0.05),
                 0 // 0 degree heading is used to disable field-relative temporarily
         );
+         */
+        drive(trajectoryController.calculate(
+                currentPose,
+                desiredPose,
+                MAXIMUM_DRIVE_VELOCITY,
+                desiredPose.getRotation()
+        ));
     }
 
-    public static boolean isCorrectPose(Pose2d currentPose, Pose2d desiredPose) {
+    public static boolean inTolerance(Pose2d currentPose, Pose2d desiredPose) {
         return (
-                inTolerance(currentPose.getX(), desiredPose.getX(), 2) &&
-                inTolerance(currentPose.getY(), desiredPose.getY(), 4)
-                //inTolerance(currentPose.getRotation().getDegrees(), 180, 4)
+                inTolerance(currentPose.getX(), desiredPose.getX(), 1) &&
+                inTolerance(currentPose.getY(), desiredPose.getY(), 1) &&
+                inTolerance(currentPose.getRotation().getDegrees(), desiredPose.getRotation().getDegrees(), 5)
         );
     }
 
@@ -154,6 +207,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * @param omega Yaw rad/s (+ right, - left)
      */
     public void autoDrive(double vX, double vY, double omega) {
+        vX = driveRateLimiter.calculate(vX);
+        vY = driveRateLimiter.calculate(vY);
+        omega = driveRateLimiter.calculate(omega);
+
         this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, -vY, -omega, odometry.getPose().getRotation()));
     }
 
@@ -168,6 +225,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * @param omega Yaw rad/s (+ right, - left)
      */
     public void robotDrive(double vX, double vY, double omega, double heading) {
+        vX = driveRateLimiter.calculate(vX);
+        vY = driveRateLimiter.calculate(vY);
+        omega = driveRateLimiter.calculate(omega);
+
         this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, -vY, -omega, new Rotation2d(heading)));
     }
 

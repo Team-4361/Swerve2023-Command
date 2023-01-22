@@ -5,15 +5,12 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
-import frc.robot.commands.auto.PIDTargetCommand;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
 import static frc.robot.subsystems.SwerveDriveSubsystem.deadzone;
@@ -37,7 +34,6 @@ public class RobotContainer {
         // Configure the trigger bindings
         configureBindings();
 
-        
         Robot.swerveDrive.setDefaultCommand(Robot.swerveDrive.run(() ->  {
             Robot.swerveDrive.robotDrive(
                     deadzone(xyStick.getX(), DRIVE_DEAD_ZONE),
@@ -49,7 +45,6 @@ public class RobotContainer {
         
     }
 
-
     /**
      * Use this method to define your trigger->command mappings. Triggers can be created via the
      * {@link Trigger#Trigger(java.util.function.BooleanSupplier)} constructor with an arbitrary
@@ -60,9 +55,8 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xbox.a().whileTrue(new PIDTargetCommand());
-
-        xbox.a().onTrue(Robot.swerveDrive.resetGyroCommand());
+        xbox.a().onTrue(Robot.swerveDrive.followCameraTargetCommand());
+        xbox.x().onTrue(Robot.swerveDrive.resetGyroCommand());
     }
 
 
@@ -75,11 +69,8 @@ public class RobotContainer {
         // test moving to april tag ID #1
         //return new PIDTargetCommand(1);
         return Robot.swerveDrive.resetGyroCommand()
-                ////.andThen(
-                     //   Robot.swerveDrive.followTrajectoryCommand(PathPlanner.loadPath("Test Path", new PathConstraints(3, 3)))
-                //)
-                .andThen(new PIDTargetCommand());
-
+                .andThen(Robot.swerveDrive.followTrajectoryCommand("Auto Path"))
+                .andThen(Robot.swerveDrive.followCameraTargetCommand());
     }
 
     public Command getTestCommand() {

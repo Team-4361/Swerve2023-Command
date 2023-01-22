@@ -36,6 +36,10 @@ public final class Constants {
         public static final double PID_PROPORTIONAL = 0.5;
         public static final double PID_INTEGRAL = 0;
         public static final double PID_DERIVATIVE = 0;
+
+        public static final double MAXIMUM_DRIVE_VELOCITY = 2; // meters per second
+        public static final double MAXIMUM_TURN_VELOCITY = 2;
+        public static final double MAXIMUM_TURN_ACC = Math.PI/2;
     }
 
     /**
