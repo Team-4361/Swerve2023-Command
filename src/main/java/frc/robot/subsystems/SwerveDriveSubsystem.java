@@ -7,10 +7,12 @@ import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -35,6 +37,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private final SwerveOdometry odometry;
     private Rotation2d robotHeading;
     private final PIDController controller;
+
+    private final ProfiledPIDController turnController = new ProfiledPIDController(PID_PROPORTIONAL, PID_INTEGRAL, PID_DERIVATIVE, new Constraints(0.5, 0.5));
 
     public Command followTrajectoryCommand(PathPlannerTrajectory trajectory) {
         return new PPSwerveControllerCommand(
@@ -91,7 +95,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         robotDrive(
                 MathUtil.clamp(controller.calculate(currentPose.getX(), desiredPose.getX()), -0.25, 0.25),
                 -MathUtil.clamp(controller.calculate(currentPose.getY(), desiredPose.getY()), -0.25, 0.25),
-                MathUtil.clamp(controller.calculate(currentPose.getRotation().getDegrees(), 180), -0.05, 0.05),
+                MathUtil.clamp(turnController.calculate(currentPose.getRotation().getDegrees(), 180), -0.05, 0.05),
                 0 // 0 degree heading is used to disable field-relative temporarily
         );
     }

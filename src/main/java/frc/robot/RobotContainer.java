@@ -39,11 +39,11 @@ public class RobotContainer {
 
         
         Robot.swerveDrive.setDefaultCommand(Robot.swerveDrive.run(() ->  {
-            Robot.swerveDrive.robotDrive(
+            Robot.swerveDrive.autoDrive(
                     deadzone(xyStick.getX(), DRIVE_DEAD_ZONE),
                     deadzone(xyStick.getY(), DRIVE_DEAD_ZONE),
-                    deadzone(zStick.getTwist(), DRIVE_DEAD_ZONE),
-                    0
+                    deadzone(zStick.getTwist(), DRIVE_DEAD_ZONE)
+                    
             );
         }));
         

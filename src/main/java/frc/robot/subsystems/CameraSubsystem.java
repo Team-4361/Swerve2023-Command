@@ -49,7 +49,7 @@ public class CameraSubsystem extends SubsystemBase {
             trackedTarget = result.getBestTarget();
             targetTransform = trackedTarget.getBestCameraToTarget();
             trackedPose = new Pose2d(
-                    new Translation2d(targetTransform.getY(), -targetTransform.getX()),
+                    new Translation2d(Math.abs(targetTransform.getY()), Math.abs(-targetTransform.getX())),
                     new Rotation2d((Units.degreesToRadians(180)-Units.degreesToRadians(trackedTarget.getYaw()))%Units.degreesToRadians(360))
             );
             lastFoundMillis = System.currentTimeMillis();
