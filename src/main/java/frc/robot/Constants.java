@@ -5,6 +5,9 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
@@ -33,9 +36,9 @@ public final class Constants {
 
     public static class AutoValues {
         // fancy calculus type stuff, not sure what to do with it but play with the numbers ;)
-        public static final double PID_PROPORTIONAL = 0.5;
-        public static final double PID_INTEGRAL = 0;
-        public static final double PID_DERIVATIVE = 0;
+        public static final Constraints X_CONSTRAINTS = new Constraints(0.5, 0.5);
+        public static final Constraints Y_CONSTRAINTS = new Constraints(0.5,0.5);
+        public static final Constraints OMEGA_CONSTRAINTS = new Constraints(0.5, 0.5);
     }
 
     /**
