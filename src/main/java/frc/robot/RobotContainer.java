@@ -42,7 +42,7 @@ public class RobotContainer {
             Robot.swerveDrive.autoDrive(
                     deadzone(xyStick.getX(), DRIVE_DEAD_ZONE),
                     deadzone(xyStick.getY(), DRIVE_DEAD_ZONE),
-                    deadzone(zStick.getTwist(), DRIVE_DEAD_ZONE)
+                    deadzone(zStick.getTwist()-0.2, 0.25)
                     
             );
         }));
@@ -60,7 +60,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xbox.a().whileTrue(new PIDTargetCommand());
+        xbox.b().whileTrue(new PIDTargetCommand());
 
         xbox.a().onTrue(Robot.swerveDrive.resetGyroCommand());
     }

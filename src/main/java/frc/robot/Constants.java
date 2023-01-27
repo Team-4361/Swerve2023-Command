@@ -36,9 +36,9 @@ public final class Constants {
 
     public static class AutoValues {
         // fancy calculus type stuff, not sure what to do with it but play with the numbers ;)
-        public static final Constraints X_CONSTRAINTS = new Constraints(0.5, 0.5);
-        public static final Constraints Y_CONSTRAINTS = new Constraints(0.5,0.5);
-        public static final Constraints OMEGA_CONSTRAINTS = new Constraints(0.5, 0.5);
+        public static final Constraints X_CONSTRAINTS = new Constraints(0.2, 0.2);
+        public static final Constraints Y_CONSTRAINTS = new Constraints(0.2,0.2);
+        public static final Constraints OMEGA_CONSTRAINTS = new Constraints(0.2, 0.2);
     }
 
     /**

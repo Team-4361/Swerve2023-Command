@@ -79,6 +79,10 @@ public class SwerveModule {
         return offset + (rotationPWMEncoder.get() * 2 * Math.PI);
     }
 
+    public double turnAngleRadiansNoOffset() {
+        return (rotationPWMEncoder.get() * 2 * Math.PI);
+    }
+
     public void setState(SwerveModuleState state) {
         state = SwerveModuleState.optimize(state, getTurnAngle());
 
@@ -136,8 +140,8 @@ public class SwerveModule {
         SmartDashboard.putNumber(turnPower, turnMotor.get());
         SmartDashboard.putNumber(turnPosition, turnAngleRadians());
         SmartDashboard.putNumber(drivePower, driveMotor.get());
-        SmartDashboard.putNumber(prefix + " pwm encoder:", rotationPWMEncoder.get());
-        SmartDashboard.putNumber(prefix + "drive encoder: ", driveEncoder.getPosition());
+        SmartDashboard.putNumber(prefix + " offset tuning rad:", turnAngleRadiansNoOffset());
+        SmartDashboard.putNumber(prefix + " drive encoder: ", driveEncoder.getPosition());
 
     }
 

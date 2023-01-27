@@ -13,7 +13,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -37,8 +36,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private final SwerveChassis swerveChassis;
     private final SwerveOdometry odometry;
     private Rotation2d robotHeading;
+    private final PIDController controller;
 
-    private final ProfiledPIDController xController, yController, omegaController;
+    private final ProfiledPIDController turnController = new ProfiledPIDController(0.1, 0, 0, new Constraints(0.5, 0.5));
 
     public Command followTrajectoryCommand(PathPlannerTrajectory trajectory) {
         return new PPSwerveControllerCommand(
@@ -59,17 +59,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     /** Initializes a new {@link SwerveDriveSubsystem}, and resets the Gyroscope. */
     public SwerveDriveSubsystem() {
         swerveChassis = new SwerveChassis();
+        controller = new PIDController(0.1, 0, 0);
         gyro = new AHRS(SPI.Port.kMXP);
         robotHeading = new Rotation2d(0);
-
-        xController = new ProfiledPIDController(3, 0, 0, X_CONSTRAINTS);
-        yController = new ProfiledPIDController(3, 0, 0, Y_CONSTRAINTS);
-        omegaController = new ProfiledPIDController(2, 0, 0, OMEGA_CONSTRAINTS);
-
-        xController.setTolerance(1);
-        yController.setTolerance(1);
-        omegaController.setTolerance(Units.degreesToRadians(3));
-        omegaController.enableContinuousInput(-Math.PI, Math.PI);
 
         // Don't run the PathPlannerServer during a competition to save bandwidth.
         if (!DriverStation.isFMSAttached())
@@ -100,23 +92,16 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     public void driveToPose(Pose2d currentPose, Pose2d desiredPose) {
-        xController.setGoal(desiredPose.getX());
-        yController.setGoal(desiredPose.getY());
-        omegaController.setGoal(desiredPose.getRotation().getRadians());
-
-        autoDrive(
-                !xController.atGoal() ? xController.calculate(currentPose.getX(), desiredPose.getX()) : 0,
-                !xController.atGoal() ? -yController.calculate(currentPose.getY(), desiredPose.getY()) : 0,
-                !omegaController.atGoal() ? omegaController.calculate(currentPose.getRotation().getRadians(), desiredPose.getRotation().getRadians()) : 0
+        robotDrive(
+                !inTolerance(currentPose.getX(), desiredPose.getX(), 2) ? MathUtil.clamp(controller.calculate(currentPose.getX(), desiredPose.getX()), -0.25, 0.25) : 0,
+                !inTolerance(currentPose.getY(), desiredPose.getY(), 4) ? MathUtil.clamp(controller.calculate(currentPose.getY(), desiredPose.getY()), -0.25, 0.25) : 0,
+                !inTolerance(currentPose.getRotation().getDegrees(), 180, 4) ? MathUtil.clamp(turnController.calculate(currentPose.getRotation().getDegrees(), 180), -0.05, 0.05) : 0,
+                0
         );
     }
 
     public static boolean isCorrectPose(Pose2d currentPose, Pose2d desiredPose) {
-        return (
-                inTolerance(currentPose.getX(), desiredPose.getX(), 1) &&
-                        inTolerance(currentPose.getY(), desiredPose.getY(), 1) &&
-                        inTolerance(currentPose.getRotation().getDegrees(), desiredPose.getRotation().getDegrees(), 3)
-        );
+        return false;
     }
 
     /**
