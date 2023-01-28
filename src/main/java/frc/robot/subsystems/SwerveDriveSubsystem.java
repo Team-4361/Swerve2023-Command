@@ -36,9 +36,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private final SwerveChassis swerveChassis;
     private final SwerveOdometry odometry;
     private Rotation2d robotHeading;
-    private final PIDController controller;
-
-    private final ProfiledPIDController turnController = new ProfiledPIDController(0.1, 0, 0, new Constraints(0.5, 0.5));
 
     public Command followTrajectoryCommand(PathPlannerTrajectory trajectory) {
         return new PPSwerveControllerCommand(
@@ -59,7 +56,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     /** Initializes a new {@link SwerveDriveSubsystem}, and resets the Gyroscope. */
     public SwerveDriveSubsystem() {
         swerveChassis = new SwerveChassis();
-        controller = new PIDController(0.1, 0, 0);
         gyro = new AHRS(SPI.Port.kMXP);
         robotHeading = new Rotation2d(0);
 
@@ -81,30 +77,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Checks if the actual value is within a specified tolerance of the expected value
-     * @param expected The value to be expected.
-     * @param actual The actual value.
-     * @param tolerance The maximum error or tolerance that the value can be offset to still be true.
-     * @return True/false depending on tolerance.
-     */
-    private static boolean inTolerance(double expected, double actual, double tolerance) {
-        return Math.abs(expected - actual) <= tolerance;
-    }
-
-    public void driveToPose(Pose2d currentPose, Pose2d desiredPose) {
-        robotDrive(
-                !inTolerance(currentPose.getX(), desiredPose.getX(), 2) ? MathUtil.clamp(controller.calculate(currentPose.getX(), desiredPose.getX()), -0.25, 0.25) : 0,
-                !inTolerance(currentPose.getY(), desiredPose.getY(), 4) ? MathUtil.clamp(controller.calculate(currentPose.getY(), desiredPose.getY()), -0.25, 0.25) : 0,
-                !inTolerance(currentPose.getRotation().getDegrees(), 180, 4) ? MathUtil.clamp(turnController.calculate(currentPose.getRotation().getDegrees(), 180), -0.05, 0.05) : 0,
-                0
-        );
-    }
-
-    public static boolean isCorrectPose(Pose2d currentPose, Pose2d desiredPose) {
-        return false;
-    }
-
-    /**
      * @return A {@link Rotation2d} containing the current rotation of the robot
      */
     public Rotation2d getRobotHeading() {
@@ -114,7 +86,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // Update the robot speed and other information.
-        robotHeading = gyro.getRotation2d();
+        robotHeading = new Rotation2d(-gyro.getRotation2d().getRadians());
 
         if (odometry.shouldUpdate()) {
             odometry.update();
@@ -146,12 +118,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     /**
      * Drives the Robot using specific speeds, which is converted to field-relative or robot-relative
-     * automatically. Unlike {@link #drive(ChassisSpeeds)}, it will compensate for the angle of the Robot, and
-     * adds flips the value of {@code vY} and {@code omega} to convert into "robot geometry"
+     * automatically. Unlike {@link #drive(ChassisSpeeds)}, it will compensate for the angle of the Robot.
      *
-     * @param vX X-direction m/s (+ right, - left)
-     * @param vY Y-direction m/s (+ forward, - reverse)
-     * @param omega Yaw rad/s (+ right, - left)
+     * @param vX X-direction m/s (+ forward, - reverse)
+     * @param vY Y-direction m/s (+ left, - right)
+     * @param omega Yaw rad/s (+ left, - right)
      */
     public void autoDrive(double vX, double vY, double omega) {
         this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, -vY, -omega, odometry.getPose().getRotation()));
@@ -163,27 +134,18 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * Unlike {@link #drive(ChassisSpeeds)}, it will compensate for the angle of the Robot, and
      * adds flips the value of {@code vY} and {@code omega} to convert into "robot geometry"
      *
-     * @param vX X-direction m/s (+ right, - left)
-     * @param vY Y-direction m/s (+ forward, - reverse)
-     * @param omega Yaw rad/s (+ right, - left)
+     * @param vX X-direction m/s (+ forward, - reverse)
+     * @param vY Y-direction m/s (+ left, - right)
+     * @param omega Yaw rad/s (+ left, - right)
      */
     public void robotDrive(double vX, double vY, double omega, double heading) {
         this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, -vY, -omega, new Rotation2d(heading)));
     }
 
-    /** Drives the robot to the right direction at 0.8 m/s (possibly?) */
-    public void driveRight() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0.8, 0, 0, Rotation2d.fromDegrees(0))); }
-
-    /** Drives the robot to the left direction at 0.8 m/s (possibly?) */
-    public void driveLeft() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(-0.8, 0, 0, Rotation2d.fromDegrees(0))); }
-
-    /** Drives the robot forward at 0.8 m/s (possibly?) */
-    public void driveForward() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0.8, 0, Rotation2d.fromDegrees(0))); }
-
-    /** Drives the robot backwards at 0.8 m/s (possibly?) */
-    public void driveBack() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, -0.8, 0, Rotation2d.fromDegrees(0))); }
-
-    /** Stops the robot from moving completely, will usually not release brake mode from testing. */
+    public void driveForward() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0.8, 0, 0, Rotation2d.fromDegrees(0))); }
+    public void driveBack() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(-0.8, 0, 0, Rotation2d.fromDegrees(0))); }
+    public void driveLeft() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0.8, 0, Rotation2d.fromDegrees(0))); }
+    public void driveRight() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, -0.8, 0, Rotation2d.fromDegrees(0))); }
     public void stop() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, Rotation2d.fromDegrees(0))); }
 
     /** @return {@link Rotation2d} gyroscope instance. */

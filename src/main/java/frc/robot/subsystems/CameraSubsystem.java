@@ -13,6 +13,7 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class CameraSubsystem extends SubsystemBase {
+
     private final PhotonCamera camera;
 
     public static final int CAMERA_BUFFER_MILLIS = 500;
@@ -48,10 +49,18 @@ public class CameraSubsystem extends SubsystemBase {
             targetFound = true;
             trackedTarget = result.getBestTarget();
             targetTransform = trackedTarget.getBestCameraToTarget();
+            /*
             trackedPose = new Pose2d(
                     new Translation2d(Math.abs(targetTransform.getY()), Math.abs(-targetTransform.getX())),
                     new Rotation2d((Units.degreesToRadians(180)-Units.degreesToRadians(trackedTarget.getYaw()))%Units.degreesToRadians(360))
             );
+             */
+
+            trackedPose = new Pose2d(
+                    new Translation2d(targetTransform.getX(), targetTransform.getY()),
+                    new Rotation2d(Math.PI-Units.degreesToRadians(trackedTarget.getYaw())%(2*Math.PI))
+            );
+
             lastFoundMillis = System.currentTimeMillis();
         } else if (System.currentTimeMillis() >= lastFoundMillis+CAMERA_BUFFER_MILLIS){
             targetTransform = new Transform3d();

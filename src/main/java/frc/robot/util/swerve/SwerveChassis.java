@@ -13,50 +13,45 @@ import java.util.Map;
 import static frc.robot.Constants.Chassis.*;
 
 public class SwerveChassis {
-    private static final Translation2d SWERVE_FR_POSITION =
-            new Translation2d(SWERVE_CHASSIS_SIDE_LENGTH / 2, SWERVE_CHASSIS_SIDE_LENGTH / 2);
     private static final Translation2d SWERVE_FL_POSITION =
-            new Translation2d(-SWERVE_CHASSIS_SIDE_LENGTH / 2, SWERVE_CHASSIS_SIDE_LENGTH / 2);
-    private static final Translation2d SWERVE_BR_POSITION =
+            new Translation2d(SWERVE_CHASSIS_SIDE_LENGTH / 2, SWERVE_CHASSIS_SIDE_LENGTH / 2);
+
+    private static final Translation2d SWERVE_FR_POSITION =
             new Translation2d(SWERVE_CHASSIS_SIDE_LENGTH / 2, -SWERVE_CHASSIS_SIDE_LENGTH / 2);
+
     private static final Translation2d SWERVE_BL_POSITION =
+            new Translation2d(-SWERVE_CHASSIS_SIDE_LENGTH / 2, SWERVE_CHASSIS_SIDE_LENGTH / 2);
+
+    private static final Translation2d SWERVE_BR_POSITION =
             new Translation2d(-SWERVE_CHASSIS_SIDE_LENGTH / 2, -SWERVE_CHASSIS_SIDE_LENGTH / 2);
+
     private static final SwerveDriveKinematics SWERVE_KINEMATICS =
             new SwerveDriveKinematics(
-                    SWERVE_FR_POSITION,
                     SWERVE_FL_POSITION,
-                    SWERVE_BR_POSITION,
-                    SWERVE_BL_POSITION
+                    SWERVE_FR_POSITION,
+                    SWERVE_BL_POSITION,
+                    SWERVE_BR_POSITION
             );
 
     private static double average(double... vals)  {
         return Arrays.stream(vals).sum() / vals.length;
     }
 
-    private static final String NAME_FR = "FR";
     private static final String NAME_FL = "FL";
-    private static final String NAME_BR = "BR";
+    private static final String NAME_FR = "FR";
     private static final String NAME_BL = "BL";
+    private static final String NAME_BR = "BR";
 
-    private final SwerveModule frontRight;
     private final SwerveModule frontLeft;
-    private final SwerveModule backRight;
+    private final SwerveModule frontRight;
     private final SwerveModule backLeft;
+    private final SwerveModule backRight;
 
     private double chassisSpeed = 0.0;
     private double maxChassisSpeed = 0.0;
-    private final double metersDriven = 0.0;
-    private boolean robotMoving = false;
 
     public SwerveChassis() {
         this(
-                new SwerveModule(
-                        FR_DRIVE_ID,
-                        FR_TURN_ID,
-                        FR_DIO_ENCODER_PORT,
-                        FR_OFFSET,
-                        FR_ERROR_FACTOR
-                ),
                 new SwerveModule(
                         FL_DRIVE_ID,
                         FL_TURN_ID,
@@ -65,11 +60,11 @@ public class SwerveChassis {
                         FL_ERROR_FACTOR
                 ),
                 new SwerveModule(
-                        BR_DRIVE_ID,
-                        BR_TURN_ID,
-                        BR_DIO_ENCODER_PORT,
-                        BR_OFFSET,
-                        BR_ERROR_FACTOR
+                        FR_DRIVE_ID,
+                        FR_TURN_ID,
+                        FR_DIO_ENCODER_PORT,
+                        FR_OFFSET,
+                        FR_ERROR_FACTOR
                 ),
                 new SwerveModule(
                         BL_DRIVE_ID,
@@ -77,15 +72,22 @@ public class SwerveChassis {
                         BL_DIO_ENCODER_PORT,
                         BL_OFFSET,
                         BL_ERROR_FACTOR
+                ),
+                new SwerveModule(
+                        BR_DRIVE_ID,
+                        BR_TURN_ID,
+                        BR_DIO_ENCODER_PORT,
+                        BR_OFFSET,
+                        BR_ERROR_FACTOR
                 )
         );
         updateDashboard();
     }
 
-    public SwerveChassis(SwerveModule frontRight,
-                         SwerveModule frontLeft,
-                         SwerveModule backRight,
-                         SwerveModule backLeft) {
+    public SwerveChassis(SwerveModule frontLeft,
+                         SwerveModule frontRight,
+                         SwerveModule backLeft,
+                         SwerveModule backRight) {
         this.frontRight = frontRight;
         this.frontLeft = frontLeft;
         this.backRight = backRight;
@@ -94,26 +96,27 @@ public class SwerveChassis {
     }
 
     private void updateDashboard() {
-        frontRight.updateDashboard(NAME_FR);
         frontLeft.updateDashboard(NAME_FL);
-        backRight.updateDashboard(NAME_BR);
+        frontRight.updateDashboard(NAME_FR);
         backLeft.updateDashboard(NAME_BL);
-    }
-
-    public SwerveModule getFrontRight() {
-        return frontRight;
+        backRight.updateDashboard(NAME_BR);
     }
 
     public SwerveModule getFrontLeft() {
         return frontLeft;
     }
 
-    public SwerveModule getBackRight() {
-        return backRight;
+    public SwerveModule getFrontRight() {
+        return frontRight;
     }
 
     public SwerveModule getBackLeft() {
         return backLeft;
+    }
+
+
+    public SwerveModule getBackRight() {
+        return backRight;
     }
 
     public SwerveDriveKinematics getSwerveKinematics() {
@@ -131,18 +134,18 @@ public class SwerveChassis {
 
     public SwerveModulePosition[] getSwerveModulePositions() {
         return new SwerveModulePosition[] {
-                getFrontRight().getPosition(),
                 getFrontLeft().getPosition(),
-                getBackRight().getPosition(),
-                getBackLeft().getPosition()
+                getFrontRight().getPosition(),
+                getBackLeft().getPosition(),
+                getBackRight().getPosition()
         };
     }
 
     public void setStates(SwerveModuleState[] states) {
-        frontRight.setState(states[0]);
-        frontLeft.setState(states[1]);
-        backRight.setState(states[2]);
-        backLeft.setState(states[3]);
+        frontLeft.setState(states[0]);
+        frontRight.setState(states[1]);
+        backLeft.setState(states[2]);
+        backRight.setState(states[3]);
     }
 
     public void drive(ChassisSpeeds speeds) {

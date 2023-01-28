@@ -1,8 +1,11 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.subsystems.SwerveDriveSubsystem;
@@ -10,8 +13,10 @@ import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
 import java.util.concurrent.atomic.AtomicReference;
+import java.util.function.Supplier;
 
 import static edu.wpi.first.math.MathUtil.clamp;
+
 
 /**
  * This {@link PIDTargetCommand} is designed to <b>automatically</b> move the {@link Robot} to a specified
@@ -22,38 +27,62 @@ import static edu.wpi.first.math.MathUtil.clamp;
  * @author Eric Gold
  */
 public class PIDTargetCommand extends CommandBase {
+    private final PIDController controller = new PIDController(0.1, 0, 0);
+    private final ProfiledPIDController turnController = new ProfiledPIDController(0.1, 0, 0, new TrapezoidProfile.Constraints(0.5, 0.5));
+
     public static final Pose2d DEFAULT_POSE = new Pose2d(
             new Translation2d(0, 2),
             new Rotation2d(0)
     );
-    private final Pose2d tagOffset;
-    private long foundTime = System.currentTimeMillis();
 
-    public PIDTargetCommand(Pose2d tagOffset) {
-        this.tagOffset = tagOffset;
+    /**
+     * Checks if the actual value is within a specified tolerance of the expected value
+     * @param expected The value to be expected.
+     * @param actual The actual value.
+     * @param tolerance The maximum error or tolerance that the value can be offset to still be true.
+     * @return True/false depending on tolerance.
+     */
+    private static boolean inTolerance(double expected, double actual, double tolerance) {
+        return Math.abs(expected - actual) <= tolerance;
+    }
+
+    private final Pose2d poseOffset;
+    private final Supplier<Pose2d> poseSupplier;
+
+    private Pose2d trackedPose = new Pose2d();
+
+    public PIDTargetCommand(Supplier<Pose2d> poseSupplier, Pose2d poseOffset) {
+        this.poseSupplier = poseSupplier;
+        this.poseOffset = poseOffset;
+
+        addRequirements(Robot.swerveDrive);
     }
 
     public PIDTargetCommand() {
-        this.tagOffset = DEFAULT_POSE;
+        this(Robot.cameraSubsystem::getTrackedPose, DEFAULT_POSE);
     }
-    /**
-     * The initial subroutine of a command. Called once when the command is initially scheduled.
-     */
-    @Override
-    public void initialize() { addRequirements(Robot.swerveDrive); }
 
     @Override
     public void execute() {
-        if (Robot.cameraSubsystem.isTargetFound()) {
-            Robot.swerveDrive.driveToPose(Robot.cameraSubsystem.getTrackedPose(), tagOffset);
-        } else {
-            Robot.swerveDrive.stop();
-        }
+        trackedPose = poseSupplier.get();
+
+        Robot.swerveDrive.robotDrive(
+                !inTolerance(trackedPose.getX(), poseOffset.getX(), 2) ?
+                        clamp(controller.calculate(trackedPose.getX(), poseOffset.getX()), -0.25, 0.25)
+                        : 0,
+                !inTolerance(trackedPose.getY(), poseOffset.getY(), 4) ?
+                        clamp(controller.calculate(trackedPose.getY(), poseOffset.getY()), -0.25, 0.25)
+                        : 0,
+                !inTolerance(trackedPose.getRotation().getRadians(), Math.PI, 4) ?
+                        clamp(turnController.calculate(trackedPose.getRotation().getRadians(), Math.PI), -0.05, 0.05)
+                        : 0,
+                0
+        );
     }
 
     @Override
     public boolean isFinished() {
-        return SwerveDriveSubsystem.isCorrectPose(Robot.cameraSubsystem.getTrackedPose(), tagOffset);
+        return inTolerance(trackedPose.getX(), poseOffset.getX(), 2) && inTolerance(trackedPose.getY(), poseOffset.getY(), 4) && inTolerance(trackedPose.getRotation().getRadians(), Math.PI, 4);
     }
 
     @Override
