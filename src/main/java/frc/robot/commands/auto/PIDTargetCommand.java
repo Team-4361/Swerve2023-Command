@@ -42,7 +42,7 @@ public class PIDTargetCommand extends CommandBase {
      * @param tolerance The maximum error or tolerance that the value can be offset to still be true.
      * @return True/false depending on tolerance.
      */
-    private static boolean inTolerance(double expected, double actual, double tolerance) {
+    public static boolean inTolerance(double expected, double actual, double tolerance) {
         return Math.abs(expected - actual) <= tolerance;
     }
 

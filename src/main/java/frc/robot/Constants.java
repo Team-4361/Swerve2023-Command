@@ -54,11 +54,7 @@ public final class Constants {
 
         public static final double ARM_GEAR_RATIO = 686; /*:1*/
 
-        public static final double[] ARM_ANGLE_PRESETS = new double[]{
-                5,
-                10,
-                20
-        };
+        public static final double ARM_ANGLE_DEGREES = 10;
     }
 
     public static class FourBarWristValues {
