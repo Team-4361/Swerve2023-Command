@@ -8,15 +8,9 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.util.camera.CameraModule;
-import frc.robot.subsystems.vision.CameraSubsystem;
+import frc.robot.subsystems.CameraSubsystem;
 import frc.robot.subsystems.SwerveDriveSubsystem;
-import frc.robot.subsystems.climber.ClimberArmSubsystem;
-import frc.robot.subsystems.fourbar.FourBarArmSubsystem;
-import frc.robot.subsystems.fourbar.FourBarGripperSubsystem;
-import frc.robot.subsystems.fourbar.FourBarWristSubsystem;
-
-import static frc.robot.Constants.FrontCamera.CAMERA_NAME;
+import org.photonvision.PhotonCamera;
 
 
 /**
@@ -30,11 +24,7 @@ public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
 
     public static SwerveDriveSubsystem swerveDrive = new SwerveDriveSubsystem();
-    public static CameraSubsystem cameras = new CameraSubsystem();
-    public static ClimberArmSubsystem climberSubsystem = new ClimberArmSubsystem();
-    public static FourBarArmSubsystem armSubsystem = new FourBarArmSubsystem();
-    public static FourBarGripperSubsystem gripperSubsystem = new FourBarGripperSubsystem();
-    public static FourBarWristSubsystem wristSubsystem = new FourBarWristSubsystem();
+    public static CameraSubsystem cameraSubsystem = new CameraSubsystem();
     /**
      * This method is run when the robot is first started up and should be used for any
      * initialization code.
@@ -43,8 +33,6 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         // Call this method at the very end!
         robotContainer = new RobotContainer();
-
-        cameras.addCamera(new CameraModule(CAMERA_NAME));
     }
 
 

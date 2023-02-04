@@ -1,14 +1,18 @@
 package frc.robot.commands.auto;
 
 import edu.wpi.first.apriltag.AprilTag;
+import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
-import frc.robot.util.camera.CameraModule;
+import frc.robot.subsystems.SwerveDriveSubsystem;
+import org.photonvision.targeting.PhotonPipelineResult;
+import org.photonvision.targeting.PhotonTrackedTarget;
 
+import java.util.concurrent.atomic.AtomicReference;
 import java.util.function.Supplier;
 
 import static edu.wpi.first.math.MathUtil.clamp;
@@ -54,8 +58,8 @@ public class PIDTargetCommand extends CommandBase {
         addRequirements(Robot.swerveDrive);
     }
 
-    public PIDTargetCommand(CameraModule camera) {
-        this(camera::getTrackedPose, DEFAULT_POSE);
+    public PIDTargetCommand() {
+        this(Robot.cameraSubsystem::getTrackedPose, DEFAULT_POSE);
     }
 
     @Override
