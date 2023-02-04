@@ -1,7 +1,21 @@
 {
   "NTProvider": {
     "types": {
-      "/FMSInfo": "FMSInfo"
+      "/FMSInfo": "FMSInfo",
+      "/SmartDashboard/Sim Field": "Field2d"
+    }
+  },
+  "NetworkTables": {
+    "retained": {
+      "Usage": {
+        "Client": {
+          "Dashboard": {
+            "open": true
+          },
+          "open": true
+        },
+        "open": true
+      }
     }
   }
 }

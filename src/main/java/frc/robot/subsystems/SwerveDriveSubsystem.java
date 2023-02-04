@@ -15,6 +15,7 @@ import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
+import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -37,6 +38,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private final SwerveOdometry odometry;
     private Rotation2d robotHeading;
 
+    private Field2d simField;
+
     public Command followTrajectoryCommand(PathPlannerTrajectory trajectory) {
         return new PPSwerveControllerCommand(
                 trajectory,
@@ -58,6 +61,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         swerveChassis = new SwerveChassis();
         gyro = new AHRS(SPI.Port.kMXP);
         robotHeading = new Rotation2d(0);
+        simField = new Field2d();
 
         // Don't run the PathPlannerServer during a competition to save bandwidth.
         if (!DriverStation.isFMSAttached())
@@ -91,6 +95,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         if (odometry.shouldUpdate()) {
             odometry.update();
         }
+
+        simField.setRobotPose(odometry.getPose());
+
+        SmartDashboard.putData("Sim Field", simField);
 
         SmartDashboard.putNumber("Robot MPH", swerveChassis.getDriveMPH());
         SmartDashboard.putNumber("Robot Max MPH", swerveChassis.getMaxDriveMPH());

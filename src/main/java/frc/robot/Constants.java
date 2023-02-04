@@ -5,8 +5,10 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+
+import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -32,6 +34,33 @@ public final class Constants {
         public static final int CUBE_PIPELINE = 1;
         public static final int CONE_PIPELINE = 2;
         public static final int DRIVER_PIPELINE = 3;
+    }
+
+    public static class FourBarArmValues {
+        public static final int ARM_MOTOR_ID = 1;
+        public static final MotorType ARM_MOTOR_TYPE = kBrushless;
+
+        // The feed forward values for the arm. These can be automatically calculated by using ReCalc. Having
+        // a correct feed forward is important as it compensates for the gravity and resistance that will push
+        // the arm down when power is cut.
+        public static final double ARM_kS = 0;
+        public static final double ARM_kG = 0;
+        public static final double ARM_kV = 0;
+        public static final double ARM_kA = 0;
+
+        public static final double ARM_kP = 0.01;
+        public static final double ARM_kI = 0.00;
+        public static final double ARM_kD = 0.00;
+
+        public static final double ARM_GEAR_RATIO = 686; /*:1*/
+
+        public static final double[] ARM_ANGLE_PRESETS = new double[]{
+                5,
+                10,
+                20
+        };
+
+        public static final Constraints ARM_CONSTRAINTS = new Constraints(0.1, 0.1);
     }
 
     public static class AutoValues {
