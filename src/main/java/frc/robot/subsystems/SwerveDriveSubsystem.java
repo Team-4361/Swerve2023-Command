@@ -147,7 +147,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * @param omega Yaw rad/s (+ left, - right)
      */
     public void robotDrive(double vX, double vY, double omega, double heading) {
-        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, -vY, -omega, new Rotation2d(heading)));
+        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vY, -vX, -omega, new Rotation2d(heading)));
     }
 
     public void driveForward() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0.8, 0, 0, Rotation2d.fromDegrees(0))); }

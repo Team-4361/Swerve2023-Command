@@ -30,7 +30,7 @@ public final class Constants {
         public static final double TARGET_HEIGHT_METERS = 0.60;
         public static final double CAMERA_PITCH = 0;
 
-        public static final int APRIL_TAG_PIPELINE = 0;
+        public static final int TAG_PIPELINE = 0;
         public static final int CUBE_PIPELINE = 1;
         public static final int CONE_PIPELINE = 2;
         public static final int DRIVER_PIPELINE = 3;
@@ -59,8 +59,24 @@ public final class Constants {
                 10,
                 20
         };
+    }
 
-        public static final Constraints ARM_CONSTRAINTS = new Constraints(0.1, 0.1);
+    public static class FourBarWristValues {
+        public static final int WRIST_SERVO_ID = 2;
+
+        public static final double[] WRIST_ANGLE_PRESETS = new double[]{
+                5,
+                10,
+                15,
+                20
+        };
+    }
+    public static class FourBarGripperValues {
+        public static final int GRIPPER_MOTOR_VALUE_ID = 0;
+    }
+    public static class ClimberArmValues {
+        public static final int ROTATION_MOTOR_ID = 0;
+        public static final int EXTENSION_MOTOR_ID = 1;
     }
 
     public static class AutoValues {
@@ -80,6 +96,7 @@ public final class Constants {
         //public static final double FR_OFFSET = 0;
 
         public static final double FR_OFFSET = -2.38 - (2 * Math.PI) + (Math.PI);
+
         /** The offset of the Front Left Motor */
         public static final double FL_OFFSET = -9.401 - (Math.PI / 2);
 
