@@ -15,9 +15,11 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
+import frc.robot.Constants.FrontCamera;
 import frc.robot.commands.auto.PIDTargetCommand;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
+import static frc.robot.Robot.cameras;
 import static frc.robot.subsystems.SwerveDriveSubsystem.deadzone;
 
 
@@ -61,7 +63,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xbox.b().whileTrue(new PIDTargetCommand());
+        xbox.b().whileTrue(new PIDTargetCommand(cameras.getCamera(FrontCamera.CAMERA_NAME)));
 
         xbox.a().onTrue(Robot.swerveDrive.resetGyroCommand());
     }
@@ -79,7 +81,7 @@ public class RobotContainer {
                 ////.andThen(
                      //   Robot.swerveDrive.followTrajectoryCommand(PathPlanner.loadPath("Test Path", new PathConstraints(3, 3)))
                 //)
-                .andThen(new PIDTargetCommand());
+                .andThen(new PIDTargetCommand(cameras.getCamera(FrontCamera.CAMERA_NAME)));
 
     }
 
