@@ -46,10 +46,6 @@ public class SwerveChassis {
     private final SwerveModule frontRight;
     private final SwerveModule backLeft;
     private final SwerveModule backRight;
-
-    private double chassisSpeed = 0.0;
-    private double maxChassisSpeed = 0.0;
-
     public SwerveChassis() {
         this(
                 new SwerveModule(
@@ -149,30 +145,8 @@ public class SwerveChassis {
     }
 
     public void drive(ChassisSpeeds speeds) {
-        SwerveModuleState[] states = SWERVE_KINEMATICS.toSwerveModuleStates(speeds);
-
-        this.setStates(states);
-
+        setStates(SWERVE_KINEMATICS.toSwerveModuleStates(speeds));
         updateDashboard();
-
-        chassisSpeed = average(
-                frontLeft.getDriveMPH(),
-                frontRight.getDriveMPH(),
-                backLeft.getDriveMPH(),
-                backRight.getDriveMPH()
-        );
-
-        if (chassisSpeed > maxChassisSpeed) {
-            maxChassisSpeed = chassisSpeed;
-        }
-    }
-
-    public double getDriveMPH() {
-        return this.chassisSpeed;
-    }
-
-    public double getMaxDriveMPH() {
-        return this.maxChassisSpeed;
     }
 
     public void resetDriveEncoders() {

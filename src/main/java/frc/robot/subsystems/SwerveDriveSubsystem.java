@@ -41,7 +41,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private boolean fieldOriented = true;
 
     private Field2d simField;
-
     public Command followTrajectoryCommand(PathPlannerTrajectory trajectory) {
         return new PPSwerveControllerCommand(
                 trajectory,
@@ -100,16 +99,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Update the robot speed and other information.
         robotHeading = new Rotation2d(gyro.getRotation2d().getRadians());
 
-        if (odometry.shouldUpdate()) {
-            odometry.update();
-        }
+        if (odometry.shouldUpdate()) odometry.update();
 
         simField.setRobotPose(odometry.getPose());
 
         SmartDashboard.putData("Sim Field", simField);
 
-        SmartDashboard.putNumber("Robot MPH", swerveChassis.getDriveMPH());
-        SmartDashboard.putNumber("Robot Max MPH", swerveChassis.getMaxDriveMPH());
         SmartDashboard.putString("Robot Actual Heading", robotHeading.toString());
         SmartDashboard.putString("Robot Position", odometry.getPose().toString());
         SmartDashboard.putBoolean("Gyro Calibrating", gyro.isCalibrating());

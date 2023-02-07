@@ -5,10 +5,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -42,15 +38,12 @@ public class RobotContainer {
         
         Robot.swerveDrive.setDefaultCommand(Robot.swerveDrive.run(() ->  {
             Robot.swerveDrive.autoDrive(
-                    deadzone(xyStick.getX(), DRIVE_DEAD_ZONE),
                     deadzone(xyStick.getY(), DRIVE_DEAD_ZONE),
+                    deadzone(xyStick.getX(), DRIVE_DEAD_ZONE),
                     deadzone(zStick.getTwist(), 0.20)
-                    
             );
         }));
-        
     }
-
 
     /**
      * Use this method to define your trigger->command mappings. Triggers can be created via the

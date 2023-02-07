@@ -82,11 +82,14 @@ public class SwerveOdometry {
     }
 
     public Pose2d getPose() {
+        /*
         return new Pose2d(
             robotPose.getY(),
             -robotPose.getX(),
             robotPose.getRotation()
         );
+         */
+        return robotPose;
     }
 
     public boolean shouldUpdate() {
