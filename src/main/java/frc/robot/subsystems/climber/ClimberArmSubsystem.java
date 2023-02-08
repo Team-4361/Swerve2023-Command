@@ -11,11 +11,19 @@ import static frc.robot.Constants.ClimberArmValues.EXTENSION_MOTOR_ID;
 import static frc.robot.Constants.ClimberArmValues.ROTATION_MOTOR_ID;
 
 public class ClimberArmSubsystem extends SubsystemBase {
-    private CANSparkMax rotationMotor = new CANSparkMax(ROTATION_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
-    private CANSparkMax extensionMotor = new CANSparkMax(EXTENSION_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushed);
-    private SparkMaxPIDController controller = rotationMotor.getPIDController();
-    private RelativeEncoder rotationEncoder = rotationMotor.getEncoder();
-    private double targetRotations = 0;
+    private CANSparkMax rotationMotor;
+    private CANSparkMax extensionMotor;
+    private SparkMaxPIDController controller;
+    private RelativeEncoder rotationEncoder;
+    private double targetRotations;
+
+    public ClimberArmSubsystem() {
+        rotationMotor = new CANSparkMax(ROTATION_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushless);
+        extensionMotor = new CANSparkMax(EXTENSION_MOTOR_ID, CANSparkMaxLowLevel.MotorType.kBrushed);
+        controller = rotationMotor.getPIDController();
+        rotationEncoder = rotationMotor.getEncoder();
+        targetRotations = 0;
+    }
     public void setTargetRotation(double rotation){
         controller.setReference(rotation, CANSparkMax.ControlType.kPosition);
         targetRotations = rotation;

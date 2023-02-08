@@ -54,12 +54,15 @@ public final class Constants {
 
         public static final double ARM_GEAR_RATIO = 686; /*:1*/
 
-        public static final double ARM_ANGLE_DEGREES = 10;
+        public static final double ARM_ANGLE_RAISE_DEGREES = 10;
+        public static final double ARM_ANGLE_LOWER_DEGREES = 0;
+        public static final double ARM_ANGLE_TOLERANCE = 2;
     }
 
     public static class FourBarWristValues {
         public static final int WRIST_SERVO_ID = 2;
 
+        public static final int WRIST_ANGLE_TOLERANCE = 2;
         public static final double[] WRIST_ANGLE_PRESETS = new double[]{
                 5,
                 10,
@@ -69,6 +72,8 @@ public final class Constants {
     }
     public static class FourBarGripperValues {
         public static final int GRIPPER_MOTOR_VALUE_ID = 0;
+
+        public static final double GRIPPER_SPEED = 0.5;
     }
     public static class ClimberArmValues {
         public static final int ROTATION_MOTOR_ID = 0;
@@ -80,6 +85,28 @@ public final class Constants {
         public static final Constraints X_CONSTRAINTS = new Constraints(0.2, 0.2);
         public static final Constraints Y_CONSTRAINTS = new Constraints(0.2,0.2);
         public static final Constraints OMEGA_CONSTRAINTS = new Constraints(0.2, 0.2);
+    }
+
+    public static class Arm {
+        public static final int ARM_MOTOR_ID = 2;
+
+        public static final double ARM_FEED_FWD = 1;
+
+        public static final double[] ARM_POSITIONS = new double[]{
+                // TODO: change numbers to match actual positions
+                5,
+                10,
+                15
+        };
+    }
+
+    public static class Wrist {
+        public static final int WRIST_MOTOR_ID = 3;
+    }
+
+    public static class Gripper {
+        public static final int GRIPPER_MOTOR_ID = 4;
+        public static final int GRIPPER_PROXIMITY_SENSOR_ID = 5;
     }
 
     /**
@@ -98,8 +125,6 @@ public final class Constants {
 
         /** The offset of the Back Right Motor */
         public static final double BR_OFFSET =  (-3.345)+0.009 - (Math.PI / 2) - (2 * Math.PI);
-
-
 
         /** The offset of the Back Left Motor */
         public static final double BL_OFFSET = (6.12)+0.339057 - (2 * Math.PI) - (Math.PI / 2);

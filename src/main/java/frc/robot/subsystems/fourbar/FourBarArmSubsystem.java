@@ -15,14 +15,14 @@ import static frc.robot.Constants.FourBarArmValues.*;
 
 public class FourBarArmSubsystem extends SubsystemBase {
 
-    private final CANSparkMax armMotor = new CANSparkMax(ARM_MOTOR_ID, ARM_MOTOR_TYPE);
+    private final CANSparkMax armMotor;
 
-    private final SparkMaxPIDController armController = armMotor.getPIDController();
-    private final RelativeEncoder armEncoder = armMotor.getEncoder();
-    private final ArmFeedforward armFeedForward = new ArmFeedforward(ARM_kS, ARM_kG, ARM_kV, ARM_kA);
+    private final SparkMaxPIDController armController;
+    private final RelativeEncoder armEncoder;
+    private final ArmFeedforward armFeedForward;
 
     private Rotation2d armAngle, targetAngle;
-    private boolean teleopMode = false;
+    private boolean teleopMode;
 
     ///////////////////////////////////////////////
 
@@ -38,6 +38,12 @@ public class FourBarArmSubsystem extends SubsystemBase {
     public void setTarget(Rotation2d target) { this.targetAngle = target; }
 
     public FourBarArmSubsystem() {
+        armMotor = new CANSparkMax(ARM_MOTOR_ID, ARM_MOTOR_TYPE);
+        armController = armMotor.getPIDController();
+        armEncoder = armMotor.getEncoder();
+        armFeedForward = new ArmFeedforward(ARM_kS, ARM_kG, ARM_kV, ARM_kA);
+        teleopMode = false;
+
         this.targetAngle = new Rotation2d(0);
 
         armMotor.enableVoltageCompensation(12);
