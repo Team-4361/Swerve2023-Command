@@ -14,16 +14,16 @@ import static frc.robot.Constants.Chassis.*;
 
 public class SwerveChassis {
     private static final Translation2d SWERVE_FL_POSITION =
-            new Translation2d(-SWERVE_CHASSIS_SIDE_LENGTH / 2, SWERVE_CHASSIS_SIDE_LENGTH / 2);
-
-    private static final Translation2d SWERVE_FR_POSITION =
             new Translation2d(SWERVE_CHASSIS_SIDE_LENGTH / 2, SWERVE_CHASSIS_SIDE_LENGTH / 2);
 
+    private static final Translation2d SWERVE_FR_POSITION =
+            new Translation2d(SWERVE_CHASSIS_SIDE_LENGTH / 2, -SWERVE_CHASSIS_SIDE_LENGTH / 2);
+
     private static final Translation2d SWERVE_BL_POSITION =
-            new Translation2d(-SWERVE_CHASSIS_SIDE_LENGTH / 2, -SWERVE_CHASSIS_SIDE_LENGTH / 2);
+            new Translation2d(-SWERVE_CHASSIS_SIDE_LENGTH / 2, SWERVE_CHASSIS_SIDE_LENGTH / 2);
 
     private static final Translation2d SWERVE_BR_POSITION =
-            new Translation2d(SWERVE_CHASSIS_SIDE_LENGTH / 2, -SWERVE_CHASSIS_SIDE_LENGTH / 2);
+            new Translation2d(-SWERVE_CHASSIS_SIDE_LENGTH / 2, -SWERVE_CHASSIS_SIDE_LENGTH / 2);
 
     private static final SwerveDriveKinematics SWERVE_KINEMATICS =
             new SwerveDriveKinematics(

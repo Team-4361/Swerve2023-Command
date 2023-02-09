@@ -7,6 +7,7 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import frc.robot.util.camera.CameraConfig;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 
@@ -25,10 +26,11 @@ public final class Constants {
      * AprilTag tracking system.
      */
     public static class FrontCamera {
-        public static final String CAMERA_NAME = "photoncamera";
-        public static final double CAMERA_HEIGHT_METERS = 0.60;
-        public static final double TARGET_HEIGHT_METERS = 0.60;
-        public static final double CAMERA_PITCH = 0;
+        public static final CameraConfig CAMERA_CONFIG = new CameraConfig()
+                .setCameraName("photoncamera")
+                .setTargetHeightMeters(0.60)
+                .setCameraHeightMeters(0.60)
+                .setCameraPitch(0);
 
         public static final int TAG_PIPELINE = 0;
         public static final int CUBE_PIPELINE = 1;
@@ -91,18 +93,18 @@ public final class Constants {
         /** The offset of the Front Right Motor */
         //public static final double FR_OFFSET = 0;
 
-        public static final double FR_OFFSET = (-2.38)+0 - (2 * Math.PI) + (Math.PI);
+        public static final double FR_OFFSET = ((-2.38)+0)+(Math.PI/2) - (2 * Math.PI) + (Math.PI);
 
         /** The offset of the Front Left Motor */
-        public static final double FL_OFFSET = (9.401)+0.045647 - (Math.PI / 2);
+        public static final double FL_OFFSET = ((9.401)+0.045647)+(Math.PI/2) - (Math.PI / 2);
 
         /** The offset of the Back Right Motor */
-        public static final double BR_OFFSET =  (-3.345)+0.009 - (Math.PI / 2) - (2 * Math.PI);
+        public static final double BR_OFFSET =  ((-3.345)+0.009)+(Math.PI/2) - (Math.PI / 2) - (2 * Math.PI);
 
 
 
         /** The offset of the Back Left Motor */
-        public static final double BL_OFFSET = (6.12)+0.339057 - (2 * Math.PI) - (Math.PI / 2);
+        public static final double BL_OFFSET = ((6.12)+0.339057)+(Math.PI/2) - (2 * Math.PI) - (Math.PI / 2);
 
 
         /** The dead-zone where anything below this value, nothing will happen. */
