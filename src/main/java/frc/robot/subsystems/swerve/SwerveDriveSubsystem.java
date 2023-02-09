@@ -1,18 +1,15 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.swerve;
 
 import com.kauailabs.navx.frc.AHRS;
 
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.pathplanner.lib.server.PathPlannerServer;
-import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.Field2d;
@@ -23,9 +20,6 @@ import frc.robot.util.swerve.SwerveChassis;
 import frc.robot.util.swerve.SwerveOdometry;
 
 import java.util.HashMap;
-import java.util.function.Supplier;
-
-import static frc.robot.Constants.AutoValues.*;
 
 /**
  * This {@link SwerveDriveSubsystem} is designed to be used for controlling the {@link SwerveChassis}, and utilizing
@@ -100,8 +94,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
         SmartDashboard.putData("Sim Field", simField);
 
-        SmartDashboard.putNumber("Robot MPH", swerveChassis.getDriveMPH());
-        SmartDashboard.putNumber("Robot Max MPH", swerveChassis.getMaxDriveMPH());
         SmartDashboard.putString("Robot Actual Heading", robotHeading.toString());
         SmartDashboard.putString("Robot Position", odometry.getPose().toString());
         SmartDashboard.putBoolean("Gyro Calibrating", gyro.isCalibrating());

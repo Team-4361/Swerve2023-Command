@@ -15,23 +15,13 @@ public class CameraModule extends PhotonCamera {
 
     public static final int CAMERA_BUFFER_MILLIS = 500;
 
-    private PhotonTrackedTarget trackedTarget;
     private Transform3d targetTransform;
     private Pose2d trackedPose;
-    private int[] aprilTagIncludes = new int[]{};
     private boolean targetFound = false;
 
+    private double cameraHeight, targetHeight, cameraPitch;
+
     private long lastFoundMillis = System.currentTimeMillis();
-
-    public CameraModule onlyIncludeAprilTags(int... aprilTags) {
-        this.aprilTagIncludes = aprilTags;
-        return this;
-    }
-
-    public CameraModule resetAprilTags() {
-        this.aprilTagIncludes = new int[]{};
-        return this;
-    }
 
     public Pose2d getTrackedPose() {
         return trackedPose;
@@ -46,8 +36,16 @@ public class CameraModule extends PhotonCamera {
 
         if (result.hasTargets()) {
             targetFound = true;
-            trackedTarget = result.getBestTarget();
+            PhotonTrackedTarget trackedTarget = result.getBestTarget();
             targetTransform = trackedTarget.getBestCameraToTarget();
+
+            // If the transform is equal to zero with a pitch/yaw existing, then its in 2D mode. Calculate the
+            // distance using the trig formula.
+            if (targetTransform.getX() == 0 && targetTransform.getY() == 0) {
+                trackedPose = new Pose2d(
+
+                );
+            }
 
             trackedPose = new Pose2d(
                     new Translation2d(targetTransform.getX(), targetTransform.getY()),

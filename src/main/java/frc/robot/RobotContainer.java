@@ -5,10 +5,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -20,7 +16,7 @@ import frc.robot.commands.auto.PIDTargetCommand;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
 import static frc.robot.Robot.cameras;
-import static frc.robot.subsystems.SwerveDriveSubsystem.deadzone;
+import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
 
 
 /**
@@ -44,8 +40,8 @@ public class RobotContainer {
         
         Robot.swerveDrive.setDefaultCommand(Robot.swerveDrive.run(() ->  {
             Robot.swerveDrive.autoDrive(
-                    deadzone(xyStick.getX(), DRIVE_DEAD_ZONE),
-                    deadzone(xyStick.getY(), DRIVE_DEAD_ZONE),
+                    deadzone(-xyStick.getY(), DRIVE_DEAD_ZONE),
+                    deadzone(-xyStick.getX(), DRIVE_DEAD_ZONE),
                     deadzone(zStick.getTwist(), 0.20)
             );
         }));

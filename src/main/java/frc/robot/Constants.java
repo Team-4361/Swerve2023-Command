@@ -36,6 +36,13 @@ public final class Constants {
         public static final int DRIVER_PIPELINE = 3;
     }
 
+    public static class MotorFlips {
+        public static final boolean FOUR_BAR_MOTOR_FLIPPED = false;
+        public static final boolean FOUR_BAR_GRIPPER_FLIPPED = false;
+        public static final boolean CLIMBER_EXTENSION_FLIPPED = false;
+        public static final boolean CLIMBER_ROTATION_FLIPPED = false;
+    }
+
     public static class FourBarArmValues {
         public static final int ARM_MOTOR_ID = 1;
         public static final MotorType ARM_MOTOR_TYPE = kBrushless;
@@ -54,9 +61,9 @@ public final class Constants {
 
         public static final double ARM_GEAR_RATIO = 686; /*:1*/
 
-        public static final double ARM_ANGLE_RAISE_DEGREES = 10;
-        public static final double ARM_ANGLE_LOWER_DEGREES = 0;
-        public static final double ARM_ANGLE_TOLERANCE = 2;
+        public static final double ARM_RAISE_ROTATION = 10;
+        public static final double ARM_LOWER_ROTATION = 0;
+        public static final double ARM_ROTATION_TOLERANCE = 2;
     }
 
     public static class FourBarWristValues {

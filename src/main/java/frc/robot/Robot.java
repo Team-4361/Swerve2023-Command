@@ -10,7 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.util.camera.CameraModule;
 import frc.robot.subsystems.vision.CameraSubsystem;
-import frc.robot.subsystems.SwerveDriveSubsystem;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.climber.ClimberArmSubsystem;
 import frc.robot.subsystems.fourbar.FourBarArmSubsystem;
 import frc.robot.subsystems.fourbar.FourBarGripperSubsystem;
@@ -35,6 +35,7 @@ public class Robot extends TimedRobot {
     public static FourBarArmSubsystem armSubsystem = new FourBarArmSubsystem();
     public static FourBarGripperSubsystem gripperSubsystem = new FourBarGripperSubsystem();
     public static FourBarWristSubsystem wristSubsystem = new FourBarWristSubsystem();
+
     /**
      * This method is run when the robot is first started up and should be used for any
      * initialization code.
@@ -42,6 +43,9 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         // Call this method at the very end!
+        swerveDrive = new SwerveDriveSubsystem();
+        cameras = new CameraSubsystem(new CameraModule(CAMERA_NAME));
+
         robotContainer = new RobotContainer();
 
         cameras.addCamera(new CameraModule(CAMERA_NAME));
