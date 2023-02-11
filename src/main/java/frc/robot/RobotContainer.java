@@ -11,7 +11,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
-import frc.robot.commands.auto.PIDTargetCommand;
+import frc.robot.commands.fourbar.climber.*;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
 import static frc.robot.subsystems.SwerveDriveSubsystem.deadzone;
@@ -55,11 +55,22 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xbox.b().whileTrue(new PIDTargetCommand());
+    
 
         xbox.a().onTrue(Robot.swerveDrive.resetGyroCommand());
 
         xyStick.button(8).onTrue(Robot.swerveDrive.toggleFieldOriented());
+
+        xbox.rightTrigger().whileTrue(new RaiseClimberArmCommand());
+        xbox.rightBumper().whileTrue(new ExtendClimberArmCommand());
+        xbox.leftTrigger().whileTrue(new LowerClimberArmCommand());
+        xbox.leftBumper().whileTrue(new RetractClimberArmCommand());
+
+        xbox.povLeft().whileTrue(Commands.runEnd(() -> {
+            Robot.pump.set(0.45);
+        }, () -> {
+            Robot.pump.set(0);
+        }));
     }
 
 
@@ -71,11 +82,11 @@ public class RobotContainer {
     public Command getAutonomousCommand() {
         // test moving to april tag ID #1
         //return new PIDTargetCommand(1);
-        return Robot.swerveDrive.resetGyroCommand()
+        return Robot.swerveDrive.resetGyroCommand();
                 ////.andThen(
                      //   Robot.swerveDrive.followTrajectoryCommand(PathPlanner.loadPath("Test Path", new PathConstraints(3, 3)))
                 //)
-                .andThen(new PIDTargetCommand());
+           
 
     }
 

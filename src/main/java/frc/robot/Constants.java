@@ -7,7 +7,6 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import frc.robot.util.camera.CameraConfig;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 
@@ -26,11 +25,6 @@ public final class Constants {
      * AprilTag tracking system.
      */
     public static class FrontCamera {
-        public static final CameraConfig CAMERA_CONFIG = new CameraConfig()
-                .setCameraName("photoncamera")
-                .setTargetHeightMeters(0.60)
-                .setCameraHeightMeters(0.60)
-                .setCameraPitch(0);
 
         public static final int TAG_PIPELINE = 0;
         public static final int CUBE_PIPELINE = 1;
