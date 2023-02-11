@@ -27,7 +27,6 @@ import static frc.robot.Constants.FrontCamera.CAMERA_NAME;
  * project.
  */
 public class Robot extends TimedRobot {
-    private Command autonomousCommand, testCommand;
     private RobotContainer robotContainer;
 
     public static SwerveDriveSubsystem swerveDrive = new SwerveDriveSubsystem();
@@ -72,22 +71,14 @@ public class Robot extends TimedRobot {
      * This method is called once each time the robot enters Disabled mode.
      */
     @Override
-    public void disabledInit() {
-        CommandScheduler.getInstance().cancelAll();
-    }
-
-
-    @Override
-    public void disabledPeriodic() {
-    }
-
+    public void disabledInit() { CommandScheduler.getInstance().cancelAll(); }
 
     /**
      * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
      */
     @Override
     public void autonomousInit() {
-        autonomousCommand = robotContainer.getAutonomousCommand();
+        Command autonomousCommand = robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
         if (autonomousCommand != null) {
@@ -95,27 +86,8 @@ public class Robot extends TimedRobot {
         }
     }
 
-
-    /**
-     * This method is called periodically during autonomous.
-     */
     @Override
-    public void autonomousPeriodic() {
-    }
-
-
-    @Override
-    public void teleopInit() {
-        CommandScheduler.getInstance().cancelAll();
-    }
-
-
-    /**
-     * This method is called periodically during operator control.
-     */
-    @Override
-    public void teleopPeriodic() {
-    }
+    public void teleopInit() { CommandScheduler.getInstance().cancelAll(); }
 
 
     @Override
@@ -123,35 +95,11 @@ public class Robot extends TimedRobot {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
 
-        testCommand = robotContainer.getTestCommand();
+        Command testCommand = robotContainer.getTestCommand();
 
         // schedule the autonomous command (example)
         if (testCommand != null) {
             testCommand.schedule();
         }
-    }
-
-
-    /**
-     * This method is called periodically during test mode.
-     */
-    @Override
-    public void testPeriodic() {
-    }
-
-
-    /**
-     * This method is called once when the robot is first started up.
-     */
-    @Override
-    public void simulationInit() {
-    }
-
-
-    /**
-     * This method is called periodically whilst in simulation.
-     */
-    @Override
-    public void simulationPeriodic() {
     }
 }

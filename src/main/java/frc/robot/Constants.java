@@ -8,6 +8,7 @@ package frc.robot;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.util.camera.PhotonCameraConfig;
+import frc.robot.util.pid.PresetList;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 
@@ -70,21 +71,19 @@ public final class Constants {
 
         public static final double ARM_GEAR_RATIO = 686; /*:1*/
 
-        public static final double ARM_RAISE_ROTATION = 10;
-        public static final double ARM_LOWER_ROTATION = 0;
-        public static final double ARM_ROTATION_TOLERANCE = 2;
+        public static final PresetList<Double> ARM_PRESETS = new PresetList<>(
+                0.0, // fully lowered
+                134.0, // first hook
+                268.0 // second hook
+        );
     }
 
     public static class FourBarWristValues {
         public static final int WRIST_SERVO_ID = 2;
 
         public static final int WRIST_ANGLE_TOLERANCE = 2;
-        public static final double[] WRIST_ANGLE_PRESETS = new double[]{
-                5,
-                10,
-                15,
-                20
-        };
+        public static final PresetList<Double> WRIST_PRESETS = new PresetList<>(5.0, 10.0, 15.0, 20.0);
+
     }
     public static class FourBarGripperValues {
         public static final int GRIPPER_MOTOR_VALUE_ID = 0;

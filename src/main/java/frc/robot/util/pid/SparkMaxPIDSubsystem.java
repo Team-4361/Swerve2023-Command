@@ -5,6 +5,7 @@ import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
@@ -24,6 +25,9 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     private final RelativeEncoder encoder;
     private final String name;
 
+    // TODO: Add preset support to all applicable commands.
+    private PresetList<Double> presets;
+
     private double targetRotation, maxSpeed, tolerance;
 
     private boolean teleopMode;
@@ -37,8 +41,15 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
      */
     public void setTarget(double rotation) { this.targetRotation = rotation; }
 
+    public SparkMaxPIDSubsystem setPresets(PresetList<Double> presets) {
+        this.presets = presets;
+        return this;
+    }
+
     /** @return The current {@link Encoder} position of the {@link CANSparkMax} motor. */
     public double getRotation() { return encoder.getPosition(); }
+
+    public PresetList<Double> getPresets() { return presets; }
 
     /** @return The current Target {@link Encoder} position of the {@link CANSparkMax} motor. */
     public double getTargetRotation() { return targetRotation; }
@@ -151,6 +162,8 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     public SparkMaxPIDSubsystem(String name, int motorID) {
         this(name, new CANSparkMax(motorID, kBrushless), 0.01, 0, 0);
     }
+
+    public Command resetEncoderCommand() { return this.runOnce(this::resetEncoder); }
 
     @Override
     public void periodic() {
