@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
+import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -44,6 +45,32 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     public SparkMaxPIDSubsystem setPresets(PresetList<Double> presets) {
         this.presets = presets;
         return this;
+    }
+
+    public SparkMaxPIDSubsystem nextPresetTarget() {
+        if (presets != null) {
+            setTarget(presets.nextPreset().getCurrentPreset());
+        }
+        return this;
+    }
+
+    public SparkMaxPIDSubsystem prevPresetTarget() {
+        if (presets != null) {
+            setTarget(presets.prevPreset().getCurrentPreset());
+        }
+        return this;
+    }
+
+    public Command nextPresetCommand() {
+        return this.runOnce(() -> {
+            nextPresetTarget();
+        });
+    }
+
+    public Command prevPresetCommand() {
+        return this.runOnce(() -> {
+            prevPresetTarget();
+        });
     }
 
     /** @return The current {@link Encoder} position of the {@link CANSparkMax} motor. */
@@ -114,6 +141,11 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     /** @return The maximum speed of the {@link PIDController}. */
     public double getMaxSpeed() {
         return maxSpeed;
+    }
+
+    public SparkMaxPIDSubsystem setPID(double p, double i, double d) {
+        controller.setPID(p, i, d);
+        return this;
     }
 
     /**
