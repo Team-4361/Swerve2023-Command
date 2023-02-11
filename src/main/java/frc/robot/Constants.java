@@ -93,6 +93,12 @@ public final class Constants {
     public static class ClimberArmValues {
         public static final int ROTATION_MOTOR_ID = 0;
         public static final int EXTENSION_MOTOR_ID = 1;
+
+        public static final int SERVO_ID = 2;
+        public static final int SOLENOID_ID = 3;
+
+        public static final double CLIMBER_ROTATION_SPEED = 0.5;
+        public static final double CLIMBER_EXTENSION_SPEED = 0.5;
     }
 
     public static class AutoValues {
