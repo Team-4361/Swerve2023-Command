@@ -40,6 +40,7 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         // Call this method at the very end!
         robotContainer = new RobotContainer();
+    
     }
 
 
@@ -99,6 +100,8 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         CommandScheduler.getInstance().cancelAll();
+        Robot.arm.getRotation().resetEncoder();
+        Robot.arm.getExtension().resetEncoder();
     }
 
 
@@ -107,6 +110,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
+        Robot.arm.getExtension().translateMotor(RobotContainer.xbox.getLeftY()/2);
+        Robot.arm.getRotation().translateMotor(-RobotContainer.xbox.getRightY());
     }
 
 

@@ -26,7 +26,7 @@ import static frc.robot.subsystems.SwerveDriveSubsystem.deadzone;
 public class RobotContainer {
     private final CommandJoystick xyStick = new CommandJoystick(Control.LEFT_STICK_ID);
     private final CommandJoystick zStick = new CommandJoystick(Control.RIGHT_STICK_ID);
-    private final CommandXboxController xbox = new CommandXboxController(Control.XBOX_CONTROLLER_ID);
+    public static final CommandXboxController xbox = new CommandXboxController(Control.XBOX_CONTROLLER_ID);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -61,16 +61,20 @@ public class RobotContainer {
 
         xyStick.button(8).onTrue(Robot.swerveDrive.toggleFieldOriented());
 
+        /* 
         xbox.rightTrigger().whileTrue(new RaiseClimberArmCommand());
         xbox.rightBumper().whileTrue(new ExtendClimberArmCommand());
         xbox.leftTrigger().whileTrue(new LowerClimberArmCommand());
         xbox.leftBumper().whileTrue(new RetractClimberArmCommand());
+*/
 
+        
         xbox.povLeft().whileTrue(Commands.runEnd(() -> {
             Robot.pump.set(0.45);
         }, () -> {
             Robot.pump.set(0);
         }));
+    
     }
 
 

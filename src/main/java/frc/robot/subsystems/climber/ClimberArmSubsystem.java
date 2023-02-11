@@ -16,8 +16,8 @@ import static frc.robot.Constants.ClimberArmValues.*;
 public class ClimberArmSubsystem extends SubsystemBase {
     private final SparkMaxPIDSubsystem extension, rotation;
     public ClimberArmSubsystem() {
-        this.extension = new SparkMaxPIDSubsystem("Climber Extension", 18);
-        this.rotation = new SparkMaxPIDSubsystem("Climber Rotation", 10);
+        this.extension = new SparkMaxPIDSubsystem("Climber Extension", 10);
+        this.rotation = new SparkMaxPIDSubsystem("Climber Rotation", 18);
     }
 
     public SparkMaxPIDSubsystem getExtension() { return extension; }
