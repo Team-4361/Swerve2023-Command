@@ -19,6 +19,6 @@ public class LowerArmCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Robot.armSubsystem.atTarget(ARM_ROTATION_TOLERANCE);
+        return Robot.armSubsystem.atTarget();
     }
 }

@@ -8,7 +8,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.util.camera.CameraModule;
+import frc.robot.util.camera.PhotonCameraModule;
 import frc.robot.subsystems.vision.CameraSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.climber.ClimberArmSubsystem;
@@ -16,6 +16,7 @@ import frc.robot.subsystems.fourbar.FourBarArmSubsystem;
 import frc.robot.subsystems.fourbar.FourBarGripperSubsystem;
 import frc.robot.subsystems.fourbar.FourBarWristSubsystem;
 
+import static frc.robot.Constants.FrontCamera.*;
 import static frc.robot.Constants.FrontCamera.CAMERA_NAME;
 
 
@@ -44,11 +45,9 @@ public class Robot extends TimedRobot {
     public void robotInit() {
         // Call this method at the very end!
         swerveDrive = new SwerveDriveSubsystem();
-        cameras = new CameraSubsystem(new CameraModule(CAMERA_NAME));
+        cameras = new CameraSubsystem(new PhotonCameraModule(CAMERA_CONFIG));
 
         robotContainer = new RobotContainer();
-
-        cameras.addCamera(new CameraModule(CAMERA_NAME));
     }
 
 

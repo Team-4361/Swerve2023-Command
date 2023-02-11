@@ -7,6 +7,7 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import frc.robot.util.camera.PhotonCameraConfig;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 
@@ -33,7 +34,15 @@ public final class Constants {
         public static final int TAG_PIPELINE = 0;
         public static final int CUBE_PIPELINE = 1;
         public static final int CONE_PIPELINE = 2;
-        public static final int DRIVER_PIPELINE = 3;
+
+        public static final PhotonCameraConfig CAMERA_CONFIG = new PhotonCameraConfig()
+                .setCameraName(CAMERA_NAME)
+                .setCameraHeight(CAMERA_HEIGHT_METERS)
+                .setTargetHeight(TARGET_HEIGHT_METERS)
+                .setCameraPitch(CAMERA_PITCH)
+                .setAprilTagPipeline(TAG_PIPELINE)
+                .setCubePipeline(CUBE_PIPELINE)
+                .setConePipeline(CONE_PIPELINE);
     }
 
     public static class MotorFlips {

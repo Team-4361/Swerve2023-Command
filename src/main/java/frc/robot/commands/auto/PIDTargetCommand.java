@@ -7,7 +7,7 @@ import edu.wpi.first.math.geometry.*;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
-import frc.robot.util.camera.CameraModule;
+import frc.robot.util.camera.PhotonCameraModule;
 
 import java.util.function.Supplier;
 
@@ -54,7 +54,7 @@ public class PIDTargetCommand extends CommandBase {
         addRequirements(Robot.swerveDrive);
     }
 
-    public PIDTargetCommand(CameraModule camera) {
+    public PIDTargetCommand(PhotonCameraModule camera) {
         this(camera::getTrackedPose, DEFAULT_POSE);
     }
 
