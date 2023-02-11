@@ -13,6 +13,10 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
 import frc.robot.Constants.FrontCamera;
 import frc.robot.commands.auto.PIDTargetCommand;
+import frc.robot.commands.fourbar.climber.ExtendClimberArmCommand;
+import frc.robot.commands.fourbar.climber.LowerClimberArmCommand;
+import frc.robot.commands.fourbar.climber.RaiseClimberArmCommand;
+import frc.robot.commands.fourbar.climber.RetractClimberArmCommand;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
 import static frc.robot.Robot.cameras;
@@ -62,6 +66,11 @@ public class RobotContainer {
         xbox.b().whileTrue(new PIDTargetCommand(cameras.getCamera(FrontCamera.CAMERA_NAME)));
 
         xbox.a().onTrue(Robot.swerveDrive.resetGyroCommand());
+
+        xbox.rightTrigger().whileTrue(new RaiseClimberArmCommand());
+        xbox.rightBumper().whileTrue(new ExtendClimberArmCommand());
+        xbox.leftTrigger().whileTrue(new LowerClimberArmCommand());
+        xbox.leftBumper().whileTrue(new RetractClimberArmCommand());
     }
 
 
