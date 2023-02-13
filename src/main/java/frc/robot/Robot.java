@@ -8,16 +8,15 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
-import frc.robot.util.camera.PhotonCameraModule;
-import frc.robot.subsystems.vision.CameraSubsystem;
-import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
+import frc.robot.subsystems.SwerveDriveSubsystem;
 import frc.robot.subsystems.climber.ClimberArmSubsystem;
-import frc.robot.subsystems.fourbar.FourBarArmSubsystem;
-import frc.robot.subsystems.fourbar.FourBarGripperSubsystem;
-import frc.robot.subsystems.fourbar.FourBarWristSubsystem;
 
-import static frc.robot.Constants.FrontCamera.*;
-import static frc.robot.Constants.FrontCamera.CAMERA_NAME;
+import frc.robot.subsystems.vacuum.VacuumSubsystem;
+import frc.robot.subsystems.vision.CameraSubsystem;
+import org.photonvision.PhotonCamera;
+
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 
 /**
@@ -30,11 +29,9 @@ public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
 
     public static SwerveDriveSubsystem swerveDrive = new SwerveDriveSubsystem();
-    public static CameraSubsystem cameras = new CameraSubsystem();
-    public static ClimberArmSubsystem climberSubsystem = new ClimberArmSubsystem();
-    public static FourBarArmSubsystem armSubsystem = new FourBarArmSubsystem();
-    public static FourBarGripperSubsystem gripperSubsystem = new FourBarGripperSubsystem();
-    public static FourBarWristSubsystem wristSubsystem = new FourBarWristSubsystem();
+    public static ClimberArmSubsystem arm = new ClimberArmSubsystem();
+    public static VacuumSubsystem pump = new VacuumSubsystem();
+    public static CameraSubsystem camera = new CameraSubsystem();
 
     /**
      * This method is run when the robot is first started up and should be used for any
@@ -43,9 +40,6 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         // Call this method at the very end!
-        swerveDrive = new SwerveDriveSubsystem();
-        cameras = new CameraSubsystem(new PhotonCameraModule(CAMERA_CONFIG));
-
         robotContainer = new RobotContainer();
     }
 
@@ -71,7 +65,15 @@ public class Robot extends TimedRobot {
      * This method is called once each time the robot enters Disabled mode.
      */
     @Override
-    public void disabledInit() { CommandScheduler.getInstance().cancelAll(); }
+    public void disabledInit() {
+        CommandScheduler.getInstance().cancelAll();
+    }
+
+
+    @Override
+    public void disabledPeriodic() {
+    }
+
 
     /**
      * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
@@ -86,20 +88,60 @@ public class Robot extends TimedRobot {
         }
     }
 
+
+    /**
+     * This method is called periodically during autonomous.
+     */
     @Override
-    public void teleopInit() { CommandScheduler.getInstance().cancelAll(); }
+    public void autonomousPeriodic() {
+    }
+
+
+    @Override
+    public void teleopInit() {
+        CommandScheduler.getInstance().cancelAll();
+        Robot.arm.getRotation().resetEncoder();
+        Robot.arm.getExtension().resetEncoder();
+    }
+
+
+    /**
+     * This method is called periodically during operator control.
+     */
+    @Override
+    public void teleopPeriodic() {
+        Robot.arm.getExtension().translateMotor(RobotContainer.xbox.getLeftY()/2);
+        Robot.arm.getRotation().translateMotor(-RobotContainer.xbox.getRightY());
+    }
 
 
     @Override
     public void testInit() {
         // Cancels all running commands at the start of test mode.
         CommandScheduler.getInstance().cancelAll();
+    }
 
-        Command testCommand = robotContainer.getTestCommand();
 
-        // schedule the autonomous command (example)
-        if (testCommand != null) {
-            testCommand.schedule();
-        }
+    /**
+     * This method is called periodically during test mode.
+     */
+    @Override
+    public void testPeriodic() {
+    }
+
+
+    /**
+     * This method is called once when the robot is first started up.
+     */
+    @Override
+    public void simulationInit() {
+    }
+
+
+    /**
+     * This method is called periodically whilst in simulation.
+     */
+    @Override
+    public void simulationPeriodic() {
     }
 }

@@ -11,12 +11,10 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
-import frc.robot.Constants.FrontCamera;
-import frc.robot.commands.auto.PIDTargetCommand;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
-import static frc.robot.Robot.cameras;
-import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
+import static frc.robot.Constants.VacuumValues.VACUUM_PUMP_SPEED;
+import static frc.robot.subsystems.SwerveDriveSubsystem.deadzone;
 
 
 /**
@@ -28,7 +26,7 @@ import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
 public class RobotContainer {
     private final CommandJoystick xyStick = new CommandJoystick(Control.LEFT_STICK_ID);
     private final CommandJoystick zStick = new CommandJoystick(Control.RIGHT_STICK_ID);
-    private final CommandXboxController xbox = new CommandXboxController(Control.XBOX_CONTROLLER_ID);
+    public static final CommandXboxController xbox = new CommandXboxController(Control.XBOX_CONTROLLER_ID);
 
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
@@ -45,9 +43,7 @@ public class RobotContainer {
                     deadzone(zStick.getTwist(), 0.20)
             );
         }));
-        
     }
-
 
     /**
      * Use this method to define your trigger->command mappings. Triggers can be created via the
@@ -59,9 +55,13 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xbox.b().whileTrue(new PIDTargetCommand(cameras.getCamera(FrontCamera.CAMERA_NAME)));
-
         xbox.a().onTrue(Robot.swerveDrive.resetGyroCommand());
+
+        xyStick.button(8).onTrue(Robot.swerveDrive.toggleFieldOriented());
+        
+        xbox.povLeft().whileTrue(Commands.runEnd(() -> {
+            Robot.pump.activate(VACUUM_PUMP_SPEED);
+        }, () -> Robot.pump.deactivate()));
     }
 
 
@@ -71,23 +71,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        // test moving to april tag ID #1
-        //return new PIDTargetCommand(1);
-        return Robot.swerveDrive.resetGyroCommand()
-                ////.andThen(
-                     //   Robot.swerveDrive.followTrajectoryCommand(PathPlanner.loadPath("Test Path", new PathConstraints(3, 3)))
-                //)
-                .andThen(new PIDTargetCommand(cameras.getCamera(FrontCamera.CAMERA_NAME)));
-
-    }
-
-    public Command getTestCommand() {
-        return Commands.run(() -> {
-            Robot.swerveDrive.robotDrive(0, 0.5, 0, 0);
-        }).andThen(Commands.waitSeconds(5)).andThen(
-                Commands.run(() -> {
-                    Robot.swerveDrive.stop();
-                })
-        );
+        return null;
     }
 }

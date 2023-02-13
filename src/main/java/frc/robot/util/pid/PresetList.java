@@ -31,7 +31,7 @@ public class PresetList<T> extends ArrayList<T> {
 
     public PresetList<T> prevPreset() {
         if (index-1 >= 0) {
-            index++;
+            index--;
         }
         return this;
     }
