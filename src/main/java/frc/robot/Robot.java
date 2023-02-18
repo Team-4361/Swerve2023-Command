@@ -43,7 +43,6 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         // Call this method at the very end!
-        swerveDrive = new SwerveDriveSubsystem();
         cameras = new CameraSubsystem(new PhotonCameraModule(CAMERA_CONFIG));
 
         robotContainer = new RobotContainer();
