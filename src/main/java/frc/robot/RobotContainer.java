@@ -13,6 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
+import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
 import static frc.robot.Constants.VacuumValues.VACUUM_PUMP_SPEED;
 import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
 
@@ -55,13 +56,18 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xbox.a().onTrue(Robot.swerveDrive.resetGyroCommand());
-
+        xyStick.button(10).onTrue(Robot.swerveDrive.resetGyroCommand());
         xyStick.button(8).onTrue(Robot.swerveDrive.toggleFieldOriented());
-        
-        xbox.povLeft().whileTrue(Commands.runEnd(() -> {
-            Robot.pump.activate(VACUUM_PUMP_SPEED);
-        }, () -> Robot.pump.deactivate()));
+
+        xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)));
+        xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(1)));
+        xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(2)));
+        xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(3)));
+
+        xbox.leftBumper().whileTrue(Robot.pump.runEnd(
+                () -> Robot.pump.activate(0.45),
+                () -> Robot.pump.deactivate())
+        );
     }
 
 

@@ -8,6 +8,7 @@ package frc.robot;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.util.math.GearRatio;
+import frc.robot.util.pid.PresetGroup;
 import frc.robot.util.pid.PresetList;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
@@ -86,6 +87,11 @@ public final class Constants {
         public static final PresetList<Double> ROTATION_PRESETS = new PresetList<>(1.0, 2.0, 3.0, 4.0);
         public static final PresetList<Double> EXTENSION_PRESETS = new PresetList<>(1.0, 2.0, 3.0, 4.0);
         public static final PresetList<Double> WRIST_PRESETS = new PresetList<>(1.0, 2.0, 3.0, 4.0);
+
+        public static final PresetGroup CLIMBER_PRESET_GROUP = new PresetGroup()
+                .addPreset("Climber Rotation", ROTATION_PRESETS)
+                .addPreset("Climber Extension", EXTENSION_PRESETS)
+                .addPreset("Climber Wrist", WRIST_PRESETS);
     }
 
 

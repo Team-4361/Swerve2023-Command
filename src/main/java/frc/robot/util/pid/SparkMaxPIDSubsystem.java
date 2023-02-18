@@ -211,5 +211,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         SmartDashboard.putNumber(name + " Rotation", getRotation());
         SmartDashboard.putNumber(name + " Target Rotation", getTargetRotation());
         SmartDashboard.putBoolean(name + " At Target", atTarget());
+
+        setTarget(presets.getCurrentPreset());
     }
 }
