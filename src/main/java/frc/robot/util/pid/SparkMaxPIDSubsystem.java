@@ -1,7 +1,6 @@
 package frc.robot.util.pid;
 
-import com.revrobotics.CANSparkMax;
-import com.revrobotics.RelativeEncoder;
+import com.revrobotics.*;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.motorcontrol.Spark;
@@ -167,19 +166,25 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         return inTolerance(getRotation(), getTargetRotation(), tolerance);
     }
 
-    public SparkMaxPIDSubsystem(String name, CANSparkMax motor, double kP, double kI, double kD) {
-        assert motor.getMotorType() != kBrushed : "PID Motor Cannot Be Brushed!";
 
+    public SparkMaxPIDSubsystem(String name, CANSparkMax motor, CANSparkMaxLowLevel.MotorType motorType, double kP, double kI, double kD) {
+        RelativeEncoder encoder1;
         this.controller = new PIDController(kP, kI, kD);
 
         this.motor = motor;
         this.name = name;
-        this.encoder = motor.getEncoder();
         this.targetRotation = 0;
         this.teleopMode = false;
         this.maxSpeed = 1;
         this.tolerance = 0.5;
 
+        if (motorType == kBrushed) {
+            encoder1 = motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 8192);
+        } else {
+            encoder1 = motor.getEncoder();
+        }
+
+        this.encoder = encoder1;
         controller.setP(kP);
         controller.setI(kI);
         controller.setD(kD);
@@ -188,11 +193,11 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     }
 
     public SparkMaxPIDSubsystem(String name, int motorID, double kP, double kI, double kD) {
-        this(name, new CANSparkMax(motorID, kBrushless), kP, kI, kD);
+        this(name, new CANSparkMax(motorID, kBrushless), kBrushless, kP, kI, kD);
     }
 
     public SparkMaxPIDSubsystem(String name, int motorID) {
-        this(name, new CANSparkMax(motorID, kBrushless), 0.01, 0, 0);
+        this(name, new CANSparkMax(motorID, kBrushless), kBrushless, 0.01, 0, 0);
     }
 
     public Command resetEncoderCommand() { return this.runOnce(this::resetEncoder); }

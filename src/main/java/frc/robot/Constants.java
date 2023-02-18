@@ -7,9 +7,8 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import frc.robot.util.camera.PhotonCameraConfig;
-import frc.robot.util.pid.PresetList;
 
+import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 
 /**
@@ -27,30 +26,17 @@ public final class Constants {
      * AprilTag tracking system.
      */
     public static class FrontCamera {
-        public static final String CAMERA_NAME = "photoncamera";
-        public static final double CAMERA_HEIGHT_METERS = 0.60;
-        public static final double TARGET_HEIGHT_METERS = 0.60;
-        public static final double CAMERA_PITCH = 0;
 
         public static final int TAG_PIPELINE = 0;
         public static final int CUBE_PIPELINE = 1;
         public static final int CONE_PIPELINE = 2;
-
-        public static final PhotonCameraConfig CAMERA_CONFIG = new PhotonCameraConfig()
-                .setCameraName(CAMERA_NAME)
-                .setCameraHeight(CAMERA_HEIGHT_METERS)
-                .setTargetHeight(TARGET_HEIGHT_METERS)
-                .setCameraPitch(CAMERA_PITCH)
-                .setAprilTagPipeline(TAG_PIPELINE)
-                .setCubePipeline(CUBE_PIPELINE)
-                .setConePipeline(CONE_PIPELINE);
+        public static final int DRIVER_PIPELINE = 3;
     }
 
-    public static class MotorFlips {
-        public static final boolean FOUR_BAR_MOTOR_FLIPPED = false;
-        public static final boolean FOUR_BAR_GRIPPER_FLIPPED = false;
-        public static final boolean CLIMBER_EXTENSION_FLIPPED = false;
-        public static final boolean CLIMBER_ROTATION_FLIPPED = false;
+    public static class VacuumValues {
+        public static int VACUUM_MOTOR_ID = 20;
+        public static double VACUUM_PUMP_SPEED = 0.45;
+        public static MotorType VACUUM_MOTOR_TYPE = kBrushed;
     }
 
     public static class FourBarArmValues {
@@ -71,34 +57,26 @@ public final class Constants {
 
         public static final double ARM_GEAR_RATIO = 686; /*:1*/
 
-        public static final PresetList<Double> ARM_PRESETS = new PresetList<>(
-                0.0, // fully lowered
-                134.0, // first hook
-                268.0 // second hook
-        );
+        public static final double ARM_ANGLE_DEGREES = 10;
     }
 
     public static class FourBarWristValues {
-        public static final int WRIST_SERVO_ID = 2;
+        public static final int WRIST_GEAR_RATIO = 30;
+        public static final int WRIST_MOTOR_ID = 5;
 
-        public static final int WRIST_ANGLE_TOLERANCE = 2;
-        public static final PresetList<Double> WRIST_PRESETS = new PresetList<>(5.0, 10.0, 15.0, 20.0);
-
+        public static final double[] WRIST_ANGLE_PRESETS = new double[]{
+                5,
+                10,
+                15,
+                20
+        };
     }
     public static class FourBarGripperValues {
         public static final int GRIPPER_MOTOR_VALUE_ID = 0;
-
-        public static final double GRIPPER_SPEED = 0.5;
     }
     public static class ClimberArmValues {
         public static final int ROTATION_MOTOR_ID = 0;
         public static final int EXTENSION_MOTOR_ID = 1;
-
-        public static final int SERVO_ID = 2;
-        public static final int SOLENOID_ID = 3;
-
-        public static final double CLIMBER_ROTATION_SPEED = 0.5;
-        public static final double CLIMBER_EXTENSION_SPEED = 0.5;
     }
 
     public static class AutoValues {
@@ -106,28 +84,6 @@ public final class Constants {
         public static final Constraints X_CONSTRAINTS = new Constraints(0.2, 0.2);
         public static final Constraints Y_CONSTRAINTS = new Constraints(0.2,0.2);
         public static final Constraints OMEGA_CONSTRAINTS = new Constraints(0.2, 0.2);
-    }
-
-    public static class Arm {
-        public static final int ARM_MOTOR_ID = 2;
-
-        public static final double ARM_FEED_FWD = 1;
-
-        public static final double[] ARM_POSITIONS = new double[]{
-                // TODO: change numbers to match actual positions
-                5,
-                10,
-                15
-        };
-    }
-
-    public static class Wrist {
-        public static final int WRIST_MOTOR_ID = 3;
-    }
-
-    public static class Gripper {
-        public static final int GRIPPER_MOTOR_ID = 4;
-        public static final int GRIPPER_PROXIMITY_SENSOR_ID = 5;
     }
 
     /**
@@ -139,16 +95,18 @@ public final class Constants {
         /** The offset of the Front Right Motor */
         //public static final double FR_OFFSET = 0;
 
-        public static final double FR_OFFSET = (-2.38)+0 - (2 * Math.PI) + (Math.PI);
+        public static final double FR_OFFSET = ((-2.38)+0)+(Math.PI/2) - (2 * Math.PI) + (Math.PI);
 
         /** The offset of the Front Left Motor */
-        public static final double FL_OFFSET = (9.401)+0.045647 - (Math.PI / 2);
+        public static final double FL_OFFSET = ((9.401)+0.045647)+(Math.PI/2) - (Math.PI / 2);
 
         /** The offset of the Back Right Motor */
-        public static final double BR_OFFSET =  (-3.345)+0.009 - (Math.PI / 2) - (2 * Math.PI);
+        public static final double BR_OFFSET =  ((-3.345)+0.009)+(Math.PI/2) - (Math.PI / 2) - (2 * Math.PI);
+
+
 
         /** The offset of the Back Left Motor */
-        public static final double BL_OFFSET = (6.12)+0.339057 - (2 * Math.PI) - (Math.PI / 2);
+        public static final double BL_OFFSET = ((6.12)+0.339057)+(Math.PI/2) - (2 * Math.PI) - (Math.PI / 2);
 
 
         /** The dead-zone where anything below this value, nothing will happen. */

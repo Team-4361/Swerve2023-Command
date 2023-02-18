@@ -1,22 +1,21 @@
-package frc.robot.commands.fourbar.climber;
+package frc.robot.commands.climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 
-import static frc.robot.Constants.ClimberArmValues.CLIMBER_EXTENSION_SPEED;
 
 public class RetractClimberArmCommand extends CommandBase {
 
     public RetractClimberArmCommand(){
-        addRequirements(Robot.climberSubsystem);
+        addRequirements(Robot.arm);
     }
     @Override
     public void initialize(){
-        Robot.climberSubsystem.getExtension().translateMotor(-CLIMBER_EXTENSION_SPEED);
+        Robot.arm.getExtension().translateMotor(-0.5);
     }
     @Override
     public void end(boolean interrupted){
-        Robot.climberSubsystem.getExtension().translateMotor(0);
+        Robot.arm.getExtension().translateMotor(0);
     }
     @Override
     public boolean isFinished(){

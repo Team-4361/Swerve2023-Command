@@ -32,8 +32,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private final SwerveOdometry odometry;
     private Rotation2d robotHeading;
 
-    private Field2d simField;
+    private boolean fieldOriented = true;
 
+    private Field2d simField;
     public Command followTrajectoryCommand(PathPlannerTrajectory trajectory) {
         return new PPSwerveControllerCommand(
                 trajectory,
@@ -44,6 +45,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                 new PIDController(0,0,0),
                 swerveChassis::setStates
         );
+    }
+
+    public Command toggleFieldOriented() {
+        return this.runOnce(() -> {
+            fieldOriented = !fieldOriented;
+        }).andThen(resetGyroCommand());
     }
 
     public Command resetGyroCommand() {
@@ -84,11 +91,9 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         // Update the robot speed and other information.
-        robotHeading = new Rotation2d(-gyro.getRotation2d().getRadians());
+        robotHeading = new Rotation2d(gyro.getRotation2d().getRadians());
 
-        if (odometry.shouldUpdate()) {
-            odometry.update();
-        }
+        if (odometry.shouldUpdate()) odometry.update();
 
         simField.setRobotPose(odometry.getPose());
 
@@ -125,7 +130,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * @param omega Yaw rad/s (+ left, - right)
      */
     public void autoDrive(double vX, double vY, double omega) {
-        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vX, -vY, -omega, odometry.getPose().getRotation()));
+        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(-vX, -vY, omega, fieldOriented ? odometry.getPose().getRotation() : new Rotation2d(0)));
     }
 
     /**
@@ -139,7 +144,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * @param omega Yaw rad/s (+ left, - right)
      */
     public void robotDrive(double vX, double vY, double omega, double heading) {
-        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(vY, -vX, -omega, new Rotation2d(heading)));
+        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(-vX, -vY, omega, new Rotation2d(heading)));
     }
 
     public void driveForward() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0.8, 0, 0, Rotation2d.fromDegrees(0))); }

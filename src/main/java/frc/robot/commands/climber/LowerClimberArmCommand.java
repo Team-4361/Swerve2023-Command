@@ -1,22 +1,20 @@
-package frc.robot.commands.fourbar.climber;
+package frc.robot.commands.climber;
 
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 
-import static frc.robot.Constants.ClimberArmValues.CLIMBER_ROTATION_SPEED;
-
 public class LowerClimberArmCommand extends CommandBase {
 
     public LowerClimberArmCommand(){
-        addRequirements(Robot.climberSubsystem);
+        addRequirements(Robot.arm);
     }
     @Override
     public void initialize(){
-        Robot.climberSubsystem.getRotation().translateMotor(-CLIMBER_ROTATION_SPEED);
+        Robot.arm.getRotation().translateMotor(-0.5);
     }
     @Override
     public void end(boolean interrupted){
-        Robot.climberSubsystem.getRotation().translateMotor(0);
+        Robot.arm.getRotation().translateMotor(0);
     }
     @Override
     public boolean isFinished(){
