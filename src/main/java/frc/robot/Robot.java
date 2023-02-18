@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.climber.ClimberArmSubsystem;
 
+import frc.robot.subsystems.climber.ClimberWristSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.vacuum.VacuumSubsystem;
 import frc.robot.subsystems.vision.CameraSubsystem;
@@ -25,8 +26,10 @@ public class Robot extends TimedRobot {
 
     public static SwerveDriveSubsystem swerveDrive = new SwerveDriveSubsystem();
     public static ClimberArmSubsystem arm = new ClimberArmSubsystem();
+    public static ClimberWristSubsystem wrist = new ClimberWristSubsystem();
     public static VacuumSubsystem pump = new VacuumSubsystem();
     public static CameraSubsystem camera = new CameraSubsystem();
+
 
     /**
      * This method is run when the robot is first started up and should be used for any

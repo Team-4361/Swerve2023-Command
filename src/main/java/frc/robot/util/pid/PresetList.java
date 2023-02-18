@@ -1,12 +1,15 @@
 package frc.robot.util.pid;
 
 import edu.wpi.first.math.MathUtil;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.Objects;
 
 public class PresetList<T> extends ArrayList<T> {
     private double index = 0;
+    private String name;
 
     @SafeVarargs
     public PresetList(T... elements) {

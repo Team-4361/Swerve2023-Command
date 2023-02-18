@@ -7,6 +7,8 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import frc.robot.util.math.GearRatio;
+import frc.robot.util.pid.PresetList;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
@@ -75,9 +77,17 @@ public final class Constants {
         public static final int GRIPPER_MOTOR_VALUE_ID = 0;
     }
     public static class ClimberArmValues {
-        public static final int ROTATION_MOTOR_ID = 0;
-        public static final int EXTENSION_MOTOR_ID = 1;
+        public static final int ROTATION_MOTOR_ID = 10;
+        public static final int EXTENSION_MOTOR_ID = 18;
+        public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029);
     }
+
+    public static class ClimberPresets {
+        public static final PresetList<Double> ROTATION_PRESETS = new PresetList<>(1.0, 2.0, 3.0, 4.0);
+        public static final PresetList<Double> EXTENSION_PRESETS = new PresetList<>(1.0, 2.0, 3.0, 4.0);
+        public static final PresetList<Double> WRIST_PRESETS = new PresetList<>(1.0, 2.0, 3.0, 4.0);
+    }
+
 
     public static class AutoValues {
         // fancy calculus type stuff, not sure what to do with it but play with the numbers ;)
