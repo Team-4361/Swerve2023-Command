@@ -14,7 +14,6 @@ public class PresetGroup extends HashMap<String, PresetList<Double>> {
         return get(name).getCurrentPreset();
     }
 
-
     public PresetGroup setCurrentPreset(int index) {
         this.index = index;
         this.forEach((name, preset) -> preset.setCurrentPreset(index));

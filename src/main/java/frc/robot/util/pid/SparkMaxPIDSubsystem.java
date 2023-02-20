@@ -9,6 +9,8 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.math.GearRatio;
 
+import java.util.function.Supplier;
+
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 import static edu.wpi.first.math.MathUtil.clamp;
@@ -27,7 +29,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     private final String name;
 
     // TODO: Add preset support to all applicable commands.
-    private PresetList<Double> presets;
+    private Supplier<Double> presetSupplier;
 
     private double targetRotation, maxSpeed, tolerance;
 
@@ -42,41 +44,16 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
      */
     public void setTarget(double rotation) { this.targetRotation = rotation; }
 
-    public SparkMaxPIDSubsystem setPresets(PresetList<Double> presets) {
-        this.presets = presets;
+    public SparkMaxPIDSubsystem setPresetSupplier(Supplier<Double> presets) {
+        this.presetSupplier = presets;
         return this;
     }
 
-    public SparkMaxPIDSubsystem nextPresetTarget() {
-        if (presets != null) {
-            setTarget(presets.nextPreset().getCurrentPreset());
-        }
-        return this;
-    }
-
-    public SparkMaxPIDSubsystem prevPresetTarget() {
-        if (presets != null) {
-            setTarget(presets.prevPreset().getCurrentPreset());
-        }
-        return this;
-    }
-
-    public Command nextPresetCommand() {
-        return this.runOnce(() -> {
-            nextPresetTarget();
-        });
-    }
-
-    public Command prevPresetCommand() {
-        return this.runOnce(() -> {
-            prevPresetTarget();
-        });
-    }
 
     /** @return The current {@link Encoder} position of the {@link CANSparkMax} motor. */
     public double getRotation() { return encoder.getPosition(); }
 
-    public PresetList<Double> getPresets() { return presets; }
+    public Supplier<Double> getPresetSupplier() { return presetSupplier; }
 
     /** @return The current Target {@link Encoder} position of the {@link CANSparkMax} motor. */
     public double getTargetRotation() { return targetRotation; }
@@ -168,8 +145,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     }
 
 
-    public SparkMaxPIDSubsystem(String name, CANSparkMax motor, CANSparkMaxLowLevel.MotorType motorType, double kP, double kI, double kD) {
-        RelativeEncoder encoder1;
+    public SparkMaxPIDSubsystem(String name, CANSparkMax motor, double kP, double kI, double kD) {
         this.controller = new PIDController(kP, kI, kD);
 
         this.motor = motor;
@@ -179,13 +155,12 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         this.maxSpeed = 1;
         this.tolerance = 0.5;
 
-        if (motorType == kBrushed) {
-            encoder1 = motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 8192);
+        if (motor.getMotorType() == kBrushed) {
+            encoder = motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 8192);
         } else {
-            encoder1 = motor.getEncoder();
+            encoder = motor.getEncoder();
         }
 
-        this.encoder = encoder1;
         controller.setP(kP);
         controller.setI(kI);
         controller.setD(kD);
@@ -194,11 +169,11 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     }
 
     public SparkMaxPIDSubsystem(String name, int motorID, double kP, double kI, double kD) {
-        this(name, new CANSparkMax(motorID, kBrushless), kBrushless, kP, kI, kD);
+        this(name, new CANSparkMax(motorID, kBrushless), kP, kI, kD);
     }
 
     public SparkMaxPIDSubsystem(String name, int motorID) {
-        this(name, new CANSparkMax(motorID, kBrushless), kBrushless, 0.01, 0, 0);
+        this(name, new CANSparkMax(motorID, kBrushless), 0.01, 0, 0);
     }
 
     public Command resetEncoderCommand() { return this.runOnce(this::resetEncoder); }
@@ -212,6 +187,6 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         SmartDashboard.putNumber(name + " Target Rotation", getTargetRotation());
         SmartDashboard.putBoolean(name + " At Target", atTarget());
 
-        setTarget(presets.getCurrentPreset());
+        setTarget(presetSupplier.get());
     }
 }

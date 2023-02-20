@@ -19,7 +19,7 @@ public class SparkMaxAngledPIDSubsystem extends SparkMaxPIDSubsystem {
 
     @Override
     public SparkMaxAngledPIDSubsystem setTolerance(double angle) {
-        super.setTolerance(gearRatio.degreesToMotorRotations(angle));
+        super.setTolerance(angle);
         return this;
     }
 
@@ -28,8 +28,8 @@ public class SparkMaxAngledPIDSubsystem extends SparkMaxPIDSubsystem {
         super.setTarget(gearRatio.degreesToMotorRotations(angle));
     }
 
-    public SparkMaxAngledPIDSubsystem(String name, GearRatio ratio, CANSparkMax motor, CANSparkMaxLowLevel.MotorType motorType, double kP, double kI, double kD) {
-        super(name, motor, motorType, kP, kI, kD);
+    public SparkMaxAngledPIDSubsystem(String name, GearRatio ratio, CANSparkMax motor, double kP, double kI, double kD) {
+        super(name, motor, kP, kI, kD);
         this.gearRatio = ratio;
     }
 
@@ -42,6 +42,4 @@ public class SparkMaxAngledPIDSubsystem extends SparkMaxPIDSubsystem {
         super(name, motorID);
         this.gearRatio = ratio;
     }
-
-
 }

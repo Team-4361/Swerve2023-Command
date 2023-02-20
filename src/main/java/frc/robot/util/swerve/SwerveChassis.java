@@ -13,29 +13,7 @@ import java.util.Map;
 import static frc.robot.Constants.Chassis.*;
 
 public class SwerveChassis {
-    private static final Translation2d SWERVE_FL_POSITION =
-            new Translation2d(SWERVE_CHASSIS_SIDE_LENGTH / 2, SWERVE_CHASSIS_SIDE_LENGTH / 2);
-
-    private static final Translation2d SWERVE_FR_POSITION =
-            new Translation2d(SWERVE_CHASSIS_SIDE_LENGTH / 2, -SWERVE_CHASSIS_SIDE_LENGTH / 2);
-
-    private static final Translation2d SWERVE_BL_POSITION =
-            new Translation2d(-SWERVE_CHASSIS_SIDE_LENGTH / 2, SWERVE_CHASSIS_SIDE_LENGTH / 2);
-
-    private static final Translation2d SWERVE_BR_POSITION =
-            new Translation2d(-SWERVE_CHASSIS_SIDE_LENGTH / 2, -SWERVE_CHASSIS_SIDE_LENGTH / 2);
-
-    private static final SwerveDriveKinematics SWERVE_KINEMATICS =
-            new SwerveDriveKinematics(
-                    SWERVE_FL_POSITION,
-                    SWERVE_FR_POSITION,
-                    SWERVE_BL_POSITION,
-                    SWERVE_BR_POSITION
-            );
-
-    private static double average(double... vals)  {
-        return Arrays.stream(vals).sum() / vals.length;
-    }
+    private final SwerveDriveKinematics swerveKinematics;
 
     private static final String NAME_FL = "FL";
     private static final String NAME_FR = "FR";
@@ -46,48 +24,24 @@ public class SwerveChassis {
     private final SwerveModule frontRight;
     private final SwerveModule backLeft;
     private final SwerveModule backRight;
-    public SwerveChassis() {
-        this(
-                new SwerveModule(
-                        FL_DRIVE_ID,
-                        FL_TURN_ID,
-                        FL_DIO_ENCODER_PORT,
-                        FL_OFFSET,
-                        FL_ERROR_FACTOR
-                ),
-                new SwerveModule(
-                        FR_DRIVE_ID,
-                        FR_TURN_ID,
-                        FR_DIO_ENCODER_PORT,
-                        FR_OFFSET,
-                        FR_ERROR_FACTOR
-                ),
-                new SwerveModule(
-                        BL_DRIVE_ID,
-                        BL_TURN_ID,
-                        BL_DIO_ENCODER_PORT,
-                        BL_OFFSET,
-                        BL_ERROR_FACTOR
-                ),
-                new SwerveModule(
-                        BR_DRIVE_ID,
-                        BR_TURN_ID,
-                        BR_DIO_ENCODER_PORT,
-                        BR_OFFSET,
-                        BR_ERROR_FACTOR
-                )
-        );
-        updateDashboard();
-    }
 
     public SwerveChassis(SwerveModule frontLeft,
                          SwerveModule frontRight,
                          SwerveModule backLeft,
-                         SwerveModule backRight) {
+                         SwerveModule backRight,
+                         double sideLength) {
         this.frontRight = frontRight;
         this.frontLeft = frontLeft;
         this.backRight = backRight;
         this.backLeft = backLeft;
+        
+        swerveKinematics = new SwerveDriveKinematics(
+                new Translation2d(sideLength / 2, sideLength / 2),
+                new Translation2d(sideLength / 2, -sideLength / 2),
+                new Translation2d(-sideLength / 2, sideLength / 2),
+                new Translation2d(-sideLength / 2, -sideLength / 2)
+        );
+        
         updateDashboard();
     }
 
@@ -110,13 +64,12 @@ public class SwerveChassis {
         return backLeft;
     }
 
-
     public SwerveModule getBackRight() {
         return backRight;
     }
 
     public SwerveDriveKinematics getSwerveKinematics() {
-        return SWERVE_KINEMATICS;
+        return swerveKinematics;
     }
 
     public HashMap<String, SwerveModuleState> getSwerveModuleStates() {
@@ -145,7 +98,7 @@ public class SwerveChassis {
     }
 
     public void drive(ChassisSpeeds speeds) {
-        setStates(SWERVE_KINEMATICS.toSwerveModuleStates(speeds));
+        setStates(swerveKinematics.toSwerveModuleStates(speeds));
         updateDashboard();
     }
 

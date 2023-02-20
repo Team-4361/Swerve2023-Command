@@ -1,4 +1,4 @@
-package frc.robot.subsystems;
+package frc.robot.subsystems.fourbar;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
@@ -27,7 +27,6 @@ public class FourBarWristSubsystem extends SparkMaxPIDSubsystem {
         super(
                 "FourBarWrist",
                 new CANSparkMax(WRIST_MOTOR_ID, kBrushed),
-                kBrushed,
                 0.01,
                 0,
                 0

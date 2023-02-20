@@ -2,7 +2,7 @@ package frc.robot.util.math;
 
 public class GearRatio {
 
-    private double ratio;
+    private final double ratio;
     public GearRatio(double ratio) {
         this.ratio = ratio;
     }

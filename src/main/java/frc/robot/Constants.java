@@ -10,6 +10,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.util.math.GearRatio;
 import frc.robot.util.pid.PresetGroup;
 import frc.robot.util.pid.PresetList;
+import frc.robot.util.swerve.SwerveModule;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
@@ -65,7 +66,7 @@ public final class Constants {
 
     public static class FourBarWristValues {
         public static final int WRIST_GEAR_RATIO = 30;
-        public static final int WRIST_MOTOR_ID = 5;
+        public static final int WRIST_MOTOR_ID = 23; // TODO: change!
 
         public static final double[] WRIST_ANGLE_PRESETS = new double[]{
                 5,
@@ -129,7 +130,7 @@ public final class Constants {
         public static final double DRIVE_DEAD_ZONE = 0.15;
 
         /** The length of the side of the {@link Chassis} in <b>meters.</b> */
-        public static final double SWERVE_CHASSIS_SIDE_LENGTH = 0.762;
+        public static final double CHASSIS_SIDE_LENGTH = 0.762;
 
         /** The Motor ID used for the Front Right Drive Motor. */
         public static final int FR_DRIVE_ID = 4;
@@ -188,6 +189,35 @@ public final class Constants {
 
         /** The Error Factor for the Front Left. */
         public static final double FL_ERROR_FACTOR = 1;
+
+        public static final SwerveModule FL_MODULE = new SwerveModule(
+                FL_DRIVE_ID,
+                FL_TURN_ID,
+                FL_DIO_ENCODER_PORT,
+                FL_OFFSET,
+                FL_ERROR_FACTOR
+        );
+        public static final SwerveModule FR_MODULE = new SwerveModule(
+                FR_DRIVE_ID,
+                FR_TURN_ID,
+                FR_DIO_ENCODER_PORT,
+                FR_OFFSET,
+                FR_ERROR_FACTOR
+        );
+        public static final SwerveModule BL_MODULE = new SwerveModule(
+                BL_DRIVE_ID,
+                BL_TURN_ID,
+                BL_DIO_ENCODER_PORT,
+                BL_OFFSET,
+                BL_ERROR_FACTOR
+        );
+        public static final SwerveModule BR_MODULE = new SwerveModule(
+                BR_DRIVE_ID,
+                BR_TURN_ID,
+                BR_DIO_ENCODER_PORT,
+                BR_OFFSET,
+                BR_ERROR_FACTOR
+        );
     }
 
     public static class Control {

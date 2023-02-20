@@ -15,6 +15,8 @@ import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.vacuum.VacuumSubsystem;
 import frc.robot.subsystems.vision.CameraSubsystem;
 
+import static frc.robot.Constants.Chassis.*;
+
 /**
  * The VM is configured to automatically run this class, and to call the methods corresponding to
  * each mode, as described in the TimedRobot documentation. If you change the name of this class or
@@ -24,12 +26,11 @@ import frc.robot.subsystems.vision.CameraSubsystem;
 public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
 
-    public static SwerveDriveSubsystem swerveDrive = new SwerveDriveSubsystem();
-    public static ClimberArmSubsystem arm = new ClimberArmSubsystem();
-    public static ClimberWristSubsystem wrist = new ClimberWristSubsystem();
-    public static VacuumSubsystem pump = new VacuumSubsystem();
-    public static CameraSubsystem camera = new CameraSubsystem();
-
+    public static SwerveDriveSubsystem swerveDrive;
+    public static ClimberArmSubsystem arm;
+    public static ClimberWristSubsystem wrist;
+    public static VacuumSubsystem pump;
+    public static CameraSubsystem camera;
 
     /**
      * This method is run when the robot is first started up and should be used for any
@@ -38,6 +39,19 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         // Call this method at the very end!
+        swerveDrive = new SwerveDriveSubsystem(
+                FL_MODULE,
+                FR_MODULE,
+                BL_MODULE,
+                BR_MODULE,
+                CHASSIS_SIDE_LENGTH
+        );
+        arm = new ClimberArmSubsystem();
+        wrist = new ClimberWristSubsystem();
+        pump = new VacuumSubsystem();
+        camera = new CameraSubsystem();
+
+        // *** IMPORTANT: Call this method at the VERY END of robotInit!!! *** //
         robotContainer = new RobotContainer();
     }
 

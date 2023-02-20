@@ -17,6 +17,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.swerve.SwerveChassis;
+import frc.robot.util.swerve.SwerveModule;
 import frc.robot.util.swerve.SwerveOdometry;
 
 import java.util.HashMap;
@@ -34,7 +35,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     private boolean fieldOriented = true;
 
-    private Field2d simField;
     public Command followTrajectoryCommand(PathPlannerTrajectory trajectory) {
         return new PPSwerveControllerCommand(
                 trajectory,
@@ -58,11 +58,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     /** Initializes a new {@link SwerveDriveSubsystem}, and resets the Gyroscope. */
-    public SwerveDriveSubsystem() {
-        swerveChassis = new SwerveChassis();
+    public SwerveDriveSubsystem(SwerveModule fl, SwerveModule fr, SwerveModule bl, SwerveModule br, double sideLength) {
+        swerveChassis = new SwerveChassis(fl, fr, bl, br, sideLength);
         gyro = new AHRS(SPI.Port.kMXP);
         robotHeading = new Rotation2d(0);
-        simField = new Field2d();
 
         // Don't run the PathPlannerServer during a competition to save bandwidth.
         if (!DriverStation.isFMSAttached())
@@ -93,11 +92,8 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         // Update the robot speed and other information.
         robotHeading = new Rotation2d(gyro.getRotation2d().getRadians());
 
-        if (odometry.shouldUpdate()) odometry.update();
-
-        simField.setRobotPose(odometry.getPose());
-
-        SmartDashboard.putData("Sim Field", simField);
+        if (odometry.shouldUpdate())
+            odometry.update();
 
         SmartDashboard.putString("Robot Actual Heading", robotHeading.toString());
         SmartDashboard.putString("Robot Position", odometry.getPose().toString());
