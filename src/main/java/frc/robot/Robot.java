@@ -16,6 +16,7 @@ import frc.robot.subsystems.vacuum.VacuumSubsystem;
 import frc.robot.subsystems.vision.CameraSubsystem;
 
 import static frc.robot.Constants.Chassis.*;
+import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
 
 /**
  * The VM is configured to automatically run this class, and to call the methods corresponding to
@@ -70,6 +71,7 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
+        CLIMBER_PRESET_GROUP.updateDashboard();
     }
 
 

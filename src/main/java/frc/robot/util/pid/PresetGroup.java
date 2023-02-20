@@ -2,10 +2,10 @@ package frc.robot.util.pid;
 
 import java.util.HashMap;
 
-public class PresetGroup extends HashMap<String, PresetList<Double>> {
+public class PresetGroup extends HashMap<String, PresetList> {
     private int index = 0;
 
-    public PresetGroup addPreset(String name, PresetList<Double> extensionPresets) {
+    public PresetGroup addPreset(String name, PresetList extensionPresets) {
         this.put(name, extensionPresets);
         return this;
     }
@@ -18,6 +18,10 @@ public class PresetGroup extends HashMap<String, PresetList<Double>> {
         this.index = index;
         this.forEach((name, preset) -> preset.setCurrentPreset(index));
         return this;
+    }
+
+    public void updateDashboard() {
+        forEach((name, presetList) -> presetList.updateDashboard(name));
     }
 
     public PresetGroup nextPreset() {

@@ -85,14 +85,18 @@ public final class Constants {
     }
 
     public static class ClimberPresets {
-        public static final PresetList<Double> ROTATION_PRESETS = new PresetList<>(1.0, 2.0, 3.0, 4.0);
-        public static final PresetList<Double> EXTENSION_PRESETS = new PresetList<>(1.0, 2.0, 3.0, 4.0);
-        public static final PresetList<Double> WRIST_PRESETS = new PresetList<>(1.0, 2.0, 3.0, 4.0);
+        public static final String ROTATION_NAME = "Climber Rotation";
+        public static final String EXTENSION_NAME = "Climber Extension";
+        public static final String WRIST_NAME = "Climber Wrist";
+
+        public static final PresetList ROTATION_PRESETS = new PresetList(1.0, 2.0, 3.0, 4.0);
+        public static final PresetList EXTENSION_PRESETS = new PresetList(1.0, 2.0, 3.0, 4.0);
+        public static final PresetList WRIST_PRESETS = new PresetList(1.0, 2.0, 3.0, 4.0);
 
         public static final PresetGroup CLIMBER_PRESET_GROUP = new PresetGroup()
-                .addPreset("Climber Rotation", ROTATION_PRESETS)
-                .addPreset("Climber Extension", EXTENSION_PRESETS)
-                .addPreset("Climber Wrist", WRIST_PRESETS);
+                .addPreset(ROTATION_NAME, ROTATION_PRESETS)
+                .addPreset(EXTENSION_NAME, EXTENSION_PRESETS)
+                .addPreset(WRIST_NAME, WRIST_PRESETS);
     }
 
 

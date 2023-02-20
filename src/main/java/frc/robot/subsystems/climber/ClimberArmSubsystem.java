@@ -6,18 +6,20 @@ import frc.robot.util.pid.SparkMaxAngledPIDSubsystem;
 import frc.robot.util.pid.SparkMaxPIDSubsystem;
 
 import static frc.robot.Constants.ClimberArmValues.*;
-import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
+import static frc.robot.Constants.ClimberPresets.*;
 
 public class ClimberArmSubsystem extends SubsystemBase {
-    private final SparkMaxPIDSubsystem extension, rotation;
+    private final SparkMaxPIDSubsystem extension;
+    private final SparkMaxAngledPIDSubsystem rotation;
+
     public ClimberArmSubsystem() {
-        this.extension = new SparkMaxPIDSubsystem("Climber Extension", EXTENSION_MOTOR_ID);
-        this.rotation = new SparkMaxAngledPIDSubsystem("Climber Rotation", ROTATION_GEAR_RATIO, ROTATION_MOTOR_ID);
+        this.extension = new SparkMaxPIDSubsystem(EXTENSION_NAME, EXTENSION_MOTOR_ID);
+        this.rotation = new SparkMaxAngledPIDSubsystem(ROTATION_NAME, ROTATION_GEAR_RATIO, ROTATION_MOTOR_ID);
     
-        extension.setPresetSupplier(() -> CLIMBER_PRESET_GROUP.getCurrentPreset("Climber Extension"));
-        rotation.setPresetSupplier(() -> CLIMBER_PRESET_GROUP.getCurrentPreset("Climber Rotation"));
+        extension.setPresetSupplier(() -> CLIMBER_PRESET_GROUP.getCurrentPreset(EXTENSION_NAME));
+        rotation.setPresetSupplier(() -> CLIMBER_PRESET_GROUP.getCurrentPreset(ROTATION_NAME));
     }
 
     public SparkMaxPIDSubsystem getExtension() { return extension; }
-    public SparkMaxPIDSubsystem getRotation() { return rotation; }
+    public SparkMaxAngledPIDSubsystem getRotation() { return rotation; }
 }
