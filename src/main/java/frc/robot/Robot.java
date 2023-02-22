@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
     public static VacuumSubsystem pump;
     public static CameraSubsystem camera;
 
-    public static boolean pidControlEnabled = true;
+    public static boolean pidControlEnabled = false; //true; TODO: Change!
 
     /**
      * This method is run when the robot is first started up and should be used for any
@@ -126,7 +126,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        Robot.arm.getExtension().translateMotor(deadzone(RobotContainer.xbox.getLeftY()/2, 0.05));
+        Robot.arm.getExtension().translateMotor(deadzone(-RobotContainer.xbox.getLeftY()/2, 0.05));
         Robot.arm.getRotation().translateMotor(deadzone(-RobotContainer.xbox.getRightY(), 0.05));
 
     }
