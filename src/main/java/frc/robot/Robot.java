@@ -16,6 +16,7 @@ import frc.robot.subsystems.vision.CameraSubsystem;
 
 import static frc.robot.Constants.Chassis.*;
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
+import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
 
 /**
  * The VM is configured to automatically run this class, and to call the methods corresponding to
@@ -125,8 +126,9 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        Robot.arm.getExtension().translateMotor(RobotContainer.xbox.getLeftY()/2);
-        Robot.arm.getRotation().translateMotor(-RobotContainer.xbox.getRightY());
+        Robot.arm.getExtension().translateMotor(deadzone(RobotContainer.xbox.getLeftY()/2, 0.05));
+        Robot.arm.getRotation().translateMotor(deadzone(-RobotContainer.xbox.getRightY(), 0.05));
+
     }
 
 

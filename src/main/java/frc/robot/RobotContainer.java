@@ -63,6 +63,27 @@ public class RobotContainer {
         xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(2)));
         xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(3)));
 
+        xbox.x().onTrue(Robot.swerveDrive.resetGyroCommand());
+
+        xbox.rightTrigger().whileTrue(Commands.runEnd(() -> {
+            Robot.wrist.translateMotor(-xbox.getRightTriggerAxis()/2);
+        }, () -> {
+            Robot.wrist.translateMotor(0);
+        }));
+
+        xbox.leftTrigger().whileTrue(Commands.runEnd(() -> {
+            Robot.wrist.translateMotor(xbox.getLeftTriggerAxis()/2);
+        }, () -> {
+            Robot.wrist.translateMotor(0);
+        }));
+
+        xbox.leftStick().onTrue(Commands.runOnce(() -> {
+            Robot.wrist.resetEncoder();
+            Robot.arm.getRotation().resetEncoder();
+            Robot.arm.getExtension().resetEncoder();
+        }));
+
+
         xbox.leftBumper().whileTrue(Robot.pump.runEnd(
                 () -> Robot.pump.activate(0.45),
                 () -> Robot.pump.deactivate())

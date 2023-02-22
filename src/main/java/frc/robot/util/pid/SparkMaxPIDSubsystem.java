@@ -28,7 +28,6 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     private final RelativeEncoder encoder;
     private final String name;
 
-    // TODO: Add preset support to all applicable commands.
     private Supplier<Double> presetSupplier;
     private Supplier<Boolean> pidEnabledSupplier;
 
