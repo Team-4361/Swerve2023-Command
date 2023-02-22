@@ -1,7 +1,7 @@
 package frc.robot.subsystems.climber;
 
 import com.revrobotics.CANSparkMax;
-import frc.robot.Constants.ClimberPresets;
+import frc.robot.Robot;
 import frc.robot.util.math.GearRatio;
 import frc.robot.util.pid.SparkMaxAngledPIDSubsystem;
 
@@ -24,5 +24,6 @@ public class ClimberWristSubsystem extends SparkMaxAngledPIDSubsystem {
         );
         setTolerance(0.2);
         setPresetSupplier(() -> CLIMBER_PRESET_GROUP.getCurrentPreset(WRIST_NAME));
+        setPIDControlSupplier(() -> Robot.pidControlEnabled);
     }
 }

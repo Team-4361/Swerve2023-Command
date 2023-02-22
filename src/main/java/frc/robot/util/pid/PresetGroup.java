@@ -25,7 +25,7 @@ public class PresetGroup extends HashMap<String, PresetList> {
     }
 
     public PresetGroup nextPreset() {
-        if (index+1 <= size()-1) {
+        if (index+1 <= size()) {
             setCurrentPreset(index+1);
         }
         return this;

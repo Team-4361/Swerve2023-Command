@@ -9,7 +9,6 @@ import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.climber.ClimberArmSubsystem;
-
 import frc.robot.subsystems.climber.ClimberWristSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.vacuum.VacuumSubsystem;
@@ -32,6 +31,8 @@ public class Robot extends TimedRobot {
     public static ClimberWristSubsystem wrist;
     public static VacuumSubsystem pump;
     public static CameraSubsystem camera;
+
+    public static boolean pidControlEnabled = true;
 
     /**
      * This method is run when the robot is first started up and should be used for any

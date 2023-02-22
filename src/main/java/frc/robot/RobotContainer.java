@@ -14,7 +14,6 @@ import frc.robot.Constants.Control;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
-import static frc.robot.Constants.VacuumValues.VACUUM_PUMP_SPEED;
 import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
 
 
@@ -56,8 +55,8 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xyStick.button(10).onTrue(Robot.swerveDrive.resetGyroCommand());
         xyStick.button(8).onTrue(Robot.swerveDrive.toggleFieldOriented());
+        xyStick.button(10).onTrue(Commands.runOnce(()->Robot.pidControlEnabled = !Robot.pidControlEnabled));
 
         xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)));
         xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(1)));

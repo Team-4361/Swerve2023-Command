@@ -1,13 +1,13 @@
 package frc.robot.util.pid;
 
-import com.revrobotics.*;
+import com.revrobotics.CANSparkMax;
+import com.revrobotics.RelativeEncoder;
+import com.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.Encoder;
-import edu.wpi.first.wpilibj.motorcontrol.Spark;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.util.math.GearRatio;
 
 import java.util.function.Supplier;
 
@@ -30,6 +30,9 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
 
     // TODO: Add preset support to all applicable commands.
     private Supplier<Double> presetSupplier;
+    private Supplier<Boolean> pidEnabledSupplier;
+
+    private double lastTarget = Double.MAX_VALUE;
 
     private double targetRotation, maxSpeed, tolerance;
 
@@ -150,8 +153,8 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
 
         this.motor = motor;
         this.name = name;
-        this.targetRotation = 0;
         this.teleopMode = false;
+        this.pidEnabledSupplier = () -> true;
         this.maxSpeed = 1;
         this.tolerance = 0.5;
 
@@ -161,11 +164,18 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
             encoder = motor.getEncoder();
         }
 
+        this.targetRotation = encoder.getPosition();
+
         controller.setP(kP);
         controller.setI(kI);
         controller.setD(kD);
 
         motor.enableVoltageCompensation(12);
+    }
+
+    public SparkMaxPIDSubsystem setPIDControlSupplier(Supplier<Boolean> supplier) {
+        pidEnabledSupplier = supplier;
+        return this;
     }
 
     public SparkMaxPIDSubsystem(String name, int motorID, double kP, double kI, double kD) {
@@ -180,13 +190,21 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (!teleopMode && !atTarget())
+        if (lastTarget == Double.MAX_VALUE) {
+            lastTarget = presetSupplier.get();
+        }
+
+        if (!teleopMode && !atTarget() && pidEnabledSupplier.get())
             motor.set(clamp(controller.calculate(getRotation(), getTargetRotation()), -maxSpeed, maxSpeed));
 
         SmartDashboard.putNumber(name + " Rotation", getRotation());
         SmartDashboard.putNumber(name + " Target Rotation", getTargetRotation());
         SmartDashboard.putBoolean(name + " At Target", atTarget());
 
-        setTarget(presetSupplier.get());
+        double suppliedTarget = presetSupplier.get();
+        if (lastTarget != presetSupplier.get()) {
+            setTarget(suppliedTarget);
+            lastTarget = suppliedTarget;
+        }
     }
 }
