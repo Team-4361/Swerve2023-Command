@@ -66,7 +66,7 @@ public final class Constants {
 
     public static class FourBarWristValues {
         public static final int WRIST_GEAR_RATIO = 30;
-        public static final int WRIST_MOTOR_ID = 23; // TODO: change!
+        public static final int WRIST_MOTOR_ID = 22; // TODO: change!
 
         public static final double[] WRIST_ANGLE_PRESETS = new double[]{
                 5,
@@ -79,8 +79,8 @@ public final class Constants {
         public static final int GRIPPER_MOTOR_VALUE_ID = 0;
     }
     public static class ClimberArmValues {
-        public static final int ROTATION_MOTOR_ID = 10;
-        public static final int EXTENSION_MOTOR_ID = 18;
+        public static final int ROTATION_MOTOR_ID = 18;
+        public static final int EXTENSION_MOTOR_ID = 21;
         public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029);
     }
 
