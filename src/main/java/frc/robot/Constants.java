@@ -41,6 +41,8 @@ public final class Constants {
         public static int VACUUM_MOTOR_ID = 20;
         public static double VACUUM_PUMP_SPEED = 0.45;
         public static MotorType VACUUM_MOTOR_TYPE = kBrushed;
+        public static int SOLENOID_OPEN = 0;
+        public static int SOLENOID_CLOSED = 1;
     }
 
     public static class FourBarArmValues {

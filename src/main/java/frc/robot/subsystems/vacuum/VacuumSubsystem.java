@@ -2,20 +2,39 @@ package frc.robot.subsystems.vacuum;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.CANSparkMaxLowLevel;
+import edu.wpi.first.wpilibj.DoubleSolenoid;
+import edu.wpi.first.wpilibj.PneumaticsModuleType;
+import edu.wpi.first.wpilibj.Solenoid;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Constants;
 
-import static frc.robot.Constants.VacuumValues.VACUUM_MOTOR_ID;
-import static frc.robot.Constants.VacuumValues.VACUUM_MOTOR_TYPE;
+import static frc.robot.Constants.VacuumValues.*;
 
 public class VacuumSubsystem extends SubsystemBase {
     private final CANSparkMax motor;
+    private DoubleSolenoid solenoidR;
+
 
     public VacuumSubsystem() {
         this.motor = new CANSparkMax(VACUUM_MOTOR_ID, VACUUM_MOTOR_TYPE);
+        solenoidR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, SOLENOID_OPEN, SOLENOID_CLOSED);
+        solenoidR.set(DoubleSolenoid.Value.kOff);
+    
+    }
+
+    public void setSolenoid(boolean value) {
+        if (value) {
+            solenoidR.set(DoubleSolenoid.Value.kForward);
+        } else {
+            solenoidR.set(DoubleSolenoid.Value.kReverse);
+        }
+    }
+
+    public void setSolenoid(DoubleSolenoid.Value state) {
+        solenoidR.set(state);
     }
 
     public void activate(double speed) {
@@ -34,9 +53,11 @@ public class VacuumSubsystem extends SubsystemBase {
      */
     @Override
     public void periodic() {
-        SmartDashboard.putBoolean("Vacuum: Running", motor.get()!=0);
+        SmartDashboard.putBoolean("Vacuum: Running", motor.get() != 0);
         SmartDashboard.putNumber("Vacuum: Power", motor.get());
     }
+
+
 }
 
 

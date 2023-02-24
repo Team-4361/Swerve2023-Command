@@ -5,12 +5,14 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
+import frc.robot.commands.vacuum.OpenVacuumCommand;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
 import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
@@ -83,6 +85,19 @@ public class RobotContainer {
             Robot.arm.getExtension().resetEncoder();
         }));
 
+        //xbox.rightBumper().whileTrue(new OpenVacuumCommand());
+
+        xyStick.button(7).whileTrue(Commands.runEnd(() -> {
+            Robot.pump.setSolenoid(DoubleSolenoid.Value.kForward);
+        }, () -> {
+            Robot.pump.setSolenoid(DoubleSolenoid.Value.kOff);
+        }));
+
+        xyStick.button(11).whileTrue(Commands.runEnd(() -> {
+            Robot.pump.setSolenoid(DoubleSolenoid.Value.kReverse);
+        }, () -> {
+            Robot.pump.setSolenoid(DoubleSolenoid.Value.kOff);
+        }));
 
         xbox.leftBumper().whileTrue(Robot.pump.runEnd(
                 () -> Robot.pump.activate(0.45),
