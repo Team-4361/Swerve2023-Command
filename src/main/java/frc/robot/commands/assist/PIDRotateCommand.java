@@ -20,7 +20,7 @@ public class PIDRotateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        Robot.swerveDrive.autoDrive(0, 0, turnController.calculate(
+        Robot.swerveDrive.teleopDrive(0, 0, turnController.calculate(
                 Robot.swerveDrive.getRobotHeading().getDegrees(),
                 target
         ));

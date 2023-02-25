@@ -62,7 +62,7 @@ public class PIDTargetCommand extends CommandBase {
     public void execute() {
         trackedPose = poseSupplier.get();
 
-        Robot.swerveDrive.robotDrive(
+        Robot.swerveDrive.autoDrive(
                 !inTolerance(trackedPose.getX(), poseOffset.getX(), 2) ?
                         clamp(controller.calculate(trackedPose.getX(), poseOffset.getX()), -0.25, 0.25)
                         : 0,
@@ -71,8 +71,7 @@ public class PIDTargetCommand extends CommandBase {
                         : 0,
                 !inTolerance(trackedPose.getRotation().getRadians(), Math.PI, 4) ?
                         clamp(turnController.calculate(trackedPose.getRotation().getRadians(), Math.PI), -0.05, 0.05)
-                        : 0,
-                0
+                        : 0
         );
     }
 

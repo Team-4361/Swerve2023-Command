@@ -10,10 +10,19 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.util.math.GearRatio;
 import frc.robot.util.pid.PresetGroup;
 import frc.robot.util.pid.PresetList;
-import frc.robot.util.swerve.SwerveModule;
+import frc.robot.util.swerve.PWMAbsoluteEncoder;
+import swervelib.SwerveModule;
+import swervelib.imu.NavXSwerve;
+import swervelib.motors.SparkMaxSwerve;
+import swervelib.parser.PIDFConfig;
+import swervelib.parser.SwerveDriveConfiguration;
+import swervelib.parser.SwerveModuleConfiguration;
+import swervelib.parser.SwerveModulePhysicalCharacteristics;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
+import static edu.wpi.first.math.util.Units.radiansToDegrees;
+
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -77,9 +86,11 @@ public final class Constants {
                 20
         };
     }
+
     public static class FourBarGripperValues {
         public static final int GRIPPER_MOTOR_VALUE_ID = 0;
     }
+
     public static class ClimberArmValues {
         public static final int ROTATION_MOTOR_ID = 18;
         public static final int EXTENSION_MOTOR_ID = 21;
@@ -105,7 +116,7 @@ public final class Constants {
     public static class AutoValues {
         // fancy calculus type stuff, not sure what to do with it but play with the numbers ;)
         public static final Constraints X_CONSTRAINTS = new Constraints(0.2, 0.2);
-        public static final Constraints Y_CONSTRAINTS = new Constraints(0.2,0.2);
+        public static final Constraints Y_CONSTRAINTS = new Constraints(0.2, 0.2);
         public static final Constraints OMEGA_CONSTRAINTS = new Constraints(0.2, 0.2);
     }
 
@@ -115,114 +126,214 @@ public final class Constants {
      * need to be flipped due to the Field Oriented driving system.
      */
     public static class Chassis {
-        /** The offset of the Front Right Motor */
+        /**
+         * The offset of the Front Right Motor
+         */
         //public static final double FR_OFFSET = 0;
 
-        public static final double FR_OFFSET = ((-2.38)+0)+(Math.PI/2) - (2 * Math.PI) + (Math.PI);
+        public static final double FR_OFFSET = ((-2.38) + 0) + (Math.PI / 2) - (2 * Math.PI) + (Math.PI);
 
-        /** The offset of the Front Left Motor */
-        public static final double FL_OFFSET = ((9.401)+0.045647)+(Math.PI/2) - (Math.PI / 2);
+        /**
+         * The offset of the Front Left Motor
+         */
+        public static final double FL_OFFSET = ((9.401) + 0.045647) + (Math.PI / 2) - (Math.PI / 2);
 
-        /** The offset of the Back Right Motor */
-        public static final double BR_OFFSET =  ((-3.345)+0.009)+(Math.PI/2) - (Math.PI / 2) - (2 * Math.PI);
+        /**
+         * The offset of the Back Right Motor
+         */
+        public static final double BR_OFFSET = ((-3.345) + 0.009) + (Math.PI / 2) - (Math.PI / 2) - (2 * Math.PI);
 
 
+        /**
+         * The offset of the Back Left Motor
+         */
+        public static final double BL_OFFSET = ((6.12) + 0.339057) + (Math.PI / 2) - (2 * Math.PI) - (Math.PI / 2);
 
-        /** The offset of the Back Left Motor */
-        public static final double BL_OFFSET = ((6.12)+0.339057)+(Math.PI/2) - (2 * Math.PI) - (Math.PI / 2);
 
-
-        /** The dead-zone where anything below this value, nothing will happen. */
+        /**
+         * The dead-zone where anything below this value, nothing will happen.
+         */
         public static final double DRIVE_DEAD_ZONE = 0.15;
 
-        /** The length of the side of the {@link Chassis} in <b>meters.</b> */
+        /**
+         * The length of the side of the {@link Chassis} in <b>meters.</b>
+         */
         public static final double CHASSIS_SIDE_LENGTH = 0.762;
 
-        /** The Motor ID used for the Front Right Drive Motor. */
+        /**
+         * The Motor ID used for the Front Right Drive Motor.
+         */
         public static final int FR_DRIVE_ID = 4;
 
-        /** The Motor ID used for the Front Left Drive Motor. */
+        /**
+         * The Motor ID used for the Front Left Drive Motor.
+         */
         public static final int FL_DRIVE_ID = 2;
 
-        /** The Motor ID used for the Back Right Drive Motor. */
+        /**
+         * The Motor ID used for the Back Right Drive Motor.
+         */
         public static final int BR_DRIVE_ID = 8;
 
-        
-        /** The Motor ID used for the Back Left Drive Motor. */
+
+        /**
+         * The Motor ID used for the Back Left Drive Motor.
+         */
         public static final int BL_DRIVE_ID = 6;
 
-        /** The Motor ID used for the Front Right Steering Motor. */
+        /**
+         * The Motor ID used for the Front Right Steering Motor.
+         */
         public static final int FR_TURN_ID = 3;
 
-        /** The Motor ID used for the Front Left Steering Motor. */
+        /**
+         * The Motor ID used for the Front Left Steering Motor.
+         */
         public static final int FL_TURN_ID = 1;
 
-        /** The Motor ID used for the Back Right Steering Motor. */
+        /**
+         * The Motor ID used for the Back Right Steering Motor.
+         */
         public static final int BR_TURN_ID = 7;
 
-        /** The Motor ID used for the Back Left Steering Motor. */
+        /**
+         * The Motor ID used for the Back Left Steering Motor.
+         */
         public static final int BL_TURN_ID = 5;
 
-        /** The ID used for the Front Right Absolute Encoder. */
+        /**
+         * The ID used for the Front Right Absolute Encoder.
+         */
         public static final int FR_DIO_ENCODER_PORT = 1;
 
-        /** The ID used for the Front Left Absolute Encoder. */
+        /**
+         * The ID used for the Front Left Absolute Encoder.
+         */
         public static final int FL_DIO_ENCODER_PORT = 0;
 
-        /** The ID used for the Back Right Absolute Encoder. */
+        /**
+         * The ID used for the Back Right Absolute Encoder.
+         */
         public static final int BR_DIO_ENCODER_PORT = 3;
 
-        /** The ID used for the Back Left Absolute Encoder. */
+        /**
+         * The ID used for the Back Left Absolute Encoder.
+         */
         public static final int BL_DIO_ENCODER_PORT = 2;
 
-        /** The Radius of each of the Swerve Drive Wheels in <b>meters.</b> */
+        /**
+         * The Radius of each of the Swerve Drive Wheels in <b>meters.</b>
+         */
         public static final double SWERVE_WHEEL_RADIUS = 0.0508;
 
-        /** The Circumference of each of the Swerve Drive Wheels in <b>meters.</b> */
+        /**
+         * The Circumference of each of the Swerve Drive Wheels in <b>meters.</b>
+         */
         public static final double SWERVE_WHEEL_CIRCUMFERENCE = SWERVE_WHEEL_RADIUS * 2 * Math.PI;
 
-        /** How often the Odometry tracking of the Swerve Drive System is updated in <b>milliseconds.</b> */
+        /**
+         * How often the Odometry tracking of the Swerve Drive System is updated in <b>milliseconds.</b>
+         */
         public static final double ODOMETRY_MS_INTERVAL = 5;
 
-        /** The Error Factor for the Back Left. */
+        /**
+         * The Error Factor for the Back Left.
+         */
         public static final double BL_ERROR_FACTOR = 1;
 
-        /** The Error Factor for the Back Right. */
+        /**
+         * The Error Factor for the Back Right.
+         */
         public static final double BR_ERROR_FACTOR = 1;
 
-        /** The Error Factor for the Front Right. */
+        /**
+         * The Error Factor for the Front Right.
+         */
         public static final double FR_ERROR_FACTOR = 1;
 
-        /** The Error Factor for the Front Left. */
+        /**
+         * The Error Factor for the Front Left.
+         */
         public static final double FL_ERROR_FACTOR = 1;
 
-        public static final SwerveModule FL_MODULE = new SwerveModule(
-                FL_DRIVE_ID,
-                FL_TURN_ID,
-                FL_DIO_ENCODER_PORT,
-                FL_OFFSET,
-                FL_ERROR_FACTOR
+        public static final double CHASSIS_MAX_SPEED = 12.5;
+        public static final double CHASSIS_MAX_RAMP = 0.5;
+
+        public static boolean GYRO_INVERTED = false;
+
+        public static final PIDFConfig HEADING_PID = new PIDFConfig(0.5, 0, 0, 0);
+        public static final PIDFConfig DRIVE_PID = new PIDFConfig(0.5, 0, 0, 0);
+
+
+
+        public static final SwerveModulePhysicalCharacteristics SDS_MODULE = new SwerveModulePhysicalCharacteristics(
+                8.16,
+                12.8,
+                5676.0,
+                0.10,
+                CHASSIS_MAX_RAMP,
+                CHASSIS_MAX_RAMP,
+                1,
+                1
         );
-        public static final SwerveModule FR_MODULE = new SwerveModule(
-                FR_DRIVE_ID,
-                FR_TURN_ID,
-                FR_DIO_ENCODER_PORT,
-                FR_OFFSET,
-                FR_ERROR_FACTOR
+
+        public static final SwerveModuleConfiguration FL_MODULE = new SwerveModuleConfiguration(
+                new SparkMaxSwerve(FL_DRIVE_ID, true),
+                new SparkMaxSwerve(FL_TURN_ID, false),
+                new PWMAbsoluteEncoder(FL_DIO_ENCODER_PORT),
+                radiansToDegrees(FL_OFFSET),
+                CHASSIS_SIDE_LENGTH / 2,
+                CHASSIS_SIDE_LENGTH / 2,
+                HEADING_PID,
+                DRIVE_PID,
+                CHASSIS_MAX_SPEED,
+                SDS_MODULE
         );
-        public static final SwerveModule BL_MODULE = new SwerveModule(
-                BL_DRIVE_ID,
-                BL_TURN_ID,
-                BL_DIO_ENCODER_PORT,
-                BL_OFFSET,
-                BL_ERROR_FACTOR
+
+        public static final SwerveModuleConfiguration FR_MODULE = new SwerveModuleConfiguration(
+                new SparkMaxSwerve(FR_DRIVE_ID, true),
+                new SparkMaxSwerve(FR_TURN_ID, false),
+                new PWMAbsoluteEncoder(FR_DIO_ENCODER_PORT),
+                radiansToDegrees(FR_OFFSET),
+                CHASSIS_SIDE_LENGTH / 2,
+                -CHASSIS_SIDE_LENGTH / 2,
+                HEADING_PID,
+                DRIVE_PID,
+                CHASSIS_MAX_SPEED,
+                SDS_MODULE
         );
-        public static final SwerveModule BR_MODULE = new SwerveModule(
-                BR_DRIVE_ID,
-                BR_TURN_ID,
-                BR_DIO_ENCODER_PORT,
-                BR_OFFSET,
-                BR_ERROR_FACTOR
+
+        public static final SwerveModuleConfiguration BL_MODULE = new SwerveModuleConfiguration(
+                new SparkMaxSwerve(BL_DRIVE_ID, true),
+                new SparkMaxSwerve(BL_TURN_ID, false),
+                new PWMAbsoluteEncoder(BL_DIO_ENCODER_PORT),
+                radiansToDegrees(BL_OFFSET),
+                -CHASSIS_SIDE_LENGTH / 2,
+                CHASSIS_SIDE_LENGTH / 2,
+                HEADING_PID,
+                DRIVE_PID,
+                CHASSIS_MAX_SPEED,
+                SDS_MODULE
+        );
+
+        public static final SwerveModuleConfiguration BR_MODULE = new SwerveModuleConfiguration(
+                new SparkMaxSwerve(BR_DRIVE_ID, true),
+                new SparkMaxSwerve(BR_TURN_ID, false),
+                new PWMAbsoluteEncoder(BR_DIO_ENCODER_PORT),
+                radiansToDegrees(BR_OFFSET),
+                -CHASSIS_SIDE_LENGTH / 2,
+                -CHASSIS_SIDE_LENGTH / 2,
+                HEADING_PID,
+                DRIVE_PID,
+                CHASSIS_MAX_SPEED,
+                SDS_MODULE
+        );
+
+        public static final SwerveDriveConfiguration DRIVE_CONFIGURATION = new SwerveDriveConfiguration(
+                new SwerveModuleConfiguration[]{FL_MODULE, FR_MODULE, BL_MODULE, BR_MODULE},
+                new NavXSwerve(),
+                CHASSIS_MAX_SPEED,
+                GYRO_INVERTED
         );
     }
 

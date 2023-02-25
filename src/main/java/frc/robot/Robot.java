@@ -42,13 +42,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         // Call this method at the very end!
-        swerveDrive = new SwerveDriveSubsystem(
-                FL_MODULE,
-                FR_MODULE,
-                BL_MODULE,
-                BR_MODULE,
-                CHASSIS_SIDE_LENGTH
-        );
+        swerveDrive = new SwerveDriveSubsystem();
         arm = new ClimberArmSubsystem();
         wrist = new ClimberWristSubsystem();
         pump = new VacuumSubsystem();
