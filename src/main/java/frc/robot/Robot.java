@@ -33,7 +33,7 @@ public class Robot extends TimedRobot {
     public static VacuumSubsystem pump;
     public static CameraSubsystem camera;
 
-    public static boolean pidControlEnabled = false; //true; TODO: Change!
+    public static boolean pidControlEnabled = true; //true; TODO: Change!
 
     /**
      * This method is run when the robot is first started up and should be used for any

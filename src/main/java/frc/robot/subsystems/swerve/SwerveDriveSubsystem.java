@@ -14,7 +14,9 @@ import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.Robot;
 import frc.robot.util.swerve.SwerveChassis;
 import frc.robot.util.swerve.SwerveModule;
 import frc.robot.util.swerve.SwerveOdometry;
@@ -47,7 +49,20 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     public Command holdPrecisionModeCommand() {
-        return this.runEnd(() -> precisionMode = true, () -> precisionMode = false);
+        return Commands.runEnd(() -> precisionMode = true, () -> precisionMode = false);
+    }
+
+    public Command lockWheelCommand() {
+        return Commands.run(() -> {
+            swerveChassis.setStates(
+                    new SwerveModuleState[]{
+                            new SwerveModuleState(0, new Rotation2d(Math.PI/2)),
+                            new SwerveModuleState(0, new Rotation2d(Math.PI/2)),
+                            new SwerveModuleState(0, new Rotation2d(Math.PI/2)),
+                            new SwerveModuleState(0, new Rotation2d(Math.PI/2))
+                    }
+            );
+        });
     }
 
     public Command toggleFieldOrientedCommand() {

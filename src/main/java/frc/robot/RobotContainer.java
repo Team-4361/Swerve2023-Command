@@ -14,6 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
+import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
 import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
 
 
@@ -57,15 +58,16 @@ public class RobotContainer {
     private void configureBindings() {
         xyStick.button(8).onTrue(Robot.swerveDrive.toggleFieldOrientedCommand());
         xyStick.button(12).onTrue(Robot.swerveDrive.resetGyroCommand());
-        xyStick.button(9).onTrue(Robot.swerveDrive.toggleClosedLoopCommand());
+        //xyStick.button(9).onTrue(Robot.swerveDrive.toggleClosedLoopCommand());
 
         //xyStick.button(10).onTrue(Commands.runOnce(()->Robot.pidControlEnabled = !Robot.pidControlEnabled));
-        xyStick.top().or(zStick.top()).whileTrue(Robot.swerveDrive.holdPrecisionModeCommand());
+        xyStick.trigger().or(zStick.trigger()).whileTrue(Robot.swerveDrive.holdPrecisionModeCommand());
+        xyStick.button(3).whileTrue(Robot.swerveDrive.lockWheelCommand());
 
-        //xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)));
-        //xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(1)));
-        //xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(2)));
-        //xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(3)));
+        xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)));
+        xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(1)));
+        xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(2)));
+        xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(3)));
 
         xbox.x().onTrue(Robot.swerveDrive.resetGyroCommand());
 

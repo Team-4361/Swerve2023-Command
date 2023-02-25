@@ -92,9 +92,9 @@ public final class Constants {
         public static final String EXTENSION_NAME = "Climber Extension";
         public static final String WRIST_NAME = "Climber Wrist";
 
-        public static final PresetList ROTATION_PRESETS = new PresetList(1.0, 2.0, 3.0, 4.0);
-        public static final PresetList EXTENSION_PRESETS = new PresetList(1.0, 2.0, 3.0, 4.0);
-        public static final PresetList WRIST_PRESETS = new PresetList(1.0, 2.0, 3.0, 4.0);
+        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, -10.0, -20.0, -30.0);
+        public static final PresetList EXTENSION_PRESETS = new PresetList(5.0, 10.0, 15.0, 20.0);
+        public static final PresetList WRIST_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0);
 
         public static final PresetGroup CLIMBER_PRESET_GROUP = new PresetGroup()
                 .addPreset(ROTATION_NAME, ROTATION_PRESETS)
