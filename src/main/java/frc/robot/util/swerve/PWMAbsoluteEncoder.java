@@ -48,9 +48,9 @@ public class PWMAbsoluteEncoder extends SwerveAbsoluteEncoder {
     @Override
     public double getAbsolutePosition() {
         if (inverted) {
-            return radiansToDegrees(-encoder.get() * 2 * Math.PI);
+            return radiansToDegrees(-encoder.get() * 2 * Math.PI)%360;
         } else {
-            return radiansToDegrees(encoder.get() * 2 * Math.PI);
+            return radiansToDegrees(encoder.get() * 2 * Math.PI)%360;
         }
     }
 

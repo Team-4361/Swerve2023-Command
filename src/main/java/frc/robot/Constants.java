@@ -7,6 +7,7 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.util.math.GearRatio;
 import frc.robot.util.pid.PresetGroup;
 import frc.robot.util.pid.PresetList;
@@ -264,8 +265,6 @@ public final class Constants {
         public static final PIDFConfig HEADING_PID = new PIDFConfig(0.5, 0, 0, 0);
         public static final PIDFConfig DRIVE_PID = new PIDFConfig(0.5, 0, 0, 0);
 
-
-
         public static final SwerveModulePhysicalCharacteristics SDS_MODULE = new SwerveModulePhysicalCharacteristics(
                 8.16,
                 12.8,
@@ -331,7 +330,7 @@ public final class Constants {
 
         public static final SwerveDriveConfiguration DRIVE_CONFIGURATION = new SwerveDriveConfiguration(
                 new SwerveModuleConfiguration[]{FL_MODULE, FR_MODULE, BL_MODULE, BR_MODULE},
-                new NavXSwerve(),
+                new NavXSwerve(SerialPort.Port.kMXP),
                 CHASSIS_MAX_SPEED,
                 GYRO_INVERTED
         );

@@ -1,6 +1,11 @@
 {
   "HALProvider": {
     "Other Devices": {
+      "DutyCycleEncoder[0]": {
+        "header": {
+          "open": true
+        }
+      },
       "SPARK MAX [10]": {
         "header": {
           "open": true
@@ -36,11 +41,6 @@
           "open": true
         }
       },
-      "SPARK MAX [4]": {
-        "header": {
-          "open": true
-        }
-      },
       "SPARK MAX [5]": {
         "header": {
           "open": true
@@ -66,7 +66,9 @@
   "NTProvider": {
     "types": {
       "/FMSInfo": "FMSInfo",
-      "/SmartDashboard/Sim Field": "Field2d"
+      "/SmartDashboard/Field": "Field2d",
+      "/SmartDashboard/Sim Field": "Field2d",
+      "/SmartDashboard/navX-Sensor[1]": "Gyro"
     }
   },
   "NetworkTables": {
@@ -81,7 +83,13 @@
       }
     },
     "transitory": {
-      "SmartDashboard": {
+      "FMSInfo": {
+        "open": true
+      },
+      "LiveWindow": {
+        "open": true
+      },
+      "Shuffleboard": {
         "open": true
       }
     }
