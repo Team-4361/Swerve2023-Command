@@ -14,7 +14,7 @@ import org.photonvision.targeting.PhotonTrackedTarget;
 
 public class PhotonCameraModule extends PhotonCamera {
 
-    public static final int CAMERA_BUFFER_MILLIS = 500;
+    public static final int CAMERA_BUFFER_MILLIS =  500;
 
     private final PhotonCameraConfig config;
 
@@ -22,11 +22,16 @@ public class PhotonCameraModule extends PhotonCamera {
     private Pose2d trackedPose;
     private boolean targetFound = false;
 
+
     private long lastFoundMillis = System.currentTimeMillis();
 
     public Pose2d getTrackedPose() { return trackedPose; }
+    public PhotonCameraModule setPipeline(int index) {
+        setPipelineIndex(index);
+        return this;
+    }
 
-    public boolean isTargetFound() { return targetFound; }
+    public boolean isTargetFound() { return targetFound;  }
 
     public void update() {
         PhotonPipelineResult result = this.getLatestResult();
