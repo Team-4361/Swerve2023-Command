@@ -121,6 +121,9 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return Robot.swerveDrive.followTrajectoryCommand("New Path");
+        return Robot.swerveDrive.followTrajectoryCommand("Eric's Path")
+                .andThen(
+                        Robot.swerveDrive.followTrajectoryCommand("New Path")
+                );
     }
 }
