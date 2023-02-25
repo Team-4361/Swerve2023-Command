@@ -7,6 +7,7 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.util.math.GearRatio;
 import frc.robot.util.pid.PresetGroup;
 import frc.robot.util.pid.PresetList;
@@ -202,28 +203,28 @@ public final class Constants {
                 FL_DIO_ENCODER_PORT,
                 FL_OFFSET,
                 FL_ERROR_FACTOR
-        );
+        ).setClosedLoopSupplier(() -> SwerveDriveSubsystem.closedLoop);
         public static final SwerveModule FR_MODULE = new SwerveModule(
                 FR_DRIVE_ID,
                 FR_TURN_ID,
                 FR_DIO_ENCODER_PORT,
                 FR_OFFSET,
                 FR_ERROR_FACTOR
-        );
+        ).setClosedLoopSupplier(() -> SwerveDriveSubsystem.closedLoop);
         public static final SwerveModule BL_MODULE = new SwerveModule(
                 BL_DRIVE_ID,
                 BL_TURN_ID,
                 BL_DIO_ENCODER_PORT,
                 BL_OFFSET,
                 BL_ERROR_FACTOR
-        );
+        ).setClosedLoopSupplier(() -> SwerveDriveSubsystem.closedLoop);
         public static final SwerveModule BR_MODULE = new SwerveModule(
                 BR_DRIVE_ID,
                 BR_TURN_ID,
                 BR_DIO_ENCODER_PORT,
                 BR_OFFSET,
                 BR_ERROR_FACTOR
-        );
+        ).setClosedLoopSupplier(() -> SwerveDriveSubsystem.closedLoop);
     }
 
     public static class Control {

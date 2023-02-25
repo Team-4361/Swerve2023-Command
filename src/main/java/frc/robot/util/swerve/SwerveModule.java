@@ -14,6 +14,8 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
+import java.util.function.Supplier;
+
 import static frc.robot.Constants.Chassis.SWERVE_WHEEL_CIRCUMFERENCE;
 import static frc.robot.Constants.Chassis.SWERVE_WHEEL_RADIUS;
 
@@ -38,14 +40,23 @@ public class SwerveModule {
             0.02
     );
 
+    private final PIDController driveController = new PIDController(
+            0.5,
+            0.0,
+            0.0,
+            0.02
+    );
+
+    private Supplier<Boolean> closedLoopSupplier = () -> false;
+
     /**
      * Creates a new {@link SwerveModule} instance, using the specified parameters.
-     * 
-     * @param driveMotorId The Motor ID used for driving the wheel.
-     * @param turnMotorId The Motor ID used for turning the wheel.
+     *
+     * @param driveMotorId       The Motor ID used for driving the wheel.
+     * @param turnMotorId        The Motor ID used for turning the wheel.
      * @param digitalEncoderPort The {@link DigitalInput} ID used for the Encoder.
-     * @param offset The offset to use for driving the wheel.
-     * @param errorFactor The maximum error factor that is acceptable.
+     * @param offset             The offset to use for driving the wheel.
+     * @param errorFactor        The maximum error factor that is acceptable.
      */
     public SwerveModule(int driveMotorId, int turnMotorId, int digitalEncoderPort, double offset, double errorFactor) {
         driveMotor = new CANSparkMax(driveMotorId, MotorType.kBrushless);
@@ -58,7 +69,14 @@ public class SwerveModule {
         this.errorFactor = errorFactor;
     }
 
-    /** @return The current meters per second of the robot. */
+    public SwerveModule setClosedLoopSupplier(Supplier<Boolean> supplier) {
+        this.closedLoopSupplier = supplier;
+        return this;
+    }
+
+    /**
+     * @return The current meters per second of the robot.
+     */
     private double velocityMetersPerSecond() {
         // rpm -> rps -> mps
         double rotationsPerMinute = driveEncoder.getVelocity();
@@ -91,7 +109,14 @@ public class SwerveModule {
                 state.angle.getRadians()
         );
 
-        driveMotor.set(state.speedMetersPerSecond * errorFactor);
+        double drivePower;
+        if (closedLoopSupplier.get()) {
+            drivePower = driveController.calculate(velocityMetersPerSecond(), state.speedMetersPerSecond);
+        } else {
+            drivePower = state.speedMetersPerSecond * errorFactor;
+        }
+
+        driveMotor.set(drivePower);
         turnMotor.set(turnPower);
     }
 
@@ -119,7 +144,7 @@ public class SwerveModule {
      * current position, based on the module's drive motor distance and
      * the turn encoder's angle.
      */
-    public SwerveModulePosition getPosition()  {
+    public SwerveModulePosition getPosition() {
         return new SwerveModulePosition(
                 getMetersDriven(),
                 getTurnAngle()
@@ -154,7 +179,7 @@ public class SwerveModule {
         return driveEncoder.getPosition();
     }
 
-    /** 
+    /**
      * @return The total amount of meters the individual {@link SwerveModule} has travelled.
      */
     public double getMetersDriven() {
@@ -163,7 +188,7 @@ public class SwerveModule {
         return (driveEncoder.getPosition() * (2 * Math.PI) * SWERVE_WHEEL_RADIUS);
     }
 
-    public void resetDriveEncoder(){
+    public void resetDriveEncoder() {
         driveEncoder.setPosition(0);
     }
 }

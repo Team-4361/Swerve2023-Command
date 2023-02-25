@@ -12,7 +12,6 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
-import frc.robot.commands.vacuum.OpenVacuumCommand;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
 import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
@@ -56,9 +55,12 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xyStick.button(8).onTrue(Robot.swerveDrive.toggleFieldOriented());
+        xyStick.button(8).onTrue(Robot.swerveDrive.toggleFieldOrientedCommand());
         xyStick.button(12).onTrue(Robot.swerveDrive.resetGyroCommand());
+        xyStick.button(9).onTrue(Robot.swerveDrive.toggleClosedLoopCommand());
+
         //xyStick.button(10).onTrue(Commands.runOnce(()->Robot.pidControlEnabled = !Robot.pidControlEnabled));
+        xyStick.top().or(zStick.top()).whileTrue(Robot.swerveDrive.holdPrecisionModeCommand());
 
         //xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)));
         //xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(1)));

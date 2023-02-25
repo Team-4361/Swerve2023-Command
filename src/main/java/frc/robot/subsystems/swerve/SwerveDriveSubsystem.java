@@ -12,7 +12,6 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
-import edu.wpi.first.wpilibj.smartdashboard.Field2d;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
@@ -33,7 +32,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private final SwerveOdometry odometry;
     private Rotation2d robotHeading;
 
-    private boolean fieldOriented = true;
+    public static boolean fieldOriented = true, precisionMode = false, closedLoop = false;
 
     public Command followTrajectoryCommand(PathPlannerTrajectory trajectory) {
         return new PPSwerveControllerCommand(
@@ -47,10 +46,20 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         );
     }
 
-    public Command toggleFieldOriented() {
+    public Command holdPrecisionModeCommand() {
+        return this.runEnd(() -> precisionMode = true, () -> precisionMode = false);
+    }
+
+    public Command toggleFieldOrientedCommand() {
         return this.runOnce(() -> {
             fieldOriented = !fieldOriented;
         }).andThen(resetGyroCommand());
+    }
+
+    public Command toggleClosedLoopCommand() {
+        return this.runOnce(() -> {
+            closedLoop = !closedLoop;
+        });
     }
 
     public Command resetGyroCommand() {
@@ -126,6 +135,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * @param omega Yaw rad/s (+ left, - right)
      */
     public void autoDrive(double vX, double vY, double omega) {
+        if (precisionMode) {
+            vX /= 3;
+            vY /= 3;
+            omega /= 3;
+        }
         this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(-vX, -vY, omega, fieldOriented ? odometry.getPose().getRotation() : new Rotation2d(0)));
     }
 
@@ -140,6 +154,11 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * @param omega Yaw rad/s (+ left, - right)
      */
     public void robotDrive(double vX, double vY, double omega, double heading) {
+        if (precisionMode) {
+            vX /= 3;
+            vY /= 3;
+            omega /= 3;
+        }
         this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(-vX, -vY, omega, new Rotation2d(heading)));
     }
 
