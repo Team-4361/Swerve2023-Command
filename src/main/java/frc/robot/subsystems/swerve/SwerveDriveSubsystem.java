@@ -2,6 +2,8 @@ package frc.robot.subsystems.swerve;
 
 import com.kauailabs.navx.frc.AHRS;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.pathplanner.lib.server.PathPlannerServer;
@@ -46,6 +48,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                 new PIDController(0,0,0),
                 swerveChassis::setStates
         );
+    }
+
+    public Command followTrajectoryCommand(String fileName) {
+        return followTrajectoryCommand(PathPlanner.loadPath(fileName, new PathConstraints(3, 3)));
     }
 
     public Command holdPrecisionModeCommand() {
