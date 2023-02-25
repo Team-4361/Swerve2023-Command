@@ -36,7 +36,6 @@ public class RobotContainer {
         // Configure the trigger bindings
         configureBindings();
 
-        
         Robot.swerveDrive.setDefaultCommand(Robot.swerveDrive.run(() ->  {
             Robot.swerveDrive.autoDrive(
                     deadzone(-xyStick.getY(), DRIVE_DEAD_ZONE),
@@ -107,6 +106,11 @@ public class RobotContainer {
                 () -> Robot.pump.activate(0.45),
                 () -> Robot.pump.deactivate())
         );
+        xbox.povUp().whileTrue(Robot.pump.runEnd(()->{
+            Robot.pump.openVacuum();
+        }, ()->{
+            Robot.pump.closeVacuum();
+        }));
     }
 
 
