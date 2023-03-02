@@ -20,6 +20,9 @@ import swervelib.math.SwerveKinematics2;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
 import swervelib.parser.SwerveParser;
+import swervelib.telemetry.SwerveDriveTelemetry;
+
+import static swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity.HIGH;
 
 public class SwerveSubsystem extends SubsystemBase {
 
@@ -50,6 +53,8 @@ public class SwerveSubsystem extends SubsystemBase {
      */
     public SwerveSubsystem(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
         swerveDrive = new SwerveDrive(driveCfg, controllerCfg);
+
+        SwerveDriveTelemetry.verbosity = HIGH;
     }
 
     /**
@@ -74,6 +79,7 @@ public class SwerveSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         swerveDrive.updateOdometry();
+        SwerveDriveTelemetry.updateData();
     }
 
     @Override

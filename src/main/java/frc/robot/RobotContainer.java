@@ -31,7 +31,6 @@ public class RobotContainer {
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
-    @SuppressWarnings("SuspiciousNameCombination")
     public RobotContainer() {
         // Configure the trigger bindings
         configureBindings();
@@ -39,8 +38,8 @@ public class RobotContainer {
         Robot.swerveDrive.setDefaultCommand(
                 new AbsoluteFieldDrive(
                         Robot.swerveDrive,
-                        xyStick::getY,
-                        xyStick::getX,
+                        () -> -xyStick.getY(),
+                        () -> -xyStick.getX(),
                         zStick::getTwist,
                         false
                 )
@@ -58,7 +57,6 @@ public class RobotContainer {
      */
     private void configureBindings() {
         xyStick.button(8).onTrue(Robot.swerveDrive.runOnce(() -> Robot.swerveDrive.resetOdometry(new Pose2d())));
-        //xyStick.button(10).onTrue(Commands.runOnce(()->Robot.pidControlEnabled = !Robot.pidControlEnabled));
 
         //xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)));
         //xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(1)));

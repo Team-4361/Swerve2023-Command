@@ -6,20 +6,12 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
-import edu.wpi.first.wpilibj.SerialPort;
 import frc.robot.util.math.GearRatio;
 import frc.robot.util.pid.PresetGroup;
 import frc.robot.util.pid.PresetList;
-import frc.robot.util.swerve.PWMAbsoluteEncoder;
-import swervelib.SwerveModule;
-import swervelib.imu.NavXSwerve;
-import swervelib.motors.SparkMaxSwerve;
-import swervelib.parser.*;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
-import static edu.wpi.first.math.util.Units.radiansToDegrees;
 
 
 /**
@@ -45,7 +37,7 @@ public final class Constants {
     }
 
     public static class VacuumValues {
-        public static int VACUUM_MOTOR_ID = 20;
+        public static int[] VACUUM_MOTORS = new int[]{20, 13};
         public static double VACUUM_PUMP_SPEED = 0.45;
         public static MotorType VACUUM_MOTOR_TYPE = kBrushed;
         public static int SOLENOID_OPEN = 0;
@@ -90,7 +82,7 @@ public final class Constants {
     }
 
     public static class ClimberArmValues {
-        public static final int ROTATION_MOTOR_ID = 18;
+        public static final int ROTATION_MOTOR_ID = 10;
         public static final int EXTENSION_MOTOR_ID = 21;
         public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029);
     }
