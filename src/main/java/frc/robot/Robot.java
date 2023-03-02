@@ -10,13 +10,13 @@ import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import frc.robot.subsystems.climber.ClimberArmSubsystem;
 import frc.robot.subsystems.climber.ClimberWristSubsystem;
-import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
+import frc.robot.subsystems.swerve.SwerveSubsystem;
 import frc.robot.subsystems.vacuum.VacuumSubsystem;
 import frc.robot.subsystems.vision.CameraSubsystem;
 
-import static frc.robot.Constants.Chassis.*;
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
-import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
+import static frc.robot.DriveConstants.Modules.CONTROLLER_CONFIGURATION;
+import static frc.robot.DriveConstants.Modules.DRIVE_CONFIGURATION;
 
 /**
  * The VM is configured to automatically run this class, and to call the methods corresponding to
@@ -27,7 +27,7 @@ import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
 public class Robot extends TimedRobot {
     private RobotContainer robotContainer;
 
-    public static SwerveDriveSubsystem swerveDrive;
+    public static SwerveSubsystem swerveDrive;
     public static ClimberArmSubsystem arm;
     public static ClimberWristSubsystem wrist;
     public static VacuumSubsystem pump;
@@ -42,7 +42,8 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         // Call this method at the very end!
-        swerveDrive = new SwerveDriveSubsystem();
+        swerveDrive = new SwerveSubsystem(DRIVE_CONFIGURATION, CONTROLLER_CONFIGURATION);
+
         arm = new ClimberArmSubsystem();
         wrist = new ClimberWristSubsystem();
         pump = new VacuumSubsystem();
@@ -120,8 +121,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        Robot.arm.getExtension().translateMotor(deadzone(-RobotContainer.xbox.getLeftY()/2, 0.05));
-        Robot.arm.getRotation().translateMotor(deadzone(-RobotContainer.xbox.getRightY(), 0.05));
+        Robot.arm.getExtension().translateMotor(-RobotContainer.xbox.getLeftY()/2);
+        Robot.arm.getRotation().translateMotor(-RobotContainer.xbox.getRightY());
 
     }
 

@@ -71,6 +71,10 @@ public class SwerveDrive
    */
   public        Matrix<N3, N1>           visionMeasurementStdDevs     = VecBuilder.fill(0.9, 0.9, 0.9);
   /**
+   * Invert odometry readings of drive motor positions, used as a patch for debugging currently.
+   */
+  public        boolean                  invertOdometry               = false;
+  /**
    * Swerve IMU device for sensing the heading of the robot.
    */
   private       SwerveIMU                imu;
@@ -261,9 +265,10 @@ public class SwerveDrive
 
       if (SwerveDriveTelemetry.verbosity.ordinal() >= TelemetryVerbosity.HIGH.ordinal())
       {
-        SwerveModuleState2 moduleState = module.getState();
-        SwerveDriveTelemetry.desiredStates[module.moduleNumber * 2] = moduleState.angle.getDegrees();
-        SwerveDriveTelemetry.desiredStates[(module.moduleNumber * 2) + 1] = moduleState.speedMetersPerSecond;
+        SwerveDriveTelemetry.desiredStates[module.moduleNumber *
+                                           2] = desiredStates[module.moduleNumber].angle.getDegrees();
+        SwerveDriveTelemetry.desiredStates[(module.moduleNumber * 2) +
+                                           1] = desiredStates[module.moduleNumber].speedMetersPerSecond;
       }
       if (SwerveDriveTelemetry.verbosity == TelemetryVerbosity.HIGH)
       {
@@ -367,7 +372,8 @@ public class SwerveDrive
   }
 
   /**
-   * Gets the current module positions (azimuth and wheel position (meters))
+   * Gets the current module positions (azimuth and wheel position (meters)). Inverts the distance from each module if
+   * {@link #invertOdometry} is true.
    *
    * @return A list of SwerveModulePositions containg the current module positions
    */
@@ -378,6 +384,10 @@ public class SwerveDrive
     for (SwerveModule module : swerveModules)
     {
       positions[module.moduleNumber] = module.getPosition();
+      if (invertOdometry)
+      {
+        positions[module.moduleNumber].distanceMeters *= -1;
+      }
     }
     return positions;
   }
@@ -629,7 +639,7 @@ public class SwerveDrive
 
   /**
    * Add a vision measurement to the {@link SwerveDrivePoseEstimator} and update the {@link SwerveIMU} gyro reading with
-   * the given timestamp of the vision measurement. <b>THIS WILL BREAK IF UPDATED TOO OFTEN.</b>
+   * the given timestamp of the vision measurement.
    *
    * @param robotPose       Robot {@link Pose2d} as measured by vision.
    * @param timestamp       Timestamp the measurement was taken as time since startup, should be taken from

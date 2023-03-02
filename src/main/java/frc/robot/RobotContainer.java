@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
@@ -12,9 +13,8 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
-
-import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
-import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
+import frc.robot.commands.swerve.auto.Autos;
+import frc.robot.commands.swerve.drivebase.AbsoluteFieldDrive;
 
 
 /**
@@ -31,18 +31,20 @@ public class RobotContainer {
     /**
      * The container for the robot. Contains subsystems, OI devices, and commands.
      */
+    @SuppressWarnings("SuspiciousNameCombination")
     public RobotContainer() {
         // Configure the trigger bindings
         configureBindings();
 
-        
-        Robot.swerveDrive.setDefaultCommand(Robot.swerveDrive.run(() ->  {
-            Robot.swerveDrive.teleopDrive(
-                    deadzone(-xyStick.getY(), DRIVE_DEAD_ZONE),
-                    deadzone(-xyStick.getX(), DRIVE_DEAD_ZONE),
-                    deadzone(zStick.getTwist(), 0.20)
-            );
-        }));
+        Robot.swerveDrive.setDefaultCommand(
+                new AbsoluteFieldDrive(
+                        Robot.swerveDrive,
+                        xyStick::getY,
+                        xyStick::getX,
+                        zStick::getTwist,
+                        false
+                )
+        );
     }
 
     /**
@@ -55,8 +57,7 @@ public class RobotContainer {
      * joysticks}.
      */
     private void configureBindings() {
-        xyStick.button(8).onTrue(Robot.swerveDrive.toggleFieldOriented());
-        xyStick.button(12).onTrue(Robot.swerveDrive.resetGyroCommand());
+        xyStick.button(8).onTrue(Robot.swerveDrive.runOnce(() -> Robot.swerveDrive.resetOdometry(new Pose2d())));
         //xyStick.button(10).onTrue(Commands.runOnce(()->Robot.pidControlEnabled = !Robot.pidControlEnabled));
 
         //xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)));
@@ -64,7 +65,7 @@ public class RobotContainer {
         //xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(2)));
         //xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(3)));
 
-        xbox.x().onTrue(Robot.swerveDrive.resetGyroCommand());
+        xbox.x().onTrue(Commands.runOnce(() -> Robot.swerveDrive.zeroGyro()));
 
         xbox.rightTrigger().whileTrue(Commands.runEnd(() -> {
             Robot.wrist.translateMotor(-xbox.getRightTriggerAxis()/2);
@@ -111,6 +112,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return null;
+        return Autos.driveAndSpin(Robot.swerveDrive);
     }
 }
