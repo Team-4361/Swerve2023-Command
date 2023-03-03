@@ -132,7 +132,7 @@ public final class Constants {
 
 
         /** The offset of the Back Left Motor */
-        public static final double BL_OFFSET = ((6.12)+0.339057)+(Math.PI/2) - (2 * Math.PI) - (Math.PI / 2);
+        public static final double BL_OFFSET = ((((6.12)+0.339057)+(Math.PI/2) - (2 * Math.PI) - (Math.PI / 2)) * Math.PI)-0.33;
 
 
         /** The dead-zone where anything below this value, nothing will happen. */
