@@ -10,6 +10,7 @@ import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
 import java.io.File;
@@ -80,6 +81,8 @@ public class SwerveSubsystem extends SubsystemBase {
     public void periodic() {
         swerveDrive.updateOdometry();
         SwerveDriveTelemetry.updateData();
+
+        SmartDashboard.putData("Field", swerveDrive.field);
     }
 
     @Override

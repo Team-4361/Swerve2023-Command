@@ -44,18 +44,19 @@ public class DriveConstants {
     }
 
     public static class Offset {
-        public static final double FR_OFFSET = ((-2.38) + 0) + (Math.PI / 2) - (2 * Math.PI) + (Math.PI);
-        public static final double FL_OFFSET = ((9.401) + 0.045647) + (Math.PI / 2) - (Math.PI / 2);
-        public static final double BR_OFFSET = ((-3.345) + 0.009) + (Math.PI / 2) - (Math.PI / 2) - (2 * Math.PI);
-        public static final double BL_OFFSET = ((6.12) + 0.339057) + (Math.PI / 2) - (2 * Math.PI) - (Math.PI / 2);
+        // ALL OFFSETS ARE IN DEGREES!
+        public static final double FR_OFFSET = 0; //-226.318;
+        public static final double FL_OFFSET = 0; //180;
+        public static final double BR_OFFSET = 0; //169.39;
+        public static final double BL_OFFSET = 0; //10.07;
     }
 
     public static class PID {
-        public static final PIDFConfig TELEOP_HEADING_PID = new PIDFConfig(0.02, 0, 0, 0);
-        public static final PIDFConfig TELEOP_DRIVE_PID = new PIDFConfig(0.0035, 0, 0, 0);
-        public static final PIDFConfig X_AUTO_PID = new PIDFConfig(0.7, 0, 0);
-        public static final PIDFConfig Y_AUTO_PID = new PIDFConfig(0.7, 0, 0);
-        public static final PIDFConfig ANGLE_AUTO_PID = new PIDFConfig(0.4, 0, 0.01);
+        public static final PIDFConfig TELEOP_HEADING_PID = new PIDFConfig(0.01, 0, 0, 0);
+        public static final PIDFConfig TELEOP_DRIVE_PID = new PIDFConfig(0.01, 0, 0, 0);
+        public static final PIDFConfig X_AUTO_PID = new PIDFConfig(0.01, 0, 0);
+        public static final PIDFConfig Y_AUTO_PID = new PIDFConfig(0.01, 0, 0);
+        public static final PIDFConfig ANGLE_AUTO_PID = new PIDFConfig(0.01, 0, 0);
     }
 
     public static class Modules {
@@ -74,7 +75,7 @@ public class DriveConstants {
                 new SparkMaxSwerve(Ports.FL_DRIVE_ID, true),
                 new SparkMaxSwerve(Ports.FL_TURN_ID, false),
                 new PWMAbsoluteEncoder(Ports.FL_DIO_ENCODER_PORT),
-                radiansToDegrees(Offset.FL_OFFSET),
+                Offset.FL_OFFSET,
                 CHASSIS_SIDE_LENGTH / 2,
                 CHASSIS_SIDE_LENGTH / 2,
                 PID.TELEOP_HEADING_PID,
@@ -87,7 +88,7 @@ public class DriveConstants {
                 new SparkMaxSwerve(Ports.FR_DRIVE_ID, true),
                 new SparkMaxSwerve(Ports.FR_TURN_ID, false),
                 new PWMAbsoluteEncoder(Ports.FR_DIO_ENCODER_PORT),
-                radiansToDegrees(Offset.FR_OFFSET),
+                Offset.FR_OFFSET,
                 Chassis.CHASSIS_SIDE_LENGTH / 2,
                 -Chassis.CHASSIS_SIDE_LENGTH / 2,
                 PID.TELEOP_HEADING_PID,
@@ -100,7 +101,7 @@ public class DriveConstants {
                 new SparkMaxSwerve(Ports.BL_DRIVE_ID, true),
                 new SparkMaxSwerve(Ports.BL_TURN_ID, false),
                 new PWMAbsoluteEncoder(Ports.BL_DIO_ENCODER_PORT),
-                radiansToDegrees(Offset.BL_OFFSET),
+                Offset.BL_OFFSET,
                 -Chassis.CHASSIS_SIDE_LENGTH / 2,
                 Chassis.CHASSIS_SIDE_LENGTH / 2,
                 PID.TELEOP_HEADING_PID,
@@ -113,7 +114,7 @@ public class DriveConstants {
                 new SparkMaxSwerve(Ports.BR_DRIVE_ID, true),
                 new SparkMaxSwerve(Ports.BR_TURN_ID, false),
                 new PWMAbsoluteEncoder(Ports.BR_DIO_ENCODER_PORT),
-                radiansToDegrees(Offset.BR_OFFSET),
+                Offset.BR_OFFSET,
                 -Chassis.CHASSIS_SIDE_LENGTH / 2,
                 -Chassis.CHASSIS_SIDE_LENGTH / 2,
                 PID.TELEOP_HEADING_PID,

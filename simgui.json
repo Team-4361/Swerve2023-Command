@@ -69,6 +69,13 @@
       "/SmartDashboard/Field": "Field2d",
       "/SmartDashboard/Sim Field": "Field2d",
       "/SmartDashboard/navX-Sensor[1]": "Gyro"
+    },
+    "windows": {
+      "/SmartDashboard/Field": {
+        "window": {
+          "visible": true
+        }
+      }
     }
   },
   "NetworkTables": {
@@ -90,6 +97,12 @@
         "open": true
       },
       "Shuffleboard": {
+        "open": true
+      },
+      "SmartDashboard": {
+        "Field": {
+          "open": true
+        },
         "open": true
       }
     }

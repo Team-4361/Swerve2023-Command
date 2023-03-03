@@ -115,6 +115,10 @@ public class Robot extends TimedRobot {
         Robot.arm.getExtension().resetEncoder();
     }
 
+    public static double deadzone(double value, double deadzone) {
+        return Math.abs(value) > deadzone ? value : 0;
+    }
+
 
     /**
      * This method is called periodically during operator control.

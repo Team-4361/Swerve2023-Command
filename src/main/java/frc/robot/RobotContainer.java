@@ -15,6 +15,9 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
 import frc.robot.commands.swerve.auto.Autos;
 import frc.robot.commands.swerve.drivebase.AbsoluteFieldDrive;
+import frc.robot.commands.swerve.drivebase.TeleopDrive;
+
+import static frc.robot.Robot.deadzone;
 
 
 /**
@@ -36,11 +39,13 @@ public class RobotContainer {
         configureBindings();
 
         Robot.swerveDrive.setDefaultCommand(
-                new AbsoluteFieldDrive(
+                new TeleopDrive(
                         Robot.swerveDrive,
-                        () -> -xyStick.getY(),
-                        () -> -xyStick.getX(),
-                        zStick::getTwist,
+                        () -> -deadzone(xyStick.getY(), 0.05),
+                        () -> -deadzone(xyStick.getX(), 0.05),
+                        () -> deadzone(zStick.getTwist(), 0.05),
+                        () -> true,
+                        false,
                         false
                 )
         );

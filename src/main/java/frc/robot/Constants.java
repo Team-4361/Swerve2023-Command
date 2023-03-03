@@ -29,7 +29,6 @@ public final class Constants {
      * AprilTag tracking system.
      */
     public static class FrontCamera {
-
         public static final int TAG_PIPELINE = 0;
         public static final int CUBE_PIPELINE = 1;
         public static final int CONE_PIPELINE = 2;
@@ -43,48 +42,15 @@ public final class Constants {
         public static int SOLENOID_OPEN = 0;
         public static int SOLENOID_CLOSED = 1;
     }
-
-    public static class FourBarArmValues {
-        public static final int ARM_MOTOR_ID = 1;
-        public static final MotorType ARM_MOTOR_TYPE = kBrushless;
-
-        // The feed forward values for the arm. These can be automatically calculated by using ReCalc. Having
-        // a correct feed forward is important as it compensates for the gravity and resistance that will push
-        // the arm down when power is cut.
-        public static final double ARM_kS = 0;
-        public static final double ARM_kG = 0;
-        public static final double ARM_kV = 0;
-        public static final double ARM_kA = 0;
-
-        public static final double ARM_kP = 0.01;
-        public static final double ARM_kI = 0.00;
-        public static final double ARM_kD = 0.00;
-
-        public static final double ARM_GEAR_RATIO = 686; /*:1*/
-
-        public static final double ARM_ANGLE_DEGREES = 10;
-    }
-
-    public static class FourBarWristValues {
-        public static final int WRIST_GEAR_RATIO = 30;
-        public static final int WRIST_MOTOR_ID = 22; // TODO: change!
-
-        public static final double[] WRIST_ANGLE_PRESETS = new double[]{
-                5,
-                10,
-                15,
-                20
-        };
-    }
-
-    public static class FourBarGripperValues {
-        public static final int GRIPPER_MOTOR_VALUE_ID = 0;
-    }
-
     public static class ClimberArmValues {
         public static final int ROTATION_MOTOR_ID = 10;
         public static final int EXTENSION_MOTOR_ID = 21;
         public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029);
+    }
+
+    public static class ClimberWristValues {
+        public static final int WRIST_GEAR_RATIO = 30;
+        public static final int WRIST_MOTOR_ID = 22; // TODO: change!
     }
 
     public static class ClimberPresets {
