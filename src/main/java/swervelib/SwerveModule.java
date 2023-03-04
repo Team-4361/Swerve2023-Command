@@ -80,10 +80,10 @@ public class SwerveModule
     // Configure voltage comp, current limit, and ramp rate.
     angleMotor.setVoltageCompensation(configuration.physicalCharacteristics.optimalVoltage);
     driveMotor.setVoltageCompensation(configuration.physicalCharacteristics.optimalVoltage);
-    angleMotor.setCurrentLimit(configuration.physicalCharacteristics.angleMotorCurrentLimit);
-    driveMotor.setCurrentLimit(configuration.physicalCharacteristics.driveMotorCurrentLimit);
-    angleMotor.setLoopRampRate(configuration.physicalCharacteristics.angleMotorRampRate);
-    driveMotor.setLoopRampRate(configuration.physicalCharacteristics.driveMotorRampRate);
+    //angleMotor.setCurrentLimit(configuration.physicalCharacteristics.angleMotorCurrentLimit);
+    //driveMotor.setCurrentLimit(configuration.physicalCharacteristics.driveMotorCurrentLimit);
+    //angleMotor.setLoopRampRate(configuration.physicalCharacteristics.angleMotorRampRate);
+    //driveMotor.setLoopRampRate(configuration.physicalCharacteristics.driveMotorRampRate);
 
     // Config angle encoders
     absoluteEncoder = moduleConfiguration.absoluteEncoder;
@@ -108,8 +108,8 @@ public class SwerveModule
     driveMotor.setInverted(moduleConfiguration.driveMotorInverted);
     driveMotor.setMotorBrake(true);
 
-    driveMotor.burnFlash();
-    angleMotor.burnFlash();
+    //driveMotor.burnFlash();
+    //angleMotor.burnFlash();
 
     if (SwerveDriveTelemetry.isSimulation)
     {

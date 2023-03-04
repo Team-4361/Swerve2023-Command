@@ -13,12 +13,12 @@ import frc.robot.util.math.CIRMotorGroup;
 import static frc.robot.Constants.VacuumValues.*;
 
 public class VacuumSubsystem extends SubsystemBase {
-    private final CIRMotorGroup motors;
+    private final MotorControllerGroup motors;
     private DoubleSolenoid solenoidR;
 
 
     public VacuumSubsystem() {
-        motors = new CIRMotorGroup(
+        motors = new MotorControllerGroup(
                 new CANSparkMax(VACUUM_MOTORS[0], VACUUM_MOTOR_TYPE),
                 new CANSparkMax(VACUUM_MOTORS[1], VACUUM_MOTOR_TYPE)
         );

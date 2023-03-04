@@ -275,7 +275,7 @@ public class SparkMaxSwerve extends SwerveMotor
   @Override
   public void burnFlash()
   {
-    motor.burnFlash();
+   // motor.burnFlash();
   }
 
   /**

@@ -33,22 +33,20 @@ public class Robot extends TimedRobot {
 
     public static boolean pidControlEnabled = true;
 
+    private long startTime;
+
     /**
      * This method is run when the robot is first started up and should be used for any
      * initialization code.
      */
     @Override
     public void robotInit() {
-        // Call this method at the very end!
-        swerveDrive = new SwerveSubsystem();
-
         arm = new ClimberArmSubsystem();
         wrist = new ClimberWristSubsystem();
         pump = new VacuumSubsystem();
         camera = new CameraSubsystem();
 
-        // *** IMPORTANT: Call this method at the VERY END of robotInit!!! *** //
-        robotContainer = new RobotContainer();
+        startTime = System.currentTimeMillis() + 2000;
     }
 
 
@@ -67,6 +65,12 @@ public class Robot extends TimedRobot {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
         CLIMBER_PRESET_GROUP.updateDashboard();
+
+        if (System.currentTimeMillis() >= startTime && swerveDrive == null) {
+            swerveDrive = new SwerveSubsystem();
+              // *** IMPORTANT: Call this method at the VERY END of robotInit!!! *** //
+            robotContainer = new RobotContainer();
+        }
     }
 
 
