@@ -45,10 +45,10 @@ public class DriveConstants {
 
     public static class Offset {
         // ALL OFFSETS ARE IN DEGREES!
-        public static final double FR_OFFSET = 0; //-226.318;
-        public static final double FL_OFFSET = 0; //180;
-        public static final double BR_OFFSET = 0; //169.39;
-        public static final double BL_OFFSET = 0; //10.07;
+        public static final double FL_OFFSET = 0; //180
+        public static final double FR_OFFSET = 220.1; //-226.318;
+        public static final double BL_OFFSET = 169.53; //10.07;
+        public static final double BR_OFFSET = 193.79; //169.39;
     }
 
     public static class PIDConstraint {
@@ -84,7 +84,7 @@ public class DriveConstants {
         );
 
         public static final SwerveModuleConfiguration FR_MODULE = new SwerveModuleConfiguration(
-                new SparkMaxSwerve(Ports.FR_DRIVE_ID, true),
+                new SparkMaxSwerve(Ports.FR_DRIVE_ID, true).inverted(true),
                 new SparkMaxSwerve(Ports.FR_TURN_ID, false),
                 new PWMAbsoluteEncoder(Ports.FR_DIO_ENCODER_PORT),
                 Offset.FR_OFFSET,
@@ -110,7 +110,7 @@ public class DriveConstants {
         );
 
         public static final SwerveModuleConfiguration BR_MODULE = new SwerveModuleConfiguration(
-                new SparkMaxSwerve(Ports.BR_DRIVE_ID, true),
+                new SparkMaxSwerve(Ports.BR_DRIVE_ID, true).inverted(true),
                 new SparkMaxSwerve(Ports.BR_TURN_ID, false),
                 new PWMAbsoluteEncoder(Ports.BR_DIO_ENCODER_PORT),
                 Offset.BR_OFFSET,

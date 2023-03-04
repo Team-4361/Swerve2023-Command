@@ -44,6 +44,7 @@ public class RobotContainer {
     }
 
     private void simButtonBindings() {
+        /* 
         Robot.swerveDrive.setDefaultCommand(
                 new TeleopDrive(
                         Robot.swerveDrive,
@@ -55,11 +56,34 @@ public class RobotContainer {
                         false
                 )
         );
+        */
 
+        Robot.swerveDrive.setDefaultCommand(
+                new TeleopDrive(
+                        Robot.swerveDrive,
+                        () -> -deadband(xyStick.getY(), 0.05),
+                        () -> -deadband(xyStick.getX(), 0.05),
+                        () -> deadband(zStick.getTwist(), 0.05),
+                        () -> Robot.swerveDrive.isFieldOriented(),
+                        () -> Robot.swerveDrive.isOpenLoop(),
+                        false
+                )
+        );
+
+        /* 
         xbox.x().onTrue(Commands.runOnce(() -> Robot.swerveDrive.resetOdometry(new Pose2d())));
         xbox.y().onTrue(Robot.swerveDrive.toggleFieldOrientedCommand());
         xbox.a().onTrue(Robot.swerveDrive.resetGyroCommand());
         xbox.b().onTrue(Robot.swerveDrive.toggleOpenLoopCommand());
+        */
+
+        xyStick.button(8).onTrue(Robot.swerveDrive.toggleFieldOrientedCommand());
+        xyStick.button(12).onTrue(Robot.swerveDrive.resetGyroCommand());
+        xyStick.button(9).onTrue(Robot.swerveDrive.toggleOpenLoopCommand());
+
+        //xyStick.button(10).onTrue(Commands.runOnce(()->Robot.pidControlEnabled = !Robot.pidControlEnabled));
+        xyStick.trigger().or(zStick.trigger()).whileTrue(Robot.swerveDrive.holdPrecisionModeCommand());
+        xyStick.button(3).whileTrue(Robot.swerveDrive.lockWheelCommand());
     }
 
     /**

@@ -70,6 +70,11 @@ public class SparkMaxSwerve extends SwerveMotor
     this(new CANSparkMax(id, MotorType.kBrushless), isDriveMotor);
   }
 
+  public SparkMaxSwerve inverted(boolean i) {
+    this.setInverted(i);
+    return this;
+  }
+
   /**
    * Set the voltage compensation for the swerve module motor.
    *

@@ -73,7 +73,6 @@ public class SwerveSubsystem extends SubsystemBase {
         );
     }
 
-
     /**
      * Construct the swerve drive.
      */

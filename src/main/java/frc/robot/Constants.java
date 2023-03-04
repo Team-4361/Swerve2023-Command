@@ -50,7 +50,7 @@ public final class Constants {
 
     public static class ClimberWristValues {
         public static final int WRIST_GEAR_RATIO = 30;
-        public static final int WRIST_MOTOR_ID = 22; // TODO: change!
+        public static final int WRIST_MOTOR_ID = 22;
     }
 
     public static class ClimberPresets {
