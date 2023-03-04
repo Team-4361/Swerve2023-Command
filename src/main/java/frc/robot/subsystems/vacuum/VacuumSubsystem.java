@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.PneumaticsModuleType;
 import edu.wpi.first.wpilibj.Servo;
 import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -16,12 +17,15 @@ import frc.robot.Constants;
 import static frc.robot.Constants.VacuumValues.*;
 
 public class VacuumSubsystem extends SubsystemBase {
-    private final CANSparkMax motor;
     private DoubleSolenoid solenoidR;
+    private MotorControllerGroup motor;
     private Servo servo;
 
     public VacuumSubsystem() {
-        this.motor = new CANSparkMax(VACUUM_MOTOR_ID, VACUUM_MOTOR_TYPE);
+        this.motor = new MotorControllerGroup(
+            new CANSparkMax(VACUUM_MOTOR_ID[0], VACUUM_MOTOR_TYPE),
+            new CANSparkMax(VACUUM_MOTOR_ID[1], VACUUM_MOTOR_TYPE)
+        );
         solenoidR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, SOLENOID_OPEN, SOLENOID_CLOSED);
         servo = new Servo(SERVO_ROTATION_ID);
         solenoidR.set(DoubleSolenoid.Value.kOff);

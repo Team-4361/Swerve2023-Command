@@ -39,7 +39,7 @@ public final class Constants {
     }
 
     public static class VacuumValues {
-        public static int VACUUM_MOTOR_ID = 20;
+        public static int[] VACUUM_MOTOR_ID = new int[]{20, 13};
         public static double VACUUM_PUMP_SPEED = 0.45;
         public static MotorType VACUUM_MOTOR_TYPE = kBrushed;
         public static int SOLENOID_OPEN = 0;
@@ -84,7 +84,7 @@ public final class Constants {
         public static final int GRIPPER_MOTOR_VALUE_ID = 0;
     }
     public static class ClimberArmValues {
-        public static final int ROTATION_MOTOR_ID = 18;
+        public static final int ROTATION_MOTOR_ID = 10;
         public static final int EXTENSION_MOTOR_ID = 21;
         public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029);
     }
