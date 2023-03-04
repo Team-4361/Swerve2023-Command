@@ -1,5 +1,6 @@
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
 import edu.wpi.first.math.geometry.Translation3d;
 import edu.wpi.first.math.util.Units;
 import edu.wpi.first.wpilibj.SerialPort;
@@ -9,9 +10,8 @@ import swervelib.math.Matter;
 import swervelib.motors.SparkMaxSwerve;
 import swervelib.parser.*;
 
-import static edu.wpi.first.math.util.Units.radiansToDegrees;
 import static frc.robot.DriveConstants.Chassis.CHASSIS_SIDE_LENGTH;
-import static frc.robot.DriveConstants.PID.TELEOP_HEADING_PID;
+import static frc.robot.DriveConstants.PIDConstraint.HEADING_PID;
 
 public class DriveConstants {
 
@@ -19,7 +19,7 @@ public class DriveConstants {
         public static final double ROBOT_MASS = 75; // robot weight in pounds.
         public static final Matter CHASSIS_SIZE = new Matter(new Translation3d(0, 0, Units.inchesToMeters(26)), ROBOT_MASS);
         public static final double LOOP_TIME  = 0.13;
-        public static final double CHASSIS_SIDE_LENGTH = 0.762;
+        public static final double CHASSIS_SIDE_LENGTH = 0.6604;
 
         public static final double CHASSIS_MAX_SPEED = 7; // meters per second.
 
@@ -51,12 +51,11 @@ public class DriveConstants {
         public static final double BL_OFFSET = 0; //10.07;
     }
 
-    public static class PID {
-        public static final PIDFConfig TELEOP_HEADING_PID = new PIDFConfig(0.01, 0, 0, 0);
-        public static final PIDFConfig TELEOP_DRIVE_PID = new PIDFConfig(0.01, 0, 0, 0);
-        public static final PIDFConfig X_AUTO_PID = new PIDFConfig(0.01, 0, 0);
-        public static final PIDFConfig Y_AUTO_PID = new PIDFConfig(0.01, 0, 0);
-        public static final PIDFConfig ANGLE_AUTO_PID = new PIDFConfig(0.01, 0, 0);
+    public static class PIDConstraint {
+        public static final PIDFConfig HEADING_PID = new PIDFConfig(0.01, 0, 0, 0);
+        public static final PIDFConfig DRIVE_PID = new PIDFConfig(0.01, 0, 0, 0);
+
+        public static final PathConstraints AUTO_CONSTRAINTS = new PathConstraints(3, 3);
     }
 
     public static class Modules {
@@ -78,8 +77,8 @@ public class DriveConstants {
                 Offset.FL_OFFSET,
                 CHASSIS_SIDE_LENGTH / 2,
                 CHASSIS_SIDE_LENGTH / 2,
-                PID.TELEOP_HEADING_PID,
-                PID.TELEOP_DRIVE_PID,
+                PIDConstraint.HEADING_PID,
+                PIDConstraint.DRIVE_PID,
                 Chassis.CHASSIS_MAX_SPEED,
                 Modules.SDS_MODULE
         );
@@ -91,8 +90,8 @@ public class DriveConstants {
                 Offset.FR_OFFSET,
                 Chassis.CHASSIS_SIDE_LENGTH / 2,
                 -Chassis.CHASSIS_SIDE_LENGTH / 2,
-                PID.TELEOP_HEADING_PID,
-                PID.TELEOP_DRIVE_PID,
+                PIDConstraint.HEADING_PID,
+                PIDConstraint.DRIVE_PID,
                 Chassis.CHASSIS_MAX_SPEED,
                 Modules.SDS_MODULE
         );
@@ -104,8 +103,8 @@ public class DriveConstants {
                 Offset.BL_OFFSET,
                 -Chassis.CHASSIS_SIDE_LENGTH / 2,
                 Chassis.CHASSIS_SIDE_LENGTH / 2,
-                PID.TELEOP_HEADING_PID,
-                PID.TELEOP_DRIVE_PID,
+                PIDConstraint.HEADING_PID,
+                PIDConstraint.DRIVE_PID,
                 Chassis.CHASSIS_MAX_SPEED,
                 Modules.SDS_MODULE
         );
@@ -117,8 +116,8 @@ public class DriveConstants {
                 Offset.BR_OFFSET,
                 -Chassis.CHASSIS_SIDE_LENGTH / 2,
                 -Chassis.CHASSIS_SIDE_LENGTH / 2,
-                PID.TELEOP_HEADING_PID,
-                PID.TELEOP_DRIVE_PID,
+                PIDConstraint.HEADING_PID,
+                PIDConstraint.DRIVE_PID,
                 Chassis.CHASSIS_MAX_SPEED,
                 Modules.SDS_MODULE
         );
@@ -137,7 +136,7 @@ public class DriveConstants {
 
         public static final SwerveControllerConfiguration CONTROLLER_CONFIGURATION = new SwerveControllerConfiguration(
                 DRIVE_CONFIGURATION,
-                TELEOP_HEADING_PID
+                HEADING_PID
         );
     }
 }

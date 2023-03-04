@@ -9,6 +9,7 @@ import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.CommandBase;
+import frc.robot.Robot;
 import frc.robot.subsystems.swerve.SwerveSubsystem;
 
 import java.util.function.BooleanSupplier;
@@ -26,7 +27,7 @@ public class TeleopDrive extends CommandBase {
     private final DoubleSupplier vY;
     private final DoubleSupplier omega;
     private final BooleanSupplier driveMode;
-    private final boolean isOpenLoop;
+    private final BooleanSupplier openLoop;
     private final SwerveController controller;
     private final Timer timer = new Timer();
     private final boolean headingCorrection;
@@ -40,13 +41,13 @@ public class TeleopDrive extends CommandBase {
      * @param swerve The subsystem used by this command.
      */
     public TeleopDrive(SwerveSubsystem swerve, DoubleSupplier vX, DoubleSupplier vY, DoubleSupplier omega,
-                       BooleanSupplier driveMode, boolean isOpenLoop, boolean headingCorrection) {
+                       BooleanSupplier driveMode, BooleanSupplier openLoopSupplier, boolean headingCorrection) {
         this.swerve = swerve;
         this.vX = vX;
         this.vY = vY;
         this.omega = omega;
         this.driveMode = driveMode;
-        this.isOpenLoop = isOpenLoop;
+        this.openLoop = openLoopSupplier;
         this.controller = swerve.getSwerveController();
         this.headingCorrection = headingCorrection;
         if (headingCorrection) {
@@ -84,13 +85,13 @@ public class TeleopDrive extends CommandBase {
                     SwerveController.getTranslation2d(correctedChassisSpeeds),
                     correctedChassisSpeeds.omegaRadiansPerSecond,
                     driveMode.getAsBoolean(),
-                    isOpenLoop);
+                    openLoop.getAsBoolean());
             lastTime = timer.get();
         } else {
             // Drive using raw values.
             swerve.drive(new Translation2d(xVelocity * controller.config.maxSpeed, yVelocity * controller.config.maxSpeed),
                     angVelocity * controller.config.maxAngularVelocity,
-                    driveMode.getAsBoolean(), isOpenLoop);
+                    driveMode.getAsBoolean(), openLoop.getAsBoolean());
         }
     }
 

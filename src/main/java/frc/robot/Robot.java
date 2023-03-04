@@ -15,8 +15,6 @@ import frc.robot.subsystems.vacuum.VacuumSubsystem;
 import frc.robot.subsystems.vision.CameraSubsystem;
 
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
-import static frc.robot.DriveConstants.Modules.CONTROLLER_CONFIGURATION;
-import static frc.robot.DriveConstants.Modules.DRIVE_CONFIGURATION;
 
 /**
  * The VM is configured to automatically run this class, and to call the methods corresponding to
@@ -33,7 +31,7 @@ public class Robot extends TimedRobot {
     public static VacuumSubsystem pump;
     public static CameraSubsystem camera;
 
-    public static boolean pidControlEnabled = false; //true; TODO: Change!
+    public static boolean pidControlEnabled = true;
 
     /**
      * This method is run when the robot is first started up and should be used for any
@@ -42,7 +40,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         // Call this method at the very end!
-        swerveDrive = new SwerveSubsystem(DRIVE_CONFIGURATION, CONTROLLER_CONFIGURATION);
+        swerveDrive = new SwerveSubsystem();
 
         arm = new ClimberArmSubsystem();
         wrist = new ClimberWristSubsystem();
@@ -115,8 +113,8 @@ public class Robot extends TimedRobot {
         Robot.arm.getExtension().resetEncoder();
     }
 
-    public static double deadzone(double value, double deadzone) {
-        return Math.abs(value) > deadzone ? value : 0;
+    public static double deadband(double value, double tolerance) {
+        return Math.abs(value) > tolerance ? value : 0;
     }
 
 

@@ -8,52 +8,79 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
-import edu.wpi.first.math.trajectory.Trajectory;
 import edu.wpi.first.wpilibj.Timer;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 
-import java.io.File;
-
+import frc.robot.DriveConstants;
+import frc.robot.Robot;
 import swervelib.SwerveController;
 import swervelib.SwerveDrive;
 import swervelib.math.SwerveKinematics2;
 import swervelib.parser.SwerveControllerConfiguration;
 import swervelib.parser.SwerveDriveConfiguration;
-import swervelib.parser.SwerveParser;
 import swervelib.telemetry.SwerveDriveTelemetry;
 
+import static frc.robot.DriveConstants.Modules.CONTROLLER_CONFIGURATION;
+import static frc.robot.DriveConstants.Modules.DRIVE_CONFIGURATION;
 import static swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity.HIGH;
 
 public class SwerveSubsystem extends SubsystemBase {
 
-    /**
-     * Swerve drive object.
-     */
     private final SwerveDrive swerveDrive;
 
-    /**
-     * Initialize {@link SwerveDrive} with the directory provided.
-     *
-     * @param directory Directory of swerve drive config files.
-     */
-    public SwerveSubsystem(File directory) {
-        // Configure the Telemetry before creating the SwerveDrive to avoid unnecessary objects being created.
-        try {
-            swerveDrive = new SwerveParser(directory).createSwerveDrive();
-        } catch (Exception e) {
-            throw new RuntimeException(e);
-        }
+    private boolean fieldOriented = true, openLoop = true, precisionMode = false;
+
+    public boolean isFieldOriented() {
+        return fieldOriented;
     }
+
+    public boolean isPrecisionMode() {
+        return precisionMode;
+    }
+
+    public SwerveSubsystem setFieldOriented(boolean fieldOriented) {
+        this.fieldOriented = fieldOriented;
+        return this;
+    }
+
+    public SwerveSubsystem setPrecisionMode(boolean precision) {
+        this.precisionMode = precision;
+        return this;
+    }
+
+    public boolean isOpenLoop() {
+        return openLoop;
+    }
+
+    public SwerveSubsystem setOpenLoop(boolean openLoop) {
+        this.openLoop = openLoop;
+        return this;
+    }
+
+    public Command toggleFieldOrientedCommand() { return Commands.runOnce(() -> fieldOriented = !fieldOriented); }
+    public Command toggleOpenLoopCommand() { return Commands.runOnce(() -> openLoop = !openLoop); }
+    public Command lockWheelCommand() { return this.runOnce(swerveDrive::lockPose); }
+
+    public Command resetGyroCommand() { return this.runOnce(swerveDrive::zeroGyro); }
+
+    public Command holdPrecisionModeCommand() {
+        return Commands.runEnd(
+                () -> { precisionMode = true; },
+                () -> { precisionMode = false; }
+        );
+    }
+
 
     /**
      * Construct the swerve drive.
-     *
-     * @param driveCfg      SwerveDriveConfiguration for the swerve.
-     * @param controllerCfg Swerve Controller.
      */
-    public SwerveSubsystem(SwerveDriveConfiguration driveCfg, SwerveControllerConfiguration controllerCfg) {
-        swerveDrive = new SwerveDrive(driveCfg, controllerCfg);
+    public SwerveSubsystem() {
+        swerveDrive = new SwerveDrive(DRIVE_CONFIGURATION, CONTROLLER_CONFIGURATION);
+
+        swerveDrive.setMotorIdleMode(true); // brake mode
 
         SwerveDriveTelemetry.verbosity = HIGH;
     }
@@ -83,10 +110,6 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveDriveTelemetry.updateData();
 
         SmartDashboard.putData("Field", swerveDrive.field);
-    }
-
-    @Override
-    public void simulationPeriodic() {
     }
 
     /**
@@ -128,29 +151,12 @@ public class SwerveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Post the trajectory to the field.
-     *
-     * @param trajectory The trajectory to post.
+     * Resets the gyro angle to zero and resets Odometry to the same position, but facing toward 0.
      */
-    public void postTrajectory(Trajectory trajectory) {
-        swerveDrive.postTrajectory(trajectory);
-    }
-
-    /**
-     * Resets the gyro angle to zero and resets odometry to the same position, but facing toward 0.
-     */
-    public void zeroGyro() {
+    public void resetGyro() {
         swerveDrive.zeroGyro();
     }
 
-    /**
-     * Sets the drive motors to brake/coast mode.
-     *
-     * @param brake True to set motors to brake mode, false for coast.
-     */
-    public void setMotorBrake(boolean brake) {
-        swerveDrive.setMotorIdleMode(brake);
-    }
 
     /**
      * Gets the current yaw angle of the robot, as reported by the imu.  CCW positive, not wrapped.
