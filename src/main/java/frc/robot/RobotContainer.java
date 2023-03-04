@@ -5,7 +5,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -14,7 +13,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
-import frc.robot.commands.swerve.auto.Autos;
+import frc.robot.commands.swerve.auto.FollowTrajectory;
 import frc.robot.commands.swerve.drivebase.TeleopDrive;
 
 import static frc.robot.Robot.deadband;
@@ -44,20 +43,6 @@ public class RobotContainer {
     }
 
     private void simButtonBindings() {
-        /* 
-        Robot.swerveDrive.setDefaultCommand(
-                new TeleopDrive(
-                        Robot.swerveDrive,
-                        () -> -deadband(xbox.getLeftY(), 0.05),
-                        () -> -deadband(xbox.getLeftX(), 0.05),
-                        () -> deadband(xbox.getRightX(), 0.05),
-                        () -> Robot.swerveDrive.isFieldOriented(),
-                        () -> Robot.swerveDrive.isOpenLoop(),
-                        false
-                )
-        );
-        */
-
         Robot.swerveDrive.setDefaultCommand(
                 new TeleopDrive(
                         Robot.swerveDrive,
@@ -162,6 +147,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return Autos.driveAndSpin(Robot.swerveDrive);
+        return new FollowTrajectory("SIMPLE AUTO", false);
     }
 }

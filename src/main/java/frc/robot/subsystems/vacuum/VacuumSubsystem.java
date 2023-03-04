@@ -8,19 +8,21 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
+import frc.robot.util.math.CIRMotorGroup;
 
 import static frc.robot.Constants.VacuumValues.*;
 
 public class VacuumSubsystem extends SubsystemBase {
-    private final MotorControllerGroup motors;
+    private final CIRMotorGroup motors;
     private DoubleSolenoid solenoidR;
 
 
     public VacuumSubsystem() {
-        motors = new MotorControllerGroup(
+        motors = new CIRMotorGroup(
                 new CANSparkMax(VACUUM_MOTORS[0], VACUUM_MOTOR_TYPE),
                 new CANSparkMax(VACUUM_MOTORS[1], VACUUM_MOTOR_TYPE)
         );
+
         solenoidR = new DoubleSolenoid(PneumaticsModuleType.CTREPCM, SOLENOID_OPEN, SOLENOID_CLOSED);
         solenoidR.set(DoubleSolenoid.Value.kOff);
     

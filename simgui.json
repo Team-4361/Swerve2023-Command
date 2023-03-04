@@ -79,6 +79,9 @@
     }
   },
   "NetworkTables": {
+    "Retained Values": {
+      "open": false
+    },
     "retained": {
       "Usage": {
         "Client": {

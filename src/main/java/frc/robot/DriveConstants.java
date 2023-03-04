@@ -80,11 +80,16 @@ public class DriveConstants {
                 PIDConstraint.HEADING_PID,
                 PIDConstraint.DRIVE_PID,
                 Chassis.CHASSIS_MAX_SPEED,
-                Modules.SDS_MODULE
+                Modules.SDS_MODULE,
+                false,
+                false,
+                false,
+                1,
+                SDS_MODULE.angleMotorFreeSpeedRPM
         );
 
         public static final SwerveModuleConfiguration FR_MODULE = new SwerveModuleConfiguration(
-                new SparkMaxSwerve(Ports.FR_DRIVE_ID, true).inverted(true),
+                new SparkMaxSwerve(Ports.FR_DRIVE_ID, true),
                 new SparkMaxSwerve(Ports.FR_TURN_ID, false),
                 new PWMAbsoluteEncoder(Ports.FR_DIO_ENCODER_PORT),
                 Offset.FR_OFFSET,
@@ -93,7 +98,12 @@ public class DriveConstants {
                 PIDConstraint.HEADING_PID,
                 PIDConstraint.DRIVE_PID,
                 Chassis.CHASSIS_MAX_SPEED,
-                Modules.SDS_MODULE
+                Modules.SDS_MODULE,
+                false,
+                true,
+                false,
+                1,
+                SDS_MODULE.angleMotorFreeSpeedRPM
         );
 
         public static final SwerveModuleConfiguration BL_MODULE = new SwerveModuleConfiguration(
@@ -106,11 +116,16 @@ public class DriveConstants {
                 PIDConstraint.HEADING_PID,
                 PIDConstraint.DRIVE_PID,
                 Chassis.CHASSIS_MAX_SPEED,
-                Modules.SDS_MODULE
+                Modules.SDS_MODULE,
+                false,
+                false,
+                false,
+                1,
+                SDS_MODULE.angleMotorFreeSpeedRPM
         );
 
         public static final SwerveModuleConfiguration BR_MODULE = new SwerveModuleConfiguration(
-                new SparkMaxSwerve(Ports.BR_DRIVE_ID, true).inverted(true),
+                new SparkMaxSwerve(Ports.BR_DRIVE_ID, true),
                 new SparkMaxSwerve(Ports.BR_TURN_ID, false),
                 new PWMAbsoluteEncoder(Ports.BR_DIO_ENCODER_PORT),
                 Offset.BR_OFFSET,
@@ -119,7 +134,12 @@ public class DriveConstants {
                 PIDConstraint.HEADING_PID,
                 PIDConstraint.DRIVE_PID,
                 Chassis.CHASSIS_MAX_SPEED,
-                Modules.SDS_MODULE
+                Modules.SDS_MODULE,
+                false,
+                true,
+                false,
+                1,
+                SDS_MODULE.angleMotorFreeSpeedRPM
         );
 
         public static final SwerveDriveConfiguration DRIVE_CONFIGURATION = new SwerveDriveConfiguration(
