@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
@@ -35,6 +36,8 @@ public class Robot extends TimedRobot {
 
     private long startTime;
 
+    private int highestCAN = 0;
+
     /**
      * This method is run when the robot is first started up and should be used for any
      * initialization code.
@@ -46,7 +49,9 @@ public class Robot extends TimedRobot {
         pump = new VacuumSubsystem();
         camera = new CameraSubsystem();
 
-        startTime = System.currentTimeMillis() + 2000;
+        swerveDrive = new SwerveSubsystem();
+
+        robotContainer = new RobotContainer();
     }
 
 
@@ -66,11 +71,6 @@ public class Robot extends TimedRobot {
         CommandScheduler.getInstance().run();
         CLIMBER_PRESET_GROUP.updateDashboard();
 
-        if (System.currentTimeMillis() >= startTime && swerveDrive == null) {
-            swerveDrive = new SwerveSubsystem();
-              // *** IMPORTANT: Call this method at the VERY END of robotInit!!! *** //
-            robotContainer = new RobotContainer();
-        }
     }
 
 

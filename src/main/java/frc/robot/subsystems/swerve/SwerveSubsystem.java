@@ -88,12 +88,8 @@ public class SwerveSubsystem extends SubsystemBase {
     private SwerveDriveConfiguration DRIVE_CONFIGURATION;
     private SwerveControllerConfiguration CONTROLLER_CONFIGURATION;
 
-    private SparkMaxSwerve flDrive, frDrive, blDrive, brDrive;
-    private SparkMaxSwerve flTurn, frTurn, blTurn, brTurn;
-
-    private boolean init = false;
-
-    private long startTime;
+    private final SparkMaxSwerve flDrive, frDrive, blDrive, brDrive;
+    private final SparkMaxSwerve flTurn, frTurn, blTurn, brTurn;
 
     public SwerveSubsystem() {
         flDrive = new SparkMaxSwerve(DriveConstants.Ports.FL_DRIVE_ID, true);
@@ -106,8 +102,6 @@ public class SwerveSubsystem extends SubsystemBase {
         blTurn = new SparkMaxSwerve(BL_TURN_ID, false);
         brTurn = new SparkMaxSwerve(BR_TURN_ID, false);
 
-        startTime = System.currentTimeMillis() + 1000;
-
         SDS_MODULE = new SwerveModulePhysicalCharacteristics(
                 8.16,
                 12.8,
@@ -119,7 +113,96 @@ public class SwerveSubsystem extends SubsystemBase {
                 1
         );
 
-        //swerveDrive.setMotorIdleMode(true); // brake mode
+        FL_MODULE = new SwerveModuleConfiguration(
+                flDrive,
+                flTurn,
+                new PWMAbsoluteEncoder(DriveConstants.Ports.FL_DIO_ENCODER_PORT),
+                DriveConstants.Offset.FL_OFFSET,
+                CHASSIS_SIDE_LENGTH / 2,
+                CHASSIS_SIDE_LENGTH / 2,
+                DriveConstants.PIDConstraint.HEADING_PID,
+                DriveConstants.PIDConstraint.DRIVE_PID,
+                DriveConstants.Chassis.CHASSIS_MAX_SPEED,
+                SDS_MODULE,
+                false,
+                false,
+                false,
+                1,
+                SDS_MODULE.angleMotorFreeSpeedRPM
+        );
+
+        FR_MODULE = new SwerveModuleConfiguration(
+                frDrive,
+                frTurn,
+                new PWMAbsoluteEncoder(DriveConstants.Ports.FR_DIO_ENCODER_PORT),
+                DriveConstants.Offset.FR_OFFSET,
+                DriveConstants.Chassis.CHASSIS_SIDE_LENGTH / 2,
+                -DriveConstants.Chassis.CHASSIS_SIDE_LENGTH / 2,
+                DriveConstants.PIDConstraint.HEADING_PID,
+                DriveConstants.PIDConstraint.DRIVE_PID,
+                DriveConstants.Chassis.CHASSIS_MAX_SPEED,
+                SDS_MODULE,
+                false,
+                true,
+                false,
+                1,
+                SDS_MODULE.angleMotorFreeSpeedRPM
+        );
+
+        BL_MODULE = new SwerveModuleConfiguration(
+                blDrive,
+                blTurn,
+                new PWMAbsoluteEncoder(DriveConstants.Ports.BL_DIO_ENCODER_PORT),
+                DriveConstants.Offset.BL_OFFSET,
+                -DriveConstants.Chassis.CHASSIS_SIDE_LENGTH / 2,
+                DriveConstants.Chassis.CHASSIS_SIDE_LENGTH / 2,
+                DriveConstants.PIDConstraint.HEADING_PID,
+                DriveConstants.PIDConstraint.DRIVE_PID,
+                DriveConstants.Chassis.CHASSIS_MAX_SPEED,
+                SDS_MODULE,
+                false,
+                false,
+                false,
+                1,
+                SDS_MODULE.angleMotorFreeSpeedRPM
+        );
+
+        BR_MODULE = new SwerveModuleConfiguration(
+                brDrive,
+                brTurn,
+                new PWMAbsoluteEncoder(DriveConstants.Ports.BR_DIO_ENCODER_PORT),
+                DriveConstants.Offset.BR_OFFSET,
+                -DriveConstants.Chassis.CHASSIS_SIDE_LENGTH / 2,
+                -DriveConstants.Chassis.CHASSIS_SIDE_LENGTH / 2,
+                DriveConstants.PIDConstraint.HEADING_PID,
+                DriveConstants.PIDConstraint.DRIVE_PID,
+                DriveConstants.Chassis.CHASSIS_MAX_SPEED,
+                SDS_MODULE,
+                false,
+                true,
+                false,
+                1,
+                SDS_MODULE.angleMotorFreeSpeedRPM
+        );
+
+        DRIVE_CONFIGURATION = new SwerveDriveConfiguration(
+                new SwerveModuleConfiguration[]{
+                        FL_MODULE,
+                        FR_MODULE,
+                        BL_MODULE,
+                        BR_MODULE
+                },
+                new NavXSwerve(SerialPort.Port.kMXP),
+                DriveConstants.Chassis.CHASSIS_MAX_SPEED,
+                DriveConstants.Chassis.GYRO_INVERTED
+        );
+
+        CONTROLLER_CONFIGURATION = new SwerveControllerConfiguration(
+                DRIVE_CONFIGURATION,
+                HEADING_PID
+        );
+
+        swerveDrive = new SwerveDrive(DRIVE_CONFIGURATION, CONTROLLER_CONFIGURATION);
 
         SwerveDriveTelemetry.verbosity = HIGH;
     }
@@ -150,99 +233,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         SmartDashboard.putData("Field", swerveDrive.field);
 
-        if (System.currentTimeMillis() >= startTime && !init) {
-            FL_MODULE = new SwerveModuleConfiguration(
-                    flDrive,
-                    flTurn,
-                    new PWMAbsoluteEncoder(DriveConstants.Ports.FL_DIO_ENCODER_PORT),
-                    DriveConstants.Offset.FL_OFFSET,
-                    CHASSIS_SIDE_LENGTH / 2,
-                    CHASSIS_SIDE_LENGTH / 2,
-                    DriveConstants.PIDConstraint.HEADING_PID,
-                    DriveConstants.PIDConstraint.DRIVE_PID,
-                    DriveConstants.Chassis.CHASSIS_MAX_SPEED,
-                    SDS_MODULE,
-                    false,
-                    false,
-                    false,
-                    1,
-                    SDS_MODULE.angleMotorFreeSpeedRPM
-            );
 
-            FR_MODULE = new SwerveModuleConfiguration(
-                    frDrive,
-                    frTurn,
-                    new PWMAbsoluteEncoder(DriveConstants.Ports.FR_DIO_ENCODER_PORT),
-                    DriveConstants.Offset.FR_OFFSET,
-                    DriveConstants.Chassis.CHASSIS_SIDE_LENGTH / 2,
-                    -DriveConstants.Chassis.CHASSIS_SIDE_LENGTH / 2,
-                    DriveConstants.PIDConstraint.HEADING_PID,
-                    DriveConstants.PIDConstraint.DRIVE_PID,
-                    DriveConstants.Chassis.CHASSIS_MAX_SPEED,
-                    SDS_MODULE,
-                    false,
-                    false,
-                    false,
-                    1,
-                    SDS_MODULE.angleMotorFreeSpeedRPM
-            );
-
-            BL_MODULE = new SwerveModuleConfiguration(
-                    blDrive,
-                    blTurn,
-                    new PWMAbsoluteEncoder(DriveConstants.Ports.BL_DIO_ENCODER_PORT),
-                    DriveConstants.Offset.BL_OFFSET,
-                    -DriveConstants.Chassis.CHASSIS_SIDE_LENGTH / 2,
-                    DriveConstants.Chassis.CHASSIS_SIDE_LENGTH / 2,
-                    DriveConstants.PIDConstraint.HEADING_PID,
-                    DriveConstants.PIDConstraint.DRIVE_PID,
-                    DriveConstants.Chassis.CHASSIS_MAX_SPEED,
-                    SDS_MODULE,
-                    false,
-                    false,
-                    false,
-                    1,
-                    SDS_MODULE.angleMotorFreeSpeedRPM
-            );
-
-            BR_MODULE = new SwerveModuleConfiguration(
-                    brDrive,
-                    brTurn,
-                    new PWMAbsoluteEncoder(DriveConstants.Ports.BR_DIO_ENCODER_PORT),
-                    DriveConstants.Offset.BR_OFFSET,
-                    -DriveConstants.Chassis.CHASSIS_SIDE_LENGTH / 2,
-                    -DriveConstants.Chassis.CHASSIS_SIDE_LENGTH / 2,
-                    DriveConstants.PIDConstraint.HEADING_PID,
-                    DriveConstants.PIDConstraint.DRIVE_PID,
-                    DriveConstants.Chassis.CHASSIS_MAX_SPEED,
-                    SDS_MODULE,
-                    false,
-                    false,
-                    false,
-                    1,
-                    SDS_MODULE.angleMotorFreeSpeedRPM
-            );
-
-            DRIVE_CONFIGURATION = new SwerveDriveConfiguration(
-                    new SwerveModuleConfiguration[]{
-                            FL_MODULE,
-                            FR_MODULE,
-                            BL_MODULE,
-                            BR_MODULE
-                    },
-                    new NavXSwerve(SerialPort.Port.kMXP),
-                    DriveConstants.Chassis.CHASSIS_MAX_SPEED,
-                    DriveConstants.Chassis.GYRO_INVERTED
-            );
-
-            CONTROLLER_CONFIGURATION = new SwerveControllerConfiguration(
-                    DRIVE_CONFIGURATION,
-                    HEADING_PID
-            );
-            swerveDrive = new SwerveDrive(DRIVE_CONFIGURATION, CONTROLLER_CONFIGURATION);
-
-            init = true;
-        }
     }
 
     /**

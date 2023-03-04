@@ -48,8 +48,6 @@ public class SparkMaxSwerve extends SwerveMotor
   {
     this.motor = motor;
     this.isDriveMotor = isDriveMotor;
-    factoryDefaults();
-    clearStickyFaults();
 
     encoder = motor.getEncoder();
     pid = motor.getPIDController();
@@ -70,11 +68,6 @@ public class SparkMaxSwerve extends SwerveMotor
     this(new CANSparkMax(id, MotorType.kBrushless), isDriveMotor);
   }
 
-  public SparkMaxSwerve inverted(boolean i) {
-    this.setInverted(i);
-    return this;
-  }
-
   /**
    * Set the voltage compensation for the swerve module motor.
    *
@@ -83,7 +76,7 @@ public class SparkMaxSwerve extends SwerveMotor
   @Override
   public void setVoltageCompensation(double nominalVoltage)
   {
-    motor.enableVoltageCompensation(nominalVoltage);
+    //motor.enableVoltageCompensation(nominalVoltage);
   }
 
   /**
@@ -95,7 +88,7 @@ public class SparkMaxSwerve extends SwerveMotor
   @Override
   public void setCurrentLimit(int currentLimit)
   {
-    motor.setSmartCurrentLimit(currentLimit);
+    //motor.setSmartCurrentLimit(currentLimit);
   }
 
   /**
@@ -106,8 +99,8 @@ public class SparkMaxSwerve extends SwerveMotor
   @Override
   public void setLoopRampRate(double rampRate)
   {
-    motor.setOpenLoopRampRate(rampRate);
-    motor.setClosedLoopRampRate(rampRate);
+    //motor.setOpenLoopRampRate(rampRate);
+    //motor.setClosedLoopRampRate(rampRate);
   }
 
   /**
@@ -140,7 +133,7 @@ public class SparkMaxSwerve extends SwerveMotor
   {
     if (!factoryDefaultOccurred)
     {
-      motor.restoreFactoryDefaults();
+      //motor.restoreFactoryDefaults();
       factoryDefaultOccurred = true;
     }
   }
@@ -151,7 +144,7 @@ public class SparkMaxSwerve extends SwerveMotor
   @Override
   public void clearStickyFaults()
   {
-    motor.clearFaults();
+    //motor.clearFaults();
   }
 
   /**
@@ -255,7 +248,7 @@ public class SparkMaxSwerve extends SwerveMotor
   @Override
   public void setMotorBrake(boolean isBrakeMode)
   {
-    motor.setIdleMode(isBrakeMode ? IdleMode.kBrake : IdleMode.kCoast);
+    //motor.setIdleMode(isBrakeMode ? IdleMode.kBrake : IdleMode.kCoast);
   }
 
   /**
