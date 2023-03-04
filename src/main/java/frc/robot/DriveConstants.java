@@ -23,7 +23,7 @@ public class DriveConstants {
 
         public static final double CHASSIS_MAX_SPEED = 7; // meters per second.
 
-        public static final boolean GYRO_INVERTED = true;
+        public static final boolean GYRO_INVERTED = false;
     }
 
     public static class Ports {
@@ -52,7 +52,7 @@ public class DriveConstants {
     }
 
     public static class PIDConstraint {
-        public static final PIDFConfig HEADING_PID = new PIDFConfig(0.01, 0, 0, 0);
+        public static final PIDFConfig HEADING_PID = new PIDFConfig(0.04, 0, 0, 0);
         public static final PIDFConfig DRIVE_PID = new PIDFConfig(0.01, 0, 0, 0);
 
         public static final PathConstraints AUTO_CONSTRAINTS = new PathConstraints(3, 3);

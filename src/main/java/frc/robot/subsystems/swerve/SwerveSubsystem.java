@@ -33,6 +33,7 @@ import static frc.robot.DriveConstants.Chassis.CHASSIS_SIDE_LENGTH;
 import static frc.robot.DriveConstants.PIDConstraint.HEADING_PID;
 import static frc.robot.DriveConstants.Ports.*;
 import static swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity.HIGH;
+import static swervelib.telemetry.SwerveDriveTelemetry.TelemetryVerbosity.LOW;
 
 public class SwerveSubsystem extends SubsystemBase {
 
@@ -204,7 +205,7 @@ public class SwerveSubsystem extends SubsystemBase {
 
         swerveDrive = new SwerveDrive(DRIVE_CONFIGURATION, CONTROLLER_CONFIGURATION);
 
-        SwerveDriveTelemetry.verbosity = HIGH;
+        SwerveDriveTelemetry.verbosity = LOW;
     }
 
     /**
@@ -232,8 +233,8 @@ public class SwerveSubsystem extends SubsystemBase {
         SwerveDriveTelemetry.updateData();
 
         SmartDashboard.putData("Field", swerveDrive.field);
-
-
+        SmartDashboard.putString("Robot Position", swerveDrive.getPose().toString());
+        SmartDashboard.putString("Robot Angle", swerveDrive.getYaw().toString());
     }
 
     /**

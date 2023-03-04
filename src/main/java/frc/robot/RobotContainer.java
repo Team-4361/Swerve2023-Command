@@ -13,7 +13,9 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
+import frc.robot.commands.swerve.auto.AutoVacuumCommand;
 import frc.robot.commands.swerve.auto.FollowTrajectory;
+import frc.robot.commands.swerve.drivebase.AbsoluteFieldDrive;
 import frc.robot.commands.swerve.drivebase.TeleopDrive;
 
 import static frc.robot.Robot.deadband;
@@ -48,7 +50,7 @@ public class RobotContainer {
                         Robot.swerveDrive,
                         () -> -deadband(xyStick.getY(), 0.05),
                         () -> -deadband(xyStick.getX(), 0.05),
-                        () -> deadband(zStick.getTwist(), 0.05),
+                        () -> -deadband(zStick.getTwist(), 0.05),
                         () -> Robot.swerveDrive.isFieldOriented(),
                         () -> Robot.swerveDrive.isOpenLoop(),
                         false
@@ -99,9 +101,9 @@ public class RobotContainer {
                         Robot.swerveDrive,
                         () -> -deadband(xyStick.getY(), 0.05),
                         () -> -deadband(xyStick.getX(), 0.05),
-                        () -> deadband(zStick.getTwist(), 0.05),
-                        () -> Robot.swerveDrive.isFieldOriented(),
-                        () -> Robot.swerveDrive.isOpenLoop(),
+                        () -> -deadband(zStick.getTwist(), 0.05),
+                        () -> true,
+                        () -> false,
                         false
                 )
         );
@@ -147,6 +149,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new FollowTrajectory("SIMPLE AUTO", true);
+        //return new FollowTrajectory("SIMPLE AUTO", true);
+        return new AutoVacuumCommand();
     }
 }

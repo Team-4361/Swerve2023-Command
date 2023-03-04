@@ -53,8 +53,6 @@ public class SparkMaxSwerve extends SwerveMotor
     pid = motor.getPIDController();
     pid.setFeedbackDevice(
         encoder); // Configure feedback of the PID controller as the integrated encoder.
-
-    motor.setCANTimeout(0); // Spin off configurations in a different thread.
   }
 
   /**
@@ -182,8 +180,8 @@ public class SparkMaxSwerve extends SwerveMotor
       configureCANStatusFrames(10, 20, 20, 500, 500);
     } else
     {
-      absoluteEncoder.setPositionConversionFactor(positionConversionFactor);
-      absoluteEncoder.setVelocityConversionFactor(positionConversionFactor / 60);
+      //absoluteEncoder.setPositionConversionFactor(positionConversionFactor);
+      //absoluteEncoder.setVelocityConversionFactor(positionConversionFactor / 60);
     }
   }
 
