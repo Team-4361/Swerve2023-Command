@@ -5,6 +5,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 
+import static frc.robot.Constants.Chassis.CHASSIS_MAX_SPEED;
 import static frc.robot.commands.auto.PIDTargetCommand.inTolerance;
 
 public class PIDRotateCommand extends CommandBase {
@@ -20,10 +21,10 @@ public class PIDRotateCommand extends CommandBase {
 
     @Override
     public void execute() {
-        Robot.swerveDrive.autoDrive(0, 0, turnController.calculate(
+        Robot.swerveDrive.drive(0, 0, turnController.calculate(
                 Robot.swerveDrive.getRobotHeading().getDegrees(),
                 target
-        ));
+        ) * CHASSIS_MAX_SPEED);
     }
 
     @Override

@@ -4,6 +4,7 @@ import edu.wpi.first.apriltag.AprilTag;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.geometry.*;
+import edu.wpi.first.math.kinematics.SwerveModuleState;
 import edu.wpi.first.math.trajectory.TrapezoidProfile;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
@@ -62,17 +63,19 @@ public class PIDTargetCommand extends CommandBase {
     public void execute() {
         trackedPose = poseSupplier.get();
 
-        Robot.swerveDrive.robotDrive(
-                !inTolerance(trackedPose.getX(), poseOffset.getX(), 2) ?
-                        clamp(controller.calculate(trackedPose.getX(), poseOffset.getX()), -0.25, 0.25)
-                        : 0,
-                !inTolerance(trackedPose.getY(), poseOffset.getY(), 4) ?
-                        clamp(controller.calculate(trackedPose.getY(), poseOffset.getY()), -0.25, 0.25)
-                        : 0,
-                !inTolerance(trackedPose.getRotation().getRadians(), Math.PI, 4) ?
-                        clamp(turnController.calculate(trackedPose.getRotation().getRadians(), Math.PI), -0.05, 0.05)
-                        : 0,
-                0
+        Robot.swerveDrive.drive(
+                Robot.swerveDrive.getJoystickSpeeds(
+                    !inTolerance(trackedPose.getX(), poseOffset.getX(), 2) ?
+                            clamp(controller.calculate(trackedPose.getX(), poseOffset.getX()), -0.25, 0.25)
+                            : 0,
+                    !inTolerance(trackedPose.getY(), poseOffset.getY(), 4) ?
+                            clamp(controller.calculate(trackedPose.getY(), poseOffset.getY()), -0.25, 0.25)
+                            : 0,
+                    !inTolerance(trackedPose.getRotation().getRadians(), Math.PI, 4) ?
+                            clamp(turnController.calculate(trackedPose.getRotation().getRadians(), Math.PI), -0.05, 0.05)
+                            : 0,
+                            false
+                )
         );
     }
 

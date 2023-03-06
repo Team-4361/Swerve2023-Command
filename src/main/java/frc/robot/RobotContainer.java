@@ -12,11 +12,14 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
-import frc.robot.commands.vacuum.OpenVacuumCommand;
+import frc.robot.commands.auto.SimpleAutoCommand;
+import frc.robot.commands.auto.TrajectoryCommand;
+import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
 import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
+import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.fieldOriented;
 
 
 /**
@@ -38,10 +41,13 @@ public class RobotContainer {
         configureBindings();
 
         Robot.swerveDrive.setDefaultCommand(Robot.swerveDrive.run(() ->  {
-            Robot.swerveDrive.autoDrive(
-                    deadzone(-xyStick.getY(), DRIVE_DEAD_ZONE),
-                    deadzone(-xyStick.getX(), DRIVE_DEAD_ZONE),
-                    deadzone(zStick.getTwist(), 0.20)
+            Robot.swerveDrive.drive(
+                Robot.swerveDrive.getJoystickSpeeds(
+                        deadzone(-xyStick.getY(), DRIVE_DEAD_ZONE),
+                        deadzone(-xyStick.getX(), DRIVE_DEAD_ZONE),
+                        deadzone(zStick.getTwist(), 0.20),
+                        fieldOriented
+                )
             );
         }));
     }
@@ -121,9 +127,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return Robot.swerveDrive.followTrajectoryCommand("Eric's Path")
-                .andThen(
-                        Robot.swerveDrive.followTrajectoryCommand("New Path")
-                );
+        return new SimpleAutoCommand();
     }
 }

@@ -2,8 +2,6 @@ package frc.robot.subsystems.swerve;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
 import com.pathplanner.lib.PathPlannerTrajectory;
 import com.pathplanner.lib.commands.PPSwerveControllerCommand;
 import com.pathplanner.lib.server.PathPlannerServer;
@@ -18,12 +16,13 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.util.swerve.SwerveChassis;
 import frc.robot.util.swerve.SwerveModule;
 import frc.robot.util.swerve.SwerveOdometry;
 
 import java.util.HashMap;
+
+import static frc.robot.Constants.Chassis.CHASSIS_MAX_SPEED;
 
 /**
  * This {@link SwerveDriveSubsystem} is designed to be used for controlling the {@link SwerveChassis}, and utilizing
@@ -50,16 +49,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         );
     }
 
-    public Command followTrajectoryCommand(String fileName) {
-        return followTrajectoryCommand(PathPlanner.loadPath(fileName, new PathConstraints(3, 3)));
-    }
-
     public Command holdPrecisionModeCommand() {
         return Commands.runEnd(() -> precisionMode = true, () -> precisionMode = false);
     }
 
     public Command lockWheelCommand() {
-        return Commands.run(() -> {
+        return this.run(() -> {
             swerveChassis.setStates(
                     new SwerveModuleState[]{
                             new SwerveModuleState(0, new Rotation2d(Math.PI/2)),
@@ -69,6 +64,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
                     }
             );
         });
+    }
+
+    public Command resetOdometryCommand() {
+        return Commands.run(this::resetPosition);
     }
 
     public Command toggleFieldOrientedCommand() {
@@ -126,7 +125,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             odometry.update();
 
         SmartDashboard.putString("Robot Actual Heading", robotHeading.toString());
-        SmartDashboard.putString("Robot Position", odometry.getPose().toString());
+        SmartDashboard.putString("Robot Position", getPose().toString());
         SmartDashboard.putBoolean("Gyro Calibrating", gyro.isCalibrating());
     }
 
@@ -155,7 +154,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      * @param vY Y-direction m/s (+ left, - right)
      * @param omega Yaw rad/s (+ left, - right)
      */
-    public void autoDrive(double vX, double vY, double omega) {
+    public void drive(double vX, double vY, double omega) {
         if (precisionMode) {
             vX /= 3;
             vY /= 3;
@@ -165,33 +164,50 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     /**
-     * Drives the Robot using specific speeds and a manually
-     * specified Robot "heading".
-     * Unlike {@link #drive(ChassisSpeeds)}, it will compensate for the angle of the Robot, and
-     * adds flips the value of {@code vY} and {@code omega} to convert into "robot geometry"
+     * Drives the Robot using specific speeds, which is converted to field-relative or robot-relative
+     * automatically. Unlike {@link #drive(ChassisSpeeds)}, it will compensate for the angle of the Robot.
      *
      * @param vX X-direction m/s (+ forward, - reverse)
      * @param vY Y-direction m/s (+ left, - right)
      * @param omega Yaw rad/s (+ left, - right)
      */
-    public void robotDrive(double vX, double vY, double omega, double heading) {
+    public void drive(double vX, double vY, double omega, boolean fieldOriented) {
         if (precisionMode) {
             vX /= 3;
             vY /= 3;
             omega /= 3;
         }
-        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(-vX, -vY, omega, new Rotation2d(heading)));
+        this.drive(ChassisSpeeds.fromFieldRelativeSpeeds(-vX, -vY, omega, fieldOriented ? odometry.getPose().getRotation() : new Rotation2d(0)));
     }
 
-    public void driveForward() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0.8, 0, 0, Rotation2d.fromDegrees(0))); }
-    public void driveBack() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(-0.8, 0, 0, Rotation2d.fromDegrees(0))); }
-    public void driveLeft() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0.8, 0, Rotation2d.fromDegrees(0))); }
-    public void driveRight() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, -0.8, 0, Rotation2d.fromDegrees(0))); }
-    public void stop() { drive(ChassisSpeeds.fromFieldRelativeSpeeds(0, 0, 0, Rotation2d.fromDegrees(0))); }
+    public void stop() {
+        drive(new ChassisSpeeds(0, 0, 0));
+    }
+
+    public ChassisSpeeds getJoystickSpeeds(double jX, double jY, double jOmega, boolean fieldOriented) {
+        jX = Math.pow(jX, 2);
+        jY = Math.pow(jY, 2);
+        jOmega = Math.pow(jOmega, 2);
+
+        return ChassisSpeeds.fromFieldRelativeSpeeds(
+                -jX * CHASSIS_MAX_SPEED,
+                -jY * CHASSIS_MAX_SPEED,
+                -jOmega * CHASSIS_MAX_SPEED,
+                fieldOriented ? odometry.getPose().getRotation() : new Rotation2d(0)
+        );
+    }
+
+    public void setStates(SwerveModuleState[] states) {
+        swerveChassis.setStates(states);
+    }
 
     /** @return {@link Rotation2d} gyroscope instance. */
     public Rotation2d getGyro() {
         return robotHeading;
+    }
+
+    public Pose2d getPose() {
+        return odometry.getPose();
     }
 
     public static double deadzone(double value, double deadzone) {

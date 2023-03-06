@@ -16,8 +16,7 @@ import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 
 import java.util.function.Supplier;
 
-import static frc.robot.Constants.Chassis.SWERVE_WHEEL_CIRCUMFERENCE;
-import static frc.robot.Constants.Chassis.SWERVE_WHEEL_RADIUS;
+import static frc.robot.Constants.Chassis.*;
 
 /**
  * A {@link SwerveModule} is composed of two motors and two encoders:
@@ -113,7 +112,7 @@ public class SwerveModule {
         if (closedLoopSupplier.get()) {
             drivePower = driveController.calculate(velocityMetersPerSecond(), state.speedMetersPerSecond);
         } else {
-            drivePower = state.speedMetersPerSecond * errorFactor;
+            drivePower = (state.speedMetersPerSecond / CHASSIS_MAX_SPEED) * errorFactor;
         }
 
         driveMotor.set(drivePower);
