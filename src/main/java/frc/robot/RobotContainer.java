@@ -12,6 +12,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
+import frc.robot.commands.auto.SimpleAutoCommand;
 import frc.robot.commands.vacuum.OpenVacuumCommand;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
@@ -121,9 +122,6 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return Robot.swerveDrive.followTrajectoryCommand("Eric's Path")
-                .andThen(
-                        Robot.swerveDrive.followTrajectoryCommand("New Path")
-                );
+        return new SimpleAutoCommand();
     }
 }
