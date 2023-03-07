@@ -48,7 +48,7 @@ public class RobotContainer {
                         deadzone(-xyStick.getY(), DRIVE_DEAD_ZONE),
                         deadzone(-xyStick.getX(), DRIVE_DEAD_ZONE),
                         deadzone(zStick.getTwist(), 0.20),
-                        false
+                        fieldOriented
                 )
             );
         }));
