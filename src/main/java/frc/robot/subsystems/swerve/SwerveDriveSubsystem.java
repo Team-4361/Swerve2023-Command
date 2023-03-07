@@ -22,6 +22,8 @@ import frc.robot.util.swerve.SwerveOdometry;
 
 import java.util.HashMap;
 
+import javax.swing.plaf.basic.BasicMenuUI.ChangeHandler;
+
 import static frc.robot.Constants.Chassis.CHASSIS_MAX_SPEED;
 
 /**
@@ -54,16 +56,14 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     public Command lockWheelCommand() {
-        return this.run(() -> {
-            swerveChassis.setStates(
-                    new SwerveModuleState[]{
-                            new SwerveModuleState(0, new Rotation2d(Math.PI/2)),
-                            new SwerveModuleState(0, new Rotation2d(Math.PI/2)),
-                            new SwerveModuleState(0, new Rotation2d(Math.PI/2)),
-                            new SwerveModuleState(0, new Rotation2d(Math.PI/2))
-                    }
-            );
-        });
+        return this.run(() -> swerveChassis.setStates(
+                new SwerveModuleState[]{
+                        new SwerveModuleState(0, new Rotation2d(Math.PI/2)),
+                        new SwerveModuleState(0, new Rotation2d(Math.PI/2)),
+                        new SwerveModuleState(0, new Rotation2d(Math.PI/2)),
+                        new SwerveModuleState(0, new Rotation2d(Math.PI/2))
+                }
+        ));
     }
 
     public Command resetOdometryCommand() {
@@ -185,13 +185,16 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     }
 
     public ChassisSpeeds getJoystickSpeeds(double jX, double jY, double jOmega, boolean fieldOriented) {
-        jX = Math.pow(jX, 2);
-        jY = Math.pow(jY, 2);
-        jOmega = Math.pow(jOmega, 2);
+       // jX = Math.pow(jX, 2);
+       // jY = Math.pow(jY, 2);
+       // jOmega = Math.pow(jOmega, 2);
+
+        SmartDashboard.putNumber("Adjusted X", -jX * CHASSIS_MAX_SPEED);
+        SmartDashboard.putNumber("Adjusted Y", -jY * CHASSIS_MAX_SPEED);
 
         return ChassisSpeeds.fromFieldRelativeSpeeds(
-                -jX * CHASSIS_MAX_SPEED,
                 -jY * CHASSIS_MAX_SPEED,
+                -jX * CHASSIS_MAX_SPEED,
                 -jOmega * CHASSIS_MAX_SPEED,
                 fieldOriented ? odometry.getPose().getRotation() : new Rotation2d(0)
         );

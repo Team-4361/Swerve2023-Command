@@ -5,9 +5,11 @@
 
 package frc.robot;
 
+import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -46,7 +48,7 @@ public class RobotContainer {
                         deadzone(-xyStick.getY(), DRIVE_DEAD_ZONE),
                         deadzone(-xyStick.getX(), DRIVE_DEAD_ZONE),
                         deadzone(zStick.getTwist(), 0.20),
-                        fieldOriented
+                        false
                 )
             );
         }));
@@ -64,9 +66,7 @@ public class RobotContainer {
     private void configureBindings() {
         xyStick.button(8).onTrue(Robot.swerveDrive.toggleFieldOrientedCommand());
         xyStick.button(12).onTrue(Robot.swerveDrive.resetGyroCommand());
-        //xyStick.button(9).onTrue(Robot.swerveDrive.toggleClosedLoopCommand());
 
-        //xyStick.button(10).onTrue(Commands.runOnce(()->Robot.pidControlEnabled = !Robot.pidControlEnabled));
         xyStick.trigger().or(zStick.trigger()).whileTrue(Robot.swerveDrive.holdPrecisionModeCommand());
         xyStick.button(3).whileTrue(Robot.swerveDrive.lockWheelCommand());
 
@@ -75,7 +75,7 @@ public class RobotContainer {
         xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(2)));
         xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(3)));
 
-        xbox.x().onTrue(Robot.swerveDrive.resetGyroCommand());
+        xbox.x().onTrue(Robot.pump.openVacuumCommand());
 
         xbox.rightTrigger().whileTrue(Commands.runEnd(() -> {
             Robot.wrist.translateMotor(-xbox.getRightTriggerAxis()/2);
@@ -93,20 +93,6 @@ public class RobotContainer {
             Robot.wrist.resetEncoder();
             Robot.arm.getRotation().resetEncoder();
             Robot.arm.getExtension().resetEncoder();
-        }));
-
-        //xbox.rightBumper().whileTrue(new OpenVacuumCommand());
-
-        xyStick.button(7).whileTrue(Commands.runEnd(() -> {
-            Robot.pump.setSolenoid(DoubleSolenoid.Value.kForward);
-        }, () -> {
-            Robot.pump.setSolenoid(DoubleSolenoid.Value.kOff);
-        }));
-
-        xyStick.button(11).whileTrue(Commands.runEnd(() -> {
-            Robot.pump.setSolenoid(DoubleSolenoid.Value.kReverse);
-        }, () -> {
-            Robot.pump.setSolenoid(DoubleSolenoid.Value.kOff);
         }));
 
         xbox.leftBumper().whileTrue(Robot.pump.runEnd(
@@ -127,6 +113,20 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return new SimpleAutoCommand();
+        return Robot.swerveDrive.run(
+                () -> Robot.swerveDrive.drive(
+                        new ChassisSpeeds(
+                                -4,
+                                0,
+                                0
+                        )
+                )).alongWith(Robot.pump.runOnce(
+                        () -> Robot.pump.activate(0.45))
+                ).raceWith(
+                        new WaitCommand(5)
+                ).andThen(Robot.swerveDrive.runOnce(
+                        () -> Robot.swerveDrive.stop()
+                ).alongWith(Robot.pump.runOnce(() -> Robot.pump.deactivate()))
+        );
     }
 }

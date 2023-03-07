@@ -8,7 +8,6 @@ package frc.robot;
 import com.pathplanner.lib.PathConstraints;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.util.math.GearRatio;
 import frc.robot.util.pid.PresetGroup;
@@ -16,7 +15,6 @@ import frc.robot.util.pid.PresetList;
 import frc.robot.util.swerve.SwerveModule;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
-import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -42,16 +40,25 @@ public final class Constants {
     public static class VacuumValues {
         public static int[] VACUUM_MOTOR_ID = new int[]{20, 13};
         public static MotorType VACUUM_MOTOR_TYPE = kBrushed;
-        public static int SOLENOID_OPEN = 0;
-        public static int SOLENOID_CLOSED = 1;
-        public static int SERVO_ROTATION_ID = 0;
-
+        public static int VACUUM_SOLENOID_ID = 0;
     }
 
     public static class ClimberArmValues {
         public static final int ROTATION_MOTOR_ID = 10;
         public static final int EXTENSION_MOTOR_ID = 21;
         public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029);
+    }
+
+    public static class ClimberWristValues {
+        public static final int WRIST_GEAR_RATIO = 30;
+        public static final int WRIST_MOTOR_ID = 22; // TODO: change!
+
+        public static final double[] WRIST_ANGLE_PRESETS = new double[]{
+                5,
+                10,
+                15,
+                20
+        };
     }
 
     public static class ClimberPresets {
@@ -73,7 +80,7 @@ public final class Constants {
     public static class AutoValues {
         // fancy calculus type stuff, not sure what to do with it but play with the numbers ;)
         public static final PathConstraints AUTO_CONSTRAINTS = new PathConstraints(3, 3);
-        public static final PIDController AUTO_CONTROLLER = new PIDController(0.01, 0, 0);
+        public static final PIDController AUTO_CONTROLLER = new PIDController(0.1, 0, 0);
     }
 
     /**

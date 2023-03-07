@@ -40,10 +40,9 @@ public class SwerveModule {
     );
 
     private final PIDController driveController = new PIDController(
-            0.5,
+            0.01,
             0.0,
-            0.0,
-            0.02
+            0
     );
 
     private Supplier<Boolean> closedLoopSupplier = () -> false;
@@ -81,7 +80,7 @@ public class SwerveModule {
         double rotationsPerMinute = driveEncoder.getVelocity();
         double rotationsPerSecond = rotationsPerMinute / 60;
 
-        return rotationsPerSecond * SWERVE_WHEEL_CIRCUMFERENCE;
+        return (rotationsPerSecond * SWERVE_WHEEL_CIRCUMFERENCE)/3.3;
     }
 
     public double getDriveMPH() {
@@ -110,7 +109,7 @@ public class SwerveModule {
 
         double drivePower;
         if (closedLoopSupplier.get()) {
-            drivePower = driveController.calculate(velocityMetersPerSecond(), state.speedMetersPerSecond);
+            drivePower = driveController.calculate(velocityMetersPerSecond()*CHASSIS_MAX_SPEED, state.speedMetersPerSecond*CHASSIS_MAX_SPEED);
         } else {
             drivePower = (state.speedMetersPerSecond / CHASSIS_MAX_SPEED) * errorFactor;
         }
