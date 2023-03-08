@@ -4,6 +4,7 @@ import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -35,7 +36,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
 
     private double targetRotation, maxSpeed, tolerance;
 
-    private boolean teleopMode;
+    private boolean teleopMode = false;
 
     /**
      * Sets the Target Rotation that the {@link Encoder} should be set to. While teleoperation mode is disabled,
@@ -68,16 +69,20 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
      * @param speed A motor speed from -1.0 to +1.0 to spin the motor.
      */
     public void translateMotor(double speed) {
-        if (speed == 0 && teleopMode) {
-            // Set the target angle to the current rotations to freeze the value and prevent the PIDController from
-            // automatically adjusting to the previous value.
-            setTarget(getRotation());
-            teleopMode = false;
+        if (DriverStation.isTeleop())
+        {
+            if (speed == 0 && teleopMode) {
+                // Set the target angle to the current rotations to freeze the value and prevent the PIDController from
+                // automatically adjusting to the previous value.
+                setTarget(getRotation());
+                teleopMode = false;
+            }
+            if (speed != 0 && !teleopMode)
+                teleopMode = true;
+    
+            motor.set(speed);
         }
-        if (speed != 0 && !teleopMode)
-            teleopMode = true;
-
-        motor.set(speed);
+       
     }
 
     /**
