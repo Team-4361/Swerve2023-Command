@@ -70,8 +70,6 @@ public class RobotContainer {
         xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(2)));
         xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(3)));
 
-        xbox.x().onTrue(Robot.swerveDrive.resetGyroCommand());
-
         xbox.rightTrigger().whileTrue(Commands.runEnd(() -> {
             Robot.wrist.translateMotor(-xbox.getRightTriggerAxis()/2);
         }, () -> {

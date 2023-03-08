@@ -21,6 +21,9 @@ public class ClimberArmSubsystem extends SubsystemBase {
 
         extension.setPIDControlSupplier(() -> Robot.pidControlEnabled);
         rotation.setPIDControlSupplier(() -> Robot.pidControlEnabled);
+
+        extension.setPID(0.04, 0, 0.01);
+        rotation.setPID(0.04, 0, 0.01);
     }
 
     public SparkMaxPIDSubsystem getExtension() { return extension; }
