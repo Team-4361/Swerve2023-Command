@@ -66,6 +66,10 @@ public class RobotContainer {
         xyStick.trigger().or(zStick.trigger()).whileTrue(Robot.swerveDrive.holdPrecisionModeCommand());
         xyStick.button(3).whileTrue(Robot.swerveDrive.lockWheelCommand());
 
+        xyStick.button(5).or(zStick.button(6)).onTrue(Robot.pump.toggleLEDCommand());
+
+        ///////////////////////////////// XBOX CONTROLS
+
         xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)));
         xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(2)));
         xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(3)));
@@ -88,29 +92,11 @@ public class RobotContainer {
             Robot.arm.getExtension().resetEncoder();
         }));
 
-        //xbox.rightBumper().whileTrue(new OpenVacuumCommand());
-
-        xyStick.button(7).whileTrue(Commands.runEnd(() -> {
-            Robot.pump.setSolenoid(DoubleSolenoid.Value.kForward);
-        }, () -> {
-            Robot.pump.setSolenoid(DoubleSolenoid.Value.kOff);
-        }));
-
-        xyStick.button(11).whileTrue(Commands.runEnd(() -> {
-            Robot.pump.setSolenoid(DoubleSolenoid.Value.kReverse);
-        }, () -> {
-            Robot.pump.setSolenoid(DoubleSolenoid.Value.kOff);
-        }));
-
         xbox.leftBumper().whileTrue(Robot.pump.runEnd(
-                () -> Robot.pump.activate(0.45),
+                () -> Robot.pump.activate(),
                 () -> Robot.pump.deactivate())
         );
-        xbox.povUp().whileTrue(Robot.pump.runEnd(()->{
-            Robot.pump.openVacuum();
-        }, ()->{
-            Robot.pump.closeVacuum();
-        }));
+        xbox.povUp().onTrue(Robot.pump.openVacuumCommand());
     }
 
 
