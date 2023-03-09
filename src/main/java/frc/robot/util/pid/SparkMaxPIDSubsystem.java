@@ -47,8 +47,11 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
      */
     public void setTarget(double rotation) { this.targetRotation = rotation; }
 
-    public SparkMaxPIDSubsystem setPresetSupplier(Supplier<Double> presets) {
-        this.presetSupplier = presets;
+    public SparkMaxPIDSubsystem setPresetList(PresetList list, Supplier<Double> presetSupplier) {
+        this.presetSupplier = presetSupplier;
+
+        list.addListener((index, value) -> updateTarget());
+
         return this;
     }
 
@@ -182,6 +185,11 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         return this;
     }
 
+    public void updateTarget() {
+        setTarget(presetSupplier.get());
+        lastTarget = presetSupplier.get();
+    }
+
     public SparkMaxPIDSubsystem(String name, int motorID, double kP, double kI, double kD) {
         this(name, new CANSparkMax(motorID, kBrushless), kP, kI, kD);
     }
@@ -205,6 +213,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         SmartDashboard.putNumber(name + " Target Rotation", getTargetRotation());
         SmartDashboard.putBoolean(name + " At Target", atTarget());
 
+    
         double suppliedTarget = presetSupplier.get();
         if (lastTarget != presetSupplier.get()) {
             setTarget(suppliedTarget);
