@@ -13,6 +13,7 @@ import frc.robot.subsystems.climber.ClimberWristSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.vacuum.VacuumSubsystem;
 import frc.robot.subsystems.vision.CameraSubsystem;
+import frc.robot.util.math.CameraQuality;
 
 import static frc.robot.Constants.Chassis.*;
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
@@ -52,7 +53,7 @@ public class Robot extends TimedRobot {
         arm = new ClimberArmSubsystem();
         wrist = new ClimberWristSubsystem();
         pump = new VacuumSubsystem();
-        camera = new CameraSubsystem();
+        camera = new CameraSubsystem(CameraQuality.VERY_FAST);
 
         // *** IMPORTANT: Call this method at the VERY END of robotInit!!! *** //
         robotContainer = new RobotContainer();
@@ -96,6 +97,11 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void autonomousInit() {
+        CommandScheduler.getInstance().cancelAll();
+
+        Robot.arm.getRotation().resetEncoder();
+        Robot.arm.getExtension().resetEncoder();
+
         Command autonomousCommand = robotContainer.getAutonomousCommand();
 
         // schedule the autonomous command (example)
@@ -116,8 +122,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         CommandScheduler.getInstance().cancelAll();
-        Robot.arm.getRotation().resetEncoder();
-        Robot.arm.getExtension().resetEncoder();
+      
     }
 
 
@@ -126,9 +131,8 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        Robot.arm.getExtension().translateMotor(deadzone(-RobotContainer.xbox.getLeftY()/2, 0.05));
-        Robot.arm.getRotation().translateMotor(deadzone(-RobotContainer.xbox.getRightY(), 0.05));
-
+        Robot.arm.getExtension().translateMotor(deadzone(-RobotContainer.xbox.getLeftY()/2, 0.1));
+        Robot.arm.getRotation().translateMotor(deadzone(-RobotContainer.xbox.getRightY(), 0.1));
     }
 
 

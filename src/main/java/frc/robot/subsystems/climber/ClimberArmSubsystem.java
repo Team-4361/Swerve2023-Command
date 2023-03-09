@@ -16,11 +16,16 @@ public class ClimberArmSubsystem extends SubsystemBase {
         this.extension = new SparkMaxPIDSubsystem(EXTENSION_NAME, EXTENSION_MOTOR_ID);
         this.rotation = new SparkMaxAngledPIDSubsystem(ROTATION_NAME, ROTATION_GEAR_RATIO, ROTATION_MOTOR_ID);
     
-        extension.setPresetSupplier(() -> CLIMBER_PRESET_GROUP.getCurrentPreset(EXTENSION_NAME));
-        rotation.setPresetSupplier(() -> CLIMBER_PRESET_GROUP.getCurrentPreset(ROTATION_NAME));
+        extension.setPresetList(CLIMBER_PRESET_GROUP.get(EXTENSION_NAME), () -> CLIMBER_PRESET_GROUP.getCurrentPreset(EXTENSION_NAME));
+        rotation.setPresetList(CLIMBER_PRESET_GROUP.get(EXTENSION_NAME), () -> CLIMBER_PRESET_GROUP.getCurrentPreset(ROTATION_NAME));
 
         extension.setPIDControlSupplier(() -> Robot.pidControlEnabled);
         rotation.setPIDControlSupplier(() -> Robot.pidControlEnabled);
+
+        //extension.setPID(0.02, 0, 0.01);
+        //rotation.setPID(0.02, 0, 0.01);
+        extension.setPID(0.01, 0, 0);
+        rotation.setPID(0.01, 0, 0);
     }
 
     public SparkMaxPIDSubsystem getExtension() { return extension; }

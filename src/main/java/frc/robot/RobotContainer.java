@@ -8,11 +8,13 @@ package frc.robot;
 import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
+import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
-import frc.robot.commands.vacuum.OpenVacuumCommand;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
@@ -65,11 +67,8 @@ public class RobotContainer {
         xyStick.button(3).whileTrue(Robot.swerveDrive.lockWheelCommand());
 
         xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)));
-        xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(1)));
-        xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(2)));
-        xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(3)));
-
-        xbox.x().onTrue(Robot.swerveDrive.resetGyroCommand());
+        xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(2)));
+        xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(3)));
 
         xbox.rightTrigger().whileTrue(Commands.runEnd(() -> {
             Robot.wrist.translateMotor(-xbox.getRightTriggerAxis()/2);
@@ -121,9 +120,21 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-        return Robot.swerveDrive.followTrajectoryCommand("Eric's Path")
-                .andThen(
-                        Robot.swerveDrive.followTrajectoryCommand("New Path")
-                );
+        /* 
+        return Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)))
+            /* 
+            new ParallelRaceGroup(
+                Robot.swerveDrive.run(() -> Robot.swerveDrive.robotDrive(-0.5, 0, 0, 0)),
+                new WaitCommand(3)
+            ).andThen(Robot.swerveDrive.runOnce(() -> Robot.swerveDrive.stop())));
+            */
+            
+            return Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)).andThen(new ParallelRaceGroup(
+                Commands.run(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(1)),
+                new WaitCommand(3)
+            ).andThen(new ParallelRaceGroup(
+                Robot.swerveDrive.run(() -> Robot.swerveDrive.robotDrive(-0.5, 0, 0, 0)),
+                new WaitCommand(3)
+            )).andThen(Robot.swerveDrive.runOnce(() -> Robot.swerveDrive.stop())));
     }
 }

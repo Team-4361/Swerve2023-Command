@@ -94,8 +94,12 @@ public final class Constants {
         public static final String EXTENSION_NAME = "Climber Extension";
         public static final String WRIST_NAME = "Climber Wrist";
 
-        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, -10.0, -20.0, -30.0);
-        public static final PresetList EXTENSION_PRESETS = new PresetList(5.0, 10.0, 15.0, 20.0);
+        // PRESET 0 = ZERO POSITION
+        // PRESET 1 = AUTO (NO TELEOP)
+        // PRESET 2 = HIGH POSITION
+        // PRESET 3 = HIGH POSITION
+        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -47.987);
+        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 30.261);
         public static final PresetList WRIST_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0);
 
         public static final PresetGroup CLIMBER_PRESET_GROUP = new PresetGroup()

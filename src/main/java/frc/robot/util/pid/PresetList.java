@@ -13,6 +13,8 @@ public class PresetList extends ArrayList<Double> {
     private String name = "";
     private boolean dashAdded = false;
 
+    private final ArrayList<PresetEventListener> listeners = new ArrayList<>();
+
     public PresetList(Double... elements) {
         this.addAll(Arrays.asList(elements));
     }
@@ -27,13 +29,21 @@ public class PresetList extends ArrayList<Double> {
 
     public PresetList setCurrentPreset(int index) {
         this.index = index;
+        updateListener();
         return this;
+    }
+
+    private void updateListener() {
+        listeners.forEach(((listener) -> {
+            listener.onPresetAdjust(index, getPreset(index));
+        }));
     }
 
     public PresetList nextPreset() {
         if (index+1 <= size()-1) {
             index++;
         }
+        updateListener();
         return this;
     }
 
@@ -41,6 +51,7 @@ public class PresetList extends ArrayList<Double> {
         if (index-1 >= 0) {
             index--;
         }
+        updateListener();
         return this;
     }
 
@@ -63,5 +74,10 @@ public class PresetList extends ArrayList<Double> {
                 set(i, SmartDashboard.getNumber(getDashboardName(i), get(i)));
             }
         }
+    }
+
+    public PresetList addListener(PresetEventListener listener) {
+        listeners.add(listener);
+        return this;
     }
 }
