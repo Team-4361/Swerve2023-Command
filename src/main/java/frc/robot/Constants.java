@@ -96,16 +96,24 @@ public final class Constants {
     }
 
     public static class ClimberPresets {
-        public static final String ROTATION_NAME = "Climber Rotation";
-        public static final String EXTENSION_NAME = "Climber Extension";
-        public static final String WRIST_NAME = "Climber Wrist";
+        //public static final String ROTATION_NAME = "Climber Rotation";
+        //public static final String EXTENSION_NAME = "Climber Extension";
+        //public static final String WRIST_NAME = "Climber Wrist";
+        public static final String ROTATION_NAME = "CLI ROT";
+        public static final String EXTENSION_NAME = "CLI EXT";
+        public static final String WRIST_NAME = "CLIM WST";
 
         // PRESET 0 = ZERO POSITION
         // PRESET 1 = AUTO (NO TELEOP)
         // PRESET 2 = HIGH POSITION
         // PRESET 3 = HIGH POSITION
-        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -47.987);
-        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 30.261);
+
+        //public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -47.987);
+        //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 30.261);
+
+        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -55.625);
+        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 38.618);
+
         public static final PresetList WRIST_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0);
 
         public static final PresetGroup CLIMBER_PRESET_GROUP = new PresetGroup()

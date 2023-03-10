@@ -29,6 +29,8 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     private final RelativeEncoder encoder;
     private final String name;
 
+    private boolean dashEnabled = true;
+
     private Supplier<Double> presetSupplier;
     private Supplier<Boolean> pidEnabledSupplier;
 
@@ -46,6 +48,11 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
      * @see #translateMotor(double)
      */
     public void setTarget(double rotation) { this.targetRotation = rotation; }
+
+    public SparkMaxPIDSubsystem enableDashboard(boolean dashEnabled) {
+        this.dashEnabled = dashEnabled;
+        return this;
+    }
 
     public SparkMaxPIDSubsystem setPresetList(PresetList list, Supplier<Double> presetSupplier) {
         this.presetSupplier = presetSupplier;
@@ -209,9 +216,11 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         if (!teleopMode && !atTarget() && pidEnabledSupplier.get())
             motor.set(clamp(controller.calculate(getRotation(), getTargetRotation()), -maxSpeed, maxSpeed));
 
-        SmartDashboard.putNumber(name + " Rotation", getRotation());
-        SmartDashboard.putNumber(name + " Target Rotation", getTargetRotation());
-        SmartDashboard.putBoolean(name + " At Target", atTarget());
+        if (dashEnabled) {
+            SmartDashboard.putNumber(name + " Rotation", getRotation());
+            SmartDashboard.putNumber(name + " Target Rotation", getTargetRotation());
+            SmartDashboard.putBoolean(name + " At Target", atTarget());
+        }
 
     
         double suppliedTarget = presetSupplier.get();

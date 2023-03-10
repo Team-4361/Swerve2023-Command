@@ -11,10 +11,10 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "6,0": {
+          "3,0": {
             "size": [
               1,
-              1
+              2
             ],
             "content": {
               "_type": "Simple Dial",
@@ -27,97 +27,9 @@
               "Visuals/Show value": true
             }
           },
-          "4,1": {
+          "2,2": {
             "size": [
               2,
-              1
-            ],
-            "content": {
-              "_type": "Simple Dial",
-              "_source0": "network_table:///SmartDashboard/Climber Extension Rotation",
-              "_title": "Climber Extension Rotation",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Range/Min": 0.0,
-              "Range/Max": 40.0,
-              "Visuals/Show value": true
-            }
-          },
-          "2,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Climber Extension Target Rotation",
-              "_title": "Climber Extension Target Rotation",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "0,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Climber Extension At Target",
-              "_title": "Climber Extension At Target",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "4,0": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Simple Dial",
-              "_source0": "network_table:///SmartDashboard/Climber Rotation Rotation",
-              "_title": "Climber Rotation Rotation",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Range/Min": 0.0,
-              "Range/Max": 100.0,
-              "Visuals/Show value": true
-            }
-          },
-          "2,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Text View",
-              "_source0": "network_table:///SmartDashboard/Climber Rotation Target Rotation",
-              "_title": "Climber Rotation Target Rotation",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
-          "0,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "Boolean Box",
-              "_source0": "network_table:///SmartDashboard/Climber Rotation At Target",
-              "_title": "Climber Rotation At Target",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Colors/Color when true": "#7CFC00FF",
-              "Colors/Color when false": "#8B0000FF"
-            }
-          },
-          "6,1": {
-            "size": [
-              1,
               1
             ],
             "content": {
@@ -130,7 +42,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "9,0": {
+          "0,2": {
             "size": [
               1,
               1
@@ -149,7 +61,7 @@
               "Visuals/Orientation": "HORIZONTAL"
             }
           },
-          "9,1": {
+          "1,2": {
             "size": [
               1,
               1
@@ -168,7 +80,7 @@
               "Visuals/Orientation": "HORIZONTAL"
             }
           },
-          "7,0": {
+          "4,0": {
             "size": [
               2,
               2
@@ -177,6 +89,115 @@
               "_type": "Boolean Box",
               "_source0": "network_table:///SmartDashboard/Vacuum: Bound",
               "_title": "Vacuum: Bound",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "2,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///SmartDashboard/CLI EXT Rotation",
+              "_title": "CLI EXT Rotation",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 40.0,
+              "Visuals/Show value": true
+            }
+          },
+          "2,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///SmartDashboard/CLI EXT Target Rotation",
+              "_title": "CLI EXT Target Rotation",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 40.0,
+              "Visuals/Show value": true
+            }
+          },
+          "0,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/CLI EXT At Target",
+              "_title": "CLI EXT At Target",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "1,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///SmartDashboard/CLI ROT Rotation",
+              "_title": "CLI ROT Rotation",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -120.0,
+              "Range/Max": 30.0,
+              "Visuals/Show value": true
+            }
+          },
+          "1,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///SmartDashboard/CLI ROT Target Rotation",
+              "_title": "CLI ROT Target Rotation",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -120.0,
+              "Range/Max": 30.0,
+              "Visuals/Show value": true
+            }
+          },
+          "0,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/CLI ROT At Target",
+              "_title": "CLI ROT At Target",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "4,2": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/Vacuum: Solenoid",
+              "_title": "Vacuum: Solenoid",
               "_glyph": 148,
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
