@@ -1,11 +1,7 @@
 package frc.robot.subsystems.vacuum;
 
 import com.revrobotics.CANSparkMax;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
-import edu.wpi.first.wpilibj.PneumaticsModuleType;
-import edu.wpi.first.wpilibj.PowerDistribution;
-import edu.wpi.first.wpilibj.Servo;
-import edu.wpi.first.wpilibj.Solenoid;
+import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
@@ -13,18 +9,15 @@ import edu.wpi.first.wpilibj2.command.*;
 import static frc.robot.Constants.VacuumValues.*;
 
 public class VacuumSubsystem extends SubsystemBase {
-    private final Solenoid vacuumSolenoid;
-    private final MotorControllerGroup motor;
-
-    private final Solenoid ledSolenoid;
-    private final Solenoid ledSolenoid2;
-
-    private boolean ledStatus = false, updating = true;
-
-    private PowerDistribution pdh;
-
     public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
-    
+
+    private final MotorControllerGroup motor;
+    private final Solenoid solenoidOne, solenoidTwo;
+    private final PowerDistribution pdh;
+    private final AnalogInput sensorOne, sensorTwo;
+
+    private boolean ledStatus = false;
+
 
     public VacuumSubsystem() {
         this.motor = new MotorControllerGroup(
@@ -32,26 +25,23 @@ public class VacuumSubsystem extends SubsystemBase {
             new CANSparkMax(VACUUM_MOTOR_ID[1], VACUUM_MOTOR_TYPE)
         );
         pdh = new PowerDistribution();
-        vacuumSolenoid = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_ID);
-        ledSolenoid = new Solenoid(MODULE_TYPE, 7);
-        ledSolenoid2 = new Solenoid(MODULE_TYPE, 3);
+        solenoidOne = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_ONE);
+        solenoidTwo = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_TWO);
+        sensorOne = new AnalogInput(VACUUM_SENSOR_ONE);
+        sensorTwo = new AnalogInput(VACUUM_SENSOR_TWO);
     }
 
     public Command openVacuumCommand() {
-        return this.runOnce(() -> {
-            updating = false;
-            ledSolenoid.set(false);
-            ledSolenoid2.set(false);
-        }).andThen(new ParallelRaceGroup(
-                this.run(() -> vacuumSolenoid.set(true)),
+        return new ParallelRaceGroup(
+                Commands.run(() -> {
+                    solenoidOne.set(true);
+                    solenoidTwo.set(true);
+                }),
                 new WaitCommand(2)
-        ).andThen(this.runOnce(() -> vacuumSolenoid.set(false)))).andThen(
-            this.runOnce(() -> {
-                ledSolenoid.set(ledStatus);
-                ledSolenoid2.set(ledStatus);
-                updating = true;
-            })
-        );
+        ).andThen(Commands.runOnce(() -> {
+            solenoidOne.set(false);
+            solenoidTwo.set(false);
+        }));
     }
 
 
@@ -78,11 +68,13 @@ public class VacuumSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Vacuum: Running", motor.get() != 0);
         SmartDashboard.putNumber("Vacuum: Power", motor.get());
 
-        if (updating) {
-            ledSolenoid.set(ledStatus);
-            ledSolenoid2.set(ledStatus);
-            pdh.setSwitchableChannel(ledStatus);
-        }
+        SmartDashboard.putNumber("Vacuum: Sensor 1", sensorOne.getValue());
+        SmartDashboard.putNumber("Vacuum: Sensor 2", sensorTwo.getValue());
+
+        SmartDashboard.putBoolean("Vacuum: Bound", sensorOne.getValue()>=VACUUM_THRESHOLD || sensorTwo.getValue()>=VACUUM_THRESHOLD);
+
+        pdh.setSwitchableChannel(ledStatus);
+
     }
 }
 

@@ -58,6 +58,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         return Commands.runEnd(() -> precisionMode = true, () -> precisionMode = false);
     }
 
+    public Pose2d getPose() {
+        return odometry.getPose();
+    }
+
     public Command lockWheelCommand() {
         return Commands.run(() -> {
             swerveChassis.setStates(

@@ -6,6 +6,8 @@
 package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
+import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
 import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.util.math.GearRatio;
@@ -42,9 +44,13 @@ public final class Constants {
         public static int[] VACUUM_MOTOR_ID = new int[]{20, 13};
         public static double VACUUM_PUMP_SPEED = 0.45;
         public static MotorType VACUUM_MOTOR_TYPE = kBrushed;
-        public static int VACUUM_SOLENOID_ID = 0;
-        public static int SOLENOID_CLOSED = 1;
-        public static int SERVO_ROTATION_ID=0;
+        public static int VACUUM_SOLENOID_ONE = 6;
+        public static int VACUUM_SOLENOID_TWO = 7;
+
+        public static int VACUUM_SENSOR_ONE = 2;
+        public static int VACUUM_SENSOR_TWO = 3;
+
+        public static double VACUUM_THRESHOLD = 0;
 
     }
 
@@ -111,9 +117,7 @@ public final class Constants {
 
     public static class AutoValues {
         // fancy calculus type stuff, not sure what to do with it but play with the numbers ;)
-        public static final Constraints X_CONSTRAINTS = new Constraints(0.2, 0.2);
-        public static final Constraints Y_CONSTRAINTS = new Constraints(0.2,0.2);
-        public static final Constraints OMEGA_CONSTRAINTS = new Constraints(0.2, 0.2);
+        public static final PIDController AUTO_CONTROLLER = new PIDController(0.1, 0, 0);
     }
 
     /**
