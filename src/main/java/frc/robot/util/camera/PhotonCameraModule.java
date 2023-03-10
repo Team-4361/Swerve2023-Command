@@ -12,6 +12,8 @@ import org.photonvision.PhotonUtils;
 import org.photonvision.targeting.PhotonPipelineResult;
 import org.photonvision.targeting.PhotonTrackedTarget;
 
+import static frc.robot.Constants.TEST_MODE;
+
 public class PhotonCameraModule extends PhotonCamera {
 
     public static final int CAMERA_BUFFER_MILLIS =  500;
@@ -69,9 +71,11 @@ public class PhotonCameraModule extends PhotonCamera {
             targetFound = false;
         }
 
-        SmartDashboard.putString("Photon: " + getName() + " Pose", trackedPose.toString());
-        SmartDashboard.putString("Photon: " + getName() + " Transform", targetTransform.toString());
-        SmartDashboard.putBoolean("Photon: " + getName() + " Target Found", targetFound);
+        if (TEST_MODE) {
+            SmartDashboard.putString("Photon: " + getName() + " Pose", trackedPose.toString());
+            SmartDashboard.putString("Photon: " + getName() + " Transform", targetTransform.toString());
+            SmartDashboard.putBoolean("Photon: " + getName() + " Target Found", targetFound);
+        }
     }
 
     public PhotonCameraModule(NetworkTableInstance instance, PhotonCameraConfig config) {

@@ -18,6 +18,7 @@ import java.util.function.Supplier;
 
 import static frc.robot.Constants.Chassis.SWERVE_WHEEL_CIRCUMFERENCE;
 import static frc.robot.Constants.Chassis.SWERVE_WHEEL_RADIUS;
+import static frc.robot.Constants.TEST_MODE;
 
 /**
  * A {@link SwerveModule} is composed of two motors and two encoders:
@@ -161,12 +162,16 @@ public class SwerveModule {
         String turnPower = prefix + ": turn pow";
         String turnPosition = prefix + ": turn rad";
 
-        SmartDashboard.putNumber(driveVelocity, getRPM());
-        SmartDashboard.putNumber(turnPower, turnMotor.get());
-        SmartDashboard.putNumber(turnPosition, turnAngleRadians());
-        SmartDashboard.putNumber(drivePower, driveMotor.get());
-        SmartDashboard.putNumber(prefix + " offset tuning rad:", turnAngleRadiansNoOffset());
-        SmartDashboard.putNumber(prefix + " drive encoder: ", driveEncoder.getPosition());
+
+
+        if (TEST_MODE) {
+            SmartDashboard.putNumber(driveVelocity, getRPM());
+            SmartDashboard.putNumber(turnPower, turnMotor.get());
+            SmartDashboard.putNumber(turnPosition, turnAngleRadians());
+            SmartDashboard.putNumber(drivePower, driveMotor.get());
+            SmartDashboard.putNumber(prefix + " offset tuning rad:", turnAngleRadiansNoOffset());
+            SmartDashboard.putNumber(prefix + " drive encoder: ", driveEncoder.getPosition());
+        }
 
     }
 

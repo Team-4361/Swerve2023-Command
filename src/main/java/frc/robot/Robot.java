@@ -17,6 +17,7 @@ import frc.robot.util.math.CameraQuality;
 
 import static frc.robot.Constants.Chassis.*;
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
+import static frc.robot.Constants.TEST_MODE;
 import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
 
 /**
@@ -74,7 +75,9 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        CLIMBER_PRESET_GROUP.updateDashboard();
+        if (TEST_MODE) {
+            CLIMBER_PRESET_GROUP.updateDashboard();
+        }
     }
 
 

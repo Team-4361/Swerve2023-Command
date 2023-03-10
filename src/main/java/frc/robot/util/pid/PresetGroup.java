@@ -2,6 +2,8 @@ package frc.robot.util.pid;
 
 import java.util.HashMap;
 
+import static frc.robot.Constants.TEST_MODE;
+
 public class PresetGroup extends HashMap<String, PresetList> {
     private int index = 0;
 
@@ -21,7 +23,9 @@ public class PresetGroup extends HashMap<String, PresetList> {
     }
 
     public void updateDashboard() {
-        forEach((name, presetList) -> presetList.updateDashboard(name));
+        if (TEST_MODE) {
+            forEach((name, presetList) -> presetList.updateDashboard(name));
+        }
     }
 
     public PresetGroup nextPreset() {

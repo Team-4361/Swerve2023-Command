@@ -8,6 +8,8 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
 
+import static frc.robot.Constants.TEST_MODE;
+
 public class PresetList extends ArrayList<Double> {
     private int index = 0;
     private String name = "";
@@ -60,18 +62,20 @@ public class PresetList extends ArrayList<Double> {
     }
 
     public void updateDashboard(String name) {
-        assert !Objects.equals(name, "");
-        this.name = name;
-        if (!dashAdded) {
-            // Add the initial values to the SmartDashboard.
-            for (int i=0; i<size(); i++) {
-                SmartDashboard.putNumber(getDashboardName(i), getPreset(i));
-            }
-            dashAdded = true;
-        } else {
-            // Pull the values from the SmartDashboard.
-            for (int i=0; i<size(); i++) {
-                set(i, SmartDashboard.getNumber(getDashboardName(i), get(i)));
+        if (TEST_MODE) {
+            assert !Objects.equals(name, "");
+            this.name = name;
+            if (!dashAdded) {
+                // Add the initial values to the SmartDashboard.
+                for (int i = 0; i < size(); i++) {
+                    SmartDashboard.putNumber(getDashboardName(i), getPreset(i));
+                }
+                dashAdded = true;
+            } else {
+                // Pull the values from the SmartDashboard.
+                for (int i = 0; i < size(); i++) {
+                    set(i, SmartDashboard.getNumber(getDashboardName(i), get(i)));
+                }
             }
         }
     }

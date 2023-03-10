@@ -6,6 +6,7 @@ import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
 
+import static frc.robot.Constants.TEST_MODE;
 import static frc.robot.Constants.VacuumValues.*;
 
 public class VacuumSubsystem extends SubsystemBase {
@@ -66,7 +67,10 @@ public class VacuumSubsystem extends SubsystemBase {
     @Override
     public void periodic() {
         SmartDashboard.putBoolean("Vacuum: Running", motor.get() != 0);
-        SmartDashboard.putNumber("Vacuum: Power", motor.get());
+
+        if (TEST_MODE) {
+            SmartDashboard.putNumber("Vacuum: Power", motor.get());
+        }
 
         SmartDashboard.putNumber("Vacuum: Sensor 1", sensorOne.getVoltage());
         SmartDashboard.putNumber("Vacuum: Sensor 2", sensorTwo.getVoltage());

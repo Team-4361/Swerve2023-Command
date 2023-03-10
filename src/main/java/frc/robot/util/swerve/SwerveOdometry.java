@@ -10,6 +10,7 @@ import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import java.util.function.Supplier;
 
 import static frc.robot.Constants.Chassis.ODOMETRY_MS_INTERVAL;
+import static frc.robot.Constants.TEST_MODE;
 
 /**
  * the chassis' swerve drive odometry system. this uses encoders on each
@@ -64,10 +65,12 @@ public class SwerveOdometry {
         SwerveModuleState backRightState = chassis.getBackRight().getState();
         SwerveModuleState backLeftState = chassis.getBackLeft().getState();
 
-        SmartDashboard.putString("FR State", formatDashboard(frontRightState));
-        SmartDashboard.putString("FL State", formatDashboard(frontLeftState));
-        SmartDashboard.putString("BR State", formatDashboard(backRightState));
-        SmartDashboard.putString("BL State", formatDashboard(backLeftState));
+        if (TEST_MODE) {
+            SmartDashboard.putString("FR State", formatDashboard(frontRightState));
+            SmartDashboard.putString("FL State", formatDashboard(frontLeftState));
+            SmartDashboard.putString("BR State", formatDashboard(backRightState));
+            SmartDashboard.putString("BL State", formatDashboard(backLeftState));
+        }
 
         robotPose = odometry.update(
                 gyroSupplier.get(),

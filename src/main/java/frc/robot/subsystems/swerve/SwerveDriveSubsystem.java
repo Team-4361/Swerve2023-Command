@@ -25,6 +25,8 @@ import frc.robot.util.swerve.SwerveOdometry;
 
 import java.util.HashMap;
 
+import static frc.robot.Constants.TEST_MODE;
+
 /**
  * This {@link SwerveDriveSubsystem} is designed to be used for controlling the {@link SwerveChassis}, and utilizing
  * an {@link AHRS} gyroscope to provide the field-relating driving a robot needs. This is also useful for debugging
@@ -129,9 +131,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         if (odometry.shouldUpdate())
             odometry.update();
 
-        SmartDashboard.putString("Robot Actual Heading", robotHeading.toString());
-        SmartDashboard.putString("Robot Position", odometry.getPose().toString());
-        SmartDashboard.putBoolean("Gyro Calibrating", gyro.isCalibrating());
+        SmartDashboard.putNumber("Robot Angle", robotHeading.getDegrees());
+
+        if (TEST_MODE) {
+            SmartDashboard.putString("Robot Position", odometry.getPose().toString());
+            SmartDashboard.putBoolean("Gyro Calibrating", gyro.isCalibrating());
+        }
     }
 
     /** @return A {@link HashMap} containing {@link SwerveModuleState} of the robot. */

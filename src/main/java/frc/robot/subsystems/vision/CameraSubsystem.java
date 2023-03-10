@@ -1,6 +1,7 @@
 package frc.robot.subsystems.vision;
 
 import edu.wpi.first.cameraserver.CameraServer;
+import edu.wpi.first.wpilibj.RobotBase;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.util.camera.PhotonCameraModule;
 import frc.robot.util.math.CameraQuality;
@@ -31,14 +32,16 @@ public class CameraSubsystem extends SubsystemBase {
     public CameraSubsystem(CameraQuality resolution) {
         this.cameras = new ArrayList<>();
 
-        CameraServer.startAutomaticCapture().setResolution(resolution.width, resolution.height);
+        if (!RobotBase.isSimulation())
+            CameraServer.startAutomaticCapture().setResolution(resolution.width, resolution.height);
     }
 
     public CameraSubsystem(CameraQuality resolution, PhotonCameraModule... cameraList) {
         this.cameras = new ArrayList<>();
         cameras.addAll(Arrays.asList(cameraList));
 
-        CameraServer.startAutomaticCapture().setResolution(resolution.width, resolution.height);
+        if (!RobotBase.isSimulation())
+            CameraServer.startAutomaticCapture().setResolution(resolution.width, resolution.height);
     }
 
     @Override

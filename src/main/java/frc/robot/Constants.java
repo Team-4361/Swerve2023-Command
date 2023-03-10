@@ -26,6 +26,8 @@ import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
  */
 public final class Constants {
 
+    public static final boolean TEST_MODE = false;
+
     /**
      * This {@link FrontCamera} class is designed to contain the required values for the PhotonVision
      * AprilTag tracking system.
