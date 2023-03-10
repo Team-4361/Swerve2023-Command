@@ -106,11 +106,15 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
-            return Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)).andThen(new ParallelRaceGroup(
+            return Commands.runOnce(() -> {
+                Robot.swerveDrive.resetGyroCommand();
+                Robot.swerveDrive.resetPosition();
+                CLIMBER_PRESET_GROUP.setCurrentPreset(0);
+            }).andThen(new ParallelRaceGroup(
                 Commands.run(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(1)),
                 new WaitCommand(3)
             ).andThen(new ParallelRaceGroup(
-                Robot.swerveDrive.run(() -> Robot.swerveDrive.robotDrive(-0.5, 0, 0, 0)),
+                Robot.swerveDrive.run(() -> Robot.swerveDrive.autoDrive(-0.5, 0, 0)),
                 new WaitCommand(3)
             )).andThen(Robot.swerveDrive.runOnce(() -> Robot.swerveDrive.stop())));
     }

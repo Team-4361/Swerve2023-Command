@@ -27,8 +27,8 @@ public class VacuumSubsystem extends SubsystemBase {
         pdh = new PowerDistribution();
         solenoidOne = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_ONE);
         solenoidTwo = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_TWO);
-        sensorOne = new AnalogInput(VACUUM_SENSOR_ONE);
-        sensorTwo = new AnalogInput(VACUUM_SENSOR_TWO);
+        sensorOne = new AnalogInput(VACUUM_SENSOR_HORIZONTAL);
+        sensorTwo = new AnalogInput(VACUUM_SENSOR_VERTICAL);
     }
 
     public Command openVacuumCommand() {
@@ -68,10 +68,10 @@ public class VacuumSubsystem extends SubsystemBase {
         SmartDashboard.putBoolean("Vacuum: Running", motor.get() != 0);
         SmartDashboard.putNumber("Vacuum: Power", motor.get());
 
-        SmartDashboard.putNumber("Vacuum: Sensor 1", sensorOne.getValue());
-        SmartDashboard.putNumber("Vacuum: Sensor 2", sensorTwo.getValue());
+        SmartDashboard.putNumber("Vacuum: Sensor 1", sensorOne.getVoltage());
+        SmartDashboard.putNumber("Vacuum: Sensor 2", sensorTwo.getVoltage());
 
-        SmartDashboard.putBoolean("Vacuum: Bound", sensorOne.getValue()>=VACUUM_THRESHOLD || sensorTwo.getValue()>=VACUUM_THRESHOLD);
+        SmartDashboard.putBoolean("Vacuum: Bound", sensorOne.getVoltage()>=VACUUM_THRESHOLD || sensorTwo.getVoltage()>=VACUUM_THRESHOLD);
 
         pdh.setSwitchableChannel(ledStatus);
 

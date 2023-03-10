@@ -7,8 +7,6 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.math.controller.ProfiledPIDController;
-import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.util.math.GearRatio;
 import frc.robot.util.pid.PresetGroup;
@@ -47,8 +45,8 @@ public final class Constants {
         public static int VACUUM_SOLENOID_ONE = 6;
         public static int VACUUM_SOLENOID_TWO = 7;
 
-        public static int VACUUM_SENSOR_ONE = 2;
-        public static int VACUUM_SENSOR_TWO = 3;
+        public static int VACUUM_SENSOR_HORIZONTAL = 2;
+        public static int VACUUM_SENSOR_VERTICAL = 3;
 
         public static double VACUUM_THRESHOLD = 0;
 
