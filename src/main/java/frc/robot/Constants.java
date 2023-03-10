@@ -48,7 +48,7 @@ public final class Constants {
         public static int VACUUM_SENSOR_HORIZONTAL = 2;
         public static int VACUUM_SENSOR_VERTICAL = 3;
 
-        public static double VACUUM_THRESHOLD = 0;
+        public static double VACUUM_THRESHOLD = 1;
 
     }
 
