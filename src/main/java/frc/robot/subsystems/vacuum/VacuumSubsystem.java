@@ -18,7 +18,6 @@ public class VacuumSubsystem extends SubsystemBase {
 
     private boolean ledStatus = false;
 
-
     public VacuumSubsystem() {
         this.motor = new MotorControllerGroup(
             new CANSparkMax(VACUUM_MOTOR_ID[0], VACUUM_MOTOR_TYPE),
