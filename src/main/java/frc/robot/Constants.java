@@ -41,11 +41,12 @@ public final class Constants {
     }
 
     public static class VacuumValues {
-        public static int[] VACUUM_MOTOR_ID = new int[]{20, 13};
+        public static int[] VACUUM_MOTOR_ID = new int[]{20, 13, 11};
         public static double VACUUM_PUMP_SPEED = 0.45;
         public static MotorType VACUUM_MOTOR_TYPE = kBrushed;
         public static int VACUUM_SOLENOID_ONE = 6;
         public static int VACUUM_SOLENOID_TWO = 7;
+        public static int VACUUM_SOLENOID_THREE = 5;
 
         public static int VACUUM_SENSOR_HORIZONTAL = 2;
         public static int VACUUM_SENSOR_VERTICAL = 3;
@@ -105,14 +106,17 @@ public final class Constants {
 
         // PRESET 0 = ZERO POSITION
         // PRESET 1 = AUTO (NO TELEOP)
-        // PRESET 2 = HIGH POSITION
-        // PRESET 3 = HIGH POSITION
+        // PRESET 2 = HUMAN STATION PICKUP
+        // PRESET 3 = CONE DROP OFF
+        // PRESET 4 = LOW POSITION
+        // PRESET 5 = CUBE FLOOR POSITION
+
 
         //public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -47.987);
         //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 30.261);
 
-        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -55.625);
-        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 38.618);
+        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -58.0, -124.0, -105.0);
+        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 38.618, 49.0, 25.0);
 
         public static final PresetList WRIST_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0);
 

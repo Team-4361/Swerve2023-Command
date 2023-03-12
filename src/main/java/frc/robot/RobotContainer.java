@@ -15,6 +15,7 @@ import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
+import frc.robot.commands.auto.Autos;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
@@ -73,6 +74,10 @@ public class RobotContainer {
         xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)));
         xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(2)));
         xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(3)));
+        xbox.x().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(4)));
+
+        xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(5)));
+
 
         xbox.rightTrigger().whileTrue(Commands.runEnd(() -> {
             Robot.wrist.translateMotor(-xbox.getRightTriggerAxis()/2);
@@ -92,10 +97,8 @@ public class RobotContainer {
             Robot.arm.getExtension().resetEncoder();
         }));
 
-        xbox.leftBumper().whileTrue(Robot.pump.runEnd(
-                () -> Robot.pump.activate(),
-                () -> Robot.pump.deactivate())
-        );
+        xbox.leftBumper().onTrue(Commands.runOnce(() -> Robot.pump.toggleVacuum()));
+    
         xbox.povUp().onTrue(Robot.pump.openVacuumCommand());
     }
 
@@ -106,6 +109,7 @@ public class RobotContainer {
      * @return the command to run in autonomous
      */
     public Command getAutonomousCommand() {
+        /* 
             return Commands.runOnce(() -> {
                 Robot.swerveDrive.resetGyroCommand();
                 Robot.swerveDrive.resetPosition();
@@ -117,5 +121,7 @@ public class RobotContainer {
                 Robot.swerveDrive.run(() -> Robot.swerveDrive.autoDrive(-0.5, 0, 0)),
                 new WaitCommand(3)
             )).andThen(Robot.swerveDrive.runOnce(() -> Robot.swerveDrive.stop())));
+            */
+            return Autos.simpleAutoCommand();
     }
 }
