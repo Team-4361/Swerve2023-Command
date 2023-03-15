@@ -5,7 +5,7 @@ import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 
-import static frc.robot.Constants.AutoValues.AUTO_CONTROLLER;
+import static frc.robot.Constants.AutoValues.*;
 
 public class PIDGoToCommand extends CommandBase {
     private final Pose2d desiredPose;
@@ -19,8 +19,8 @@ public class PIDGoToCommand extends CommandBase {
     public void execute() {
         Pose2d currentPose = Robot.swerveDrive.getPose();
         Robot.swerveDrive.autoDrive(
-                AUTO_CONTROLLER.calculate(currentPose.getX(), desiredPose.getX()),
-                AUTO_CONTROLLER.calculate(currentPose.getY(), desiredPose.getY()),
+                X_CONTROLLER.calculate(currentPose.getX(), desiredPose.getX()),
+                Y_CONTROLLER.calculate(currentPose.getY(), desiredPose.getY()),
                 0
         );
     }

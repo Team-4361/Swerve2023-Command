@@ -13,10 +13,12 @@ import frc.robot.subsystems.climber.ClimberWristSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.vacuum.VacuumSubsystem;
 import frc.robot.subsystems.vision.CameraSubsystem;
+import frc.robot.util.camera.PhotonCameraModule;
 import frc.robot.util.math.CameraQuality;
 
 import static frc.robot.Constants.Chassis.*;
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
+import static frc.robot.Constants.FrontCamera.CAMERA_CONFIG;
 import static frc.robot.Constants.TEST_MODE;
 import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
 
@@ -54,7 +56,9 @@ public class Robot extends TimedRobot {
         arm = new ClimberArmSubsystem();
         wrist = new ClimberWristSubsystem();
         pump = new VacuumSubsystem();
-        camera = new CameraSubsystem(CameraQuality.VERY_FAST);
+        camera = new CameraSubsystem(CameraQuality.VERY_FAST).addCamera(
+                new PhotonCameraModule(CAMERA_CONFIG)
+        );
 
         // *** IMPORTANT: Call this method at the VERY END of robotInit!!! *** //
         robotContainer = new RobotContainer();

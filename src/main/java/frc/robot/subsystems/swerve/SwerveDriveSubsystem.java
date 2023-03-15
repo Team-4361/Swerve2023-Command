@@ -40,21 +40,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
 
     public static boolean fieldOriented = true, precisionMode = false, closedLoop = false;
 
-    public Command followTrajectoryCommand(PathPlannerTrajectory trajectory) {
-        return new PPSwerveControllerCommand(
-                trajectory,
-                odometry::getPose,
-                swerveChassis.getSwerveKinematics(),
-                new PIDController(0,0,0),
-                new PIDController(0,0,0),
-                new PIDController(0,0,0),
-                swerveChassis::setStates
-        );
-    }
-
-    public Command followTrajectoryCommand(String fileName) {
-        return followTrajectoryCommand(PathPlanner.loadPath(fileName, new PathConstraints(3, 3)));
-    }
 
     public Command holdPrecisionModeCommand() {
         return Commands.runEnd(() -> precisionMode = true, () -> precisionMode = false);
@@ -213,6 +198,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      */
     public void resetPosition() {
         odometry.resetOdometry();
+    }
+
+    public void resetPositionPose(Pose2d pose) {
+        odometry.resetOdometry(pose);
     }
 
     /** @return The currently used {@link SwerveChassis} */

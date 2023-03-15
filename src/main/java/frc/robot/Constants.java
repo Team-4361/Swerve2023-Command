@@ -5,13 +5,20 @@
 
 package frc.robot;
 
+import com.pathplanner.lib.PathConstraints;
+import com.pathplanner.lib.auto.PIDConstants;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
+import frc.robot.util.camera.PhotonCameraConfig;
 import frc.robot.util.math.GearRatio;
 import frc.robot.util.pid.PresetGroup;
 import frc.robot.util.pid.PresetList;
 import frc.robot.util.swerve.SwerveModule;
+
+import java.util.HashMap;
+import java.util.Map;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
@@ -26,7 +33,7 @@ import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
  */
 public final class Constants {
 
-    public static final boolean TEST_MODE = false;
+    public static final boolean TEST_MODE = true;
 
     /**
      * This {@link FrontCamera} class is designed to contain the required values for the PhotonVision
@@ -38,6 +45,15 @@ public final class Constants {
         public static final int CUBE_PIPELINE = 1;
         public static final int CONE_PIPELINE = 2;
         public static final int DRIVER_PIPELINE = 3;
+
+        public static final PhotonCameraConfig CAMERA_CONFIG = new PhotonCameraConfig()
+                .setCameraName("frontcamera")
+                .setCameraHeight(0.45)
+                .setTargetHeight(0)
+                .setAprilTagPipeline(1)
+                .setConePipeline(2)
+                .setCubePipeline(3);
+
     }
 
     public static class VacuumValues {
@@ -129,7 +145,19 @@ public final class Constants {
 
     public static class AutoValues {
         // fancy calculus type stuff, not sure what to do with it but play with the numbers ;)
-        public static final PIDController AUTO_CONTROLLER = new PIDController(0.1, 0, 0);
+        public static final PIDController X_CONTROLLER = new PIDController(0.1, 0, 0);
+        public static final PIDController Y_CONTROLLER = new PIDController(0.1, 0, 0);
+
+
+        public static final PathConstraints AUTO_CONSTRAINTS = new PathConstraints(4, 4);
+        public static final PIDConstants X_CONSTANTS = new PIDConstants(5.0, 0.0, 0.0);
+        public static final PIDConstants Y_CONSTANTS = new PIDConstants(0.5, 0.0, 0.0);
+
+        public static final PIDController PITCH_CONTROLLER = new PIDController(0.1, 0, 0);
+
+        public static final Map<String, Command> AUTO_EVENT_MAP = new HashMap<>();
+
+        public static final String CHARGE_STATION_AUTO = "CHARGE STATION AUTO";
     }
 
     /**
