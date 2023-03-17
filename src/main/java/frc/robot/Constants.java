@@ -109,7 +109,8 @@ public final class Constants {
     public static class ClimberArmValues {
         public static final int ROTATION_MOTOR_ID = 10;
         public static final int EXTENSION_MOTOR_ID = 21;
-        public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029);
+        //public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029);
+        public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(735);
     }
 
     public static class ClimberPresets {
@@ -121,20 +122,23 @@ public final class Constants {
         public static final String WRIST_NAME = "CLIM WST";
 
         // PRESET 0 = ZERO POSITION
-        // PRESET 1 = AUTO (NO TELEOP)
+        // PRESET 1 = AUTO CONE FLOOR (NO TELEOP)
         // PRESET 2 = HUMAN STATION PICKUP
         // PRESET 3 = CONE DROP OFF
         // PRESET 4 = LOW POSITION
         // PRESET 5 = CUBE FLOOR POSITION
 
 
-        //public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -47.987);
-        //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 30.261);
 
         public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -58.0, -124.0, -105.0);
-        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 38.618, 49.0, 25.0);
+        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 33.02, 49.0, 25.0);
 
-        public static final PresetList WRIST_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0);
+        //public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+
+
+
+        public static final PresetList WRIST_PRESETS = new PresetList(0.0, 4.76, 0.0, 0.0);
 
         public static final PresetGroup CLIMBER_PRESET_GROUP = new PresetGroup()
                 .addPreset(ROTATION_NAME, ROTATION_PRESETS)

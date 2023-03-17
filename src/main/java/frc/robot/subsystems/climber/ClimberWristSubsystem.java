@@ -25,7 +25,9 @@ public class ClimberWristSubsystem extends SparkMaxAngledPIDSubsystem {
         setTolerance(0.2);
         setPresetList(CLIMBER_PRESET_GROUP.get(WRIST_NAME), () -> CLIMBER_PRESET_GROUP.getCurrentPreset(WRIST_NAME));
         //setPIDControlSupplier(() -> Robot.pidControlEnabled);
+        setMaxSpeed(0.25);
+        invert(true);
         setPIDControlSupplier(() -> false);
-        enableDashboard(false);
+        enableDashboard(true);
     }
 }

@@ -37,7 +37,7 @@ public class Robot extends TimedRobot {
     public static VacuumSubsystem pump;
     public static CameraSubsystem camera;
 
-    public static boolean pidControlEnabled = true; //true; TODO: Change!
+    public static boolean pidControlEnabled = true; //true;
 
     /**
      * This method is run when the robot is first started up and should be used for any
@@ -56,9 +56,9 @@ public class Robot extends TimedRobot {
         arm = new ClimberArmSubsystem();
         wrist = new ClimberWristSubsystem();
         pump = new VacuumSubsystem();
-        camera = new CameraSubsystem(CameraQuality.VERY_FAST).addCamera(
-                new PhotonCameraModule(CAMERA_CONFIG)
-        );
+        camera = new CameraSubsystem(CameraQuality.VERY_FAST);//.addCamera(
+                //new PhotonCameraModule(CAMERA_CONFIG)
+        
 
         // *** IMPORTANT: Call this method at the VERY END of robotInit!!! *** //
         robotContainer = new RobotContainer();

@@ -27,6 +27,7 @@ public class ClimberArmSubsystem extends SubsystemBase {
 
         //rotation.setPID(0.03, 0, 0.01); Worked but slow
         rotation.setPID(0.04, 0, 0.01); // Working in competition 3/11/23
+        //rotation.setPID(0.01, 0, 0);
 
         //extension.setPID(0.01, 0, 0);
         //rotation.setPID(0.01, 0, 0);

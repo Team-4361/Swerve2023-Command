@@ -62,6 +62,11 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         return this;
     }
 
+    public SparkMaxPIDSubsystem setContInput(double start, double end) {
+        controller.enableContinuousInput(start, end);
+        return  this;
+    }
+
 
     /** @return The current {@link Encoder} position of the {@link CANSparkMax} motor. */
     public double getRotation() { return encoder.getPosition(); }
@@ -161,6 +166,11 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         return inTolerance(getRotation(), getTargetRotation(), tolerance);
     }
 
+    public SparkMaxPIDSubsystem invert(boolean inverted) {
+        motor.setInverted(inverted);
+        return this;
+    }
+
 
     public SparkMaxPIDSubsystem(String name, CANSparkMax motor, double kP, double kI, double kD) {
         this.controller = new PIDController(kP, kI, kD);
@@ -173,7 +183,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         this.tolerance = 0.5;
 
         if (motor.getMotorType() == kBrushed) {
-            encoder = motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 8192);
+            encoder = motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 2048);
         } else {
             encoder = motor.getEncoder();
         }
