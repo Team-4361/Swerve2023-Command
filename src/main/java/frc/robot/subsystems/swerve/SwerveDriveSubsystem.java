@@ -117,6 +117,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             odometry.update();
 
         SmartDashboard.putNumber("Robot Angle", robotHeading.getDegrees());
+        SmartDashboard.putNumber("Gyro Pitch", new Rotation2d(gyro.getPitch()).getDegrees());
 
         if (TEST_MODE) {
             SmartDashboard.putString("Robot Position", odometry.getPose().toString());

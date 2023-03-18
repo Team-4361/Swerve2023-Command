@@ -204,6 +204,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
 
         if (motor.getMotorType() == kBrushed) {
             encoderAdapter = new RelativeEncoderAdapter(motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 2048));
+            controller.enableContinuousInput(kI, kD);
         } else {
             encoder = motor.getEncoder();
         }

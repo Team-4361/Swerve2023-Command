@@ -5,25 +5,14 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPoint;
-import edu.wpi.first.math.geometry.Rotation2d;
-import edu.wpi.first.math.geometry.Translation2d;
-import edu.wpi.first.wpilibj.DoubleSolenoid;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.auto.Autos;
-import edu.wpi.first.wpilibj2.command.ParallelRaceGroup;
-import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
-import edu.wpi.first.wpilibj2.command.WaitCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
-import frc.robot.commands.auto.FollowPathCommand;
 
-import static frc.robot.Constants.AutoValues.CHARGE_STATION_AUTO;
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
 import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
@@ -129,6 +118,7 @@ public class RobotContainer {
                 new WaitCommand(3)
             )).andThen(Robot.swerveDrive.runOnce(() -> Robot.swerveDrive.stop())));
             */
-        return Autos.coneMiddleAutoCommand();
+        //return Autos.coneMiddleGetAdditionalCommand();
+        return Autos.coneMiddleGetAdditionalCommand();
     }
 }

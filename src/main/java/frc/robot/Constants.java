@@ -130,8 +130,8 @@ public final class Constants {
 
 
 
-        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -58.0, -124.0, -105.0);
-        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 33.02, 49.0, 25.0);
+        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -62.0, -124.0, -105.0);
+        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 27.5, 49.0, 25.0);
 
         //public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
@@ -157,7 +157,7 @@ public final class Constants {
         public static final PIDConstants X_CONSTANTS = new PIDConstants(5.0, 0.0, 0.0);
         public static final PIDConstants Y_CONSTANTS = new PIDConstants(0.5, 0.0, 0.0);
 
-        public static final PIDController PITCH_CONTROLLER = new PIDController(0.1, 0, 0);
+        public static final PIDController PITCH_CONTROLLER = new PIDController(0.2, 0, 0);
 
         public static final Map<String, Command> AUTO_EVENT_MAP = new HashMap<>();
 
