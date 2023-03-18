@@ -26,7 +26,8 @@ import static edu.wpi.first.math.MathUtil.clamp;
 public class SparkMaxPIDSubsystem extends SubsystemBase {
     private final CANSparkMax motor;
     private final PIDController controller;
-    private final RelativeEncoder encoder;
+    private RelativeEncoder encoder;
+    private RelativeEncoderAdapter encoderAdapter;
     private final String name;
 
     private boolean dashEnabled = true;
@@ -69,7 +70,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
 
 
     /** @return The current {@link Encoder} position of the {@link CANSparkMax} motor. */
-    public double getRotation() { return encoder.getPosition(); }
+    public double getRotation() { return getAdjustedPosition(); }
 
     public Supplier<Double> getPresetSupplier() { return presetSupplier; }
 
@@ -116,7 +117,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
      * Resets the {@link Encoder} used for measuring position.
      */
     public void resetEncoder() {
-        encoder.setPosition(0);
+        setAdjustedPosition(0);
         targetRotation = 0;
     }
 
@@ -171,6 +172,24 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         return this;
     }
 
+    private double getAdjustedPosition() {
+        if (encoder == null && encoderAdapter != null) {
+            return encoderAdapter.getPosition();
+        } else {
+            assert encoder != null;
+            return encoder.getPosition();
+        }
+    }
+
+    private double setAdjustedPosition(double position) {
+        if (encoder == null && encoderAdapter != null) {
+            return encoderAdapter.getPosition();
+        } else {
+            assert encoder != null;
+            return encoder.getPosition();
+        }
+    }
+
 
     public SparkMaxPIDSubsystem(String name, CANSparkMax motor, double kP, double kI, double kD) {
         this.controller = new PIDController(kP, kI, kD);
@@ -182,13 +201,24 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         this.maxSpeed = 1;
         this.tolerance = 0.5;
 
+
         if (motor.getMotorType() == kBrushed) {
-            encoder = motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 2048);
+            encoderAdapter = new RelativeEncoderAdapter(motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 2048));
         } else {
             encoder = motor.getEncoder();
         }
 
-        this.targetRotation = encoder.getPosition();
+        /*
+        if (motor.getMotorType() == kBrushed) {
+            encoderAdapter = new RelativeEncoderAdapter(motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 2048));
+        } else {
+            encoderAdapter = new RelativeEncoderAdapter(motor.getEncoder());
+        }
+
+         */
+
+
+        this.targetRotation = getAdjustedPosition();
 
         controller.setP(kP);
         controller.setI(kI);
@@ -219,6 +249,9 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
+        if (encoderAdapter != null)
+            encoderAdapter.update();
+
         if (lastTarget == Double.MAX_VALUE) {
             lastTarget = presetSupplier.get();
         }
