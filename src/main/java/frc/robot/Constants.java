@@ -93,7 +93,7 @@ public final class Constants {
     }
 
     public static class FourBarWristValues {
-        public static final int WRIST_GEAR_RATIO = 30;
+        public static final int WRIST_GEAR_RATIO = 100;
         public static final int WRIST_MOTOR_ID = 22; // TODO: change!
 
         public static final double[] WRIST_ANGLE_PRESETS = new double[]{

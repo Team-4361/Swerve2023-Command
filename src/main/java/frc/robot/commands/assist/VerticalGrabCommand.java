@@ -3,6 +3,8 @@ package frc.robot.commands.assist;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 
+import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
+
 public class VerticalGrabCommand extends CommandBase {
     private long endTime = Long.MIN_VALUE;
 
@@ -25,7 +27,7 @@ public class VerticalGrabCommand extends CommandBase {
 
     @Override
     public boolean isFinished() {
-        return Robot.pump.hasPressure() || System.currentTimeMillis() >= endTime;
+        return Robot.pump.hasPressure() || System.currentTimeMillis() >= endTime || Robot.arm.getExtension().getRotation() >= -110.0;
     }
 
     @Override
