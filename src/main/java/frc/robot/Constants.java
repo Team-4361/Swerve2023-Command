@@ -111,6 +111,8 @@ public final class Constants {
         public static final int EXTENSION_MOTOR_ID = 21;
         //public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029);
         public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(735);
+
+        public static final double WRIST_ROLLOVER_VALUE = 13180.0;
     }
 
     public static class ClimberPresets {
@@ -135,8 +137,6 @@ public final class Constants {
 
         //public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-
-
 
         public static final PresetList WRIST_PRESETS = new PresetList(0.0, 4.76, 0.0, 0.0);
 

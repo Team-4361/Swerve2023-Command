@@ -250,9 +250,6 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
 
     @Override
     public void periodic() {
-        if (encoderAdapter != null)
-            encoderAdapter.update();
-
         if (lastTarget == Double.MAX_VALUE) {
             lastTarget = presetSupplier.get();
         }

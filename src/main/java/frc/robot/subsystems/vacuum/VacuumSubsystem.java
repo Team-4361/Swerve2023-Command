@@ -28,6 +28,9 @@ public class VacuumSubsystem extends SubsystemBase {
         }
     }
 
+    public boolean hasPressure() {
+        return sensorOne.getVoltage()<=VACUUM_THRESHOLD || sensorTwo.getVoltage()<=VACUUM_THRESHOLD;
+    }
 
     public VacuumSubsystem() {
         this.motor = new MotorControllerGroup(
@@ -96,7 +99,7 @@ public class VacuumSubsystem extends SubsystemBase {
         SmartDashboard.putNumber("Vacuum: Sensor 1", sensorOne.getVoltage());
         SmartDashboard.putNumber("Vacuum: Sensor 2", sensorTwo.getVoltage());
 
-        SmartDashboard.putBoolean("Vacuum: Bound", sensorOne.getVoltage()<=VACUUM_THRESHOLD || sensorTwo.getVoltage()<=VACUUM_THRESHOLD);
+        SmartDashboard.putBoolean("Vacuum: Bound", hasPressure());
         SmartDashboard.putBoolean("Vacuum: Solenoid", solenoidOne.get() || solenoidTwo.get() || solenoidThree.get());
         pdh.setSwitchableChannel(ledStatus);
     }
