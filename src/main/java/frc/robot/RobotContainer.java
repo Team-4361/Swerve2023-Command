@@ -119,6 +119,6 @@ public class RobotContainer {
             )).andThen(Robot.swerveDrive.runOnce(() -> Robot.swerveDrive.stop())));
             */
         //return Autos.coneMiddleGetAdditionalCommand();
-        return Autos.coneMiddleGetAdditionalCommand();
+        return Autos.coneMiddleChargeStationCommand();
     }
 }

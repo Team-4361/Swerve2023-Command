@@ -5,7 +5,6 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
-import frc.robot.commands.assist.PIDRotateCommand;
 
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
 
@@ -25,7 +24,7 @@ public class Autos {
         )));
     }
 
-    public static Command autoConeMiddleCommand() {
+    public static Command autoConeMiddleFeature() {
         /*
         return Commands.runOnce(() -> {
             Robot.swerveDrive.resetGyroCommand();
@@ -69,7 +68,7 @@ public class Autos {
     }
 
 
-    public static Command coneMiddleGetAdditionalCommand() {
+    public static Command coneMiddleChargeStationCommand() {
         /*
         return autoConeMiddleCommand().andThen(
             new ParallelRaceGroup(
@@ -84,12 +83,8 @@ public class Autos {
 
          */
         return new SequentialCommandGroup(
-                //autoConeMiddleCommand(),
-                //Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
-                Commands.runOnce(() -> {
-                    Robot.swerveDrive.resetGyroCommand();
-                    Robot.swerveDrive.resetPosition();
-                }),
+                autoConeMiddleFeature(),
+                Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
                 new ParallelRaceGroup(
                         new PIDGoToCommand(new Pose2d(new Translation2d(-20, 0), new Rotation2d(0))),
                         new WaitCommand(3)
