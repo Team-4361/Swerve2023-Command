@@ -6,9 +6,12 @@
 package frc.robot;
 
 import edu.wpi.first.wpilibj.TimedRobot;
+import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
+import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import frc.robot.commands.auto.Autos;
 import frc.robot.subsystems.climber.ClimberArmSubsystem;
 import frc.robot.subsystems.climber.ClimberWristSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
@@ -40,6 +43,8 @@ public class Robot extends TimedRobot {
 
     public static boolean pidControlEnabled = false; //true;
 
+    public static SendableChooser<Command> autoChooser = new SendableChooser<>();
+
     /**
      * This method is run when the robot is first started up and should be used for any
      * initialization code.
@@ -59,7 +64,13 @@ public class Robot extends TimedRobot {
         pump = new VacuumSubsystem();
         camera = new CameraSubsystem(CameraQuality.VERY_FAST);//.addCamera(
                 //new PhotonCameraModule(CAMERA_CONFIG)
-        
+
+        autoChooser.addOption("Charge Station Auto", Autos.coneMiddleChargeStationCommand());
+        autoChooser.addOption("Cone Grab Auto", Autos.coneMiddleGetAdditionalCommand());
+
+        autoChooser.setDefaultOption("Charge Station Auto", Autos.coneMiddleChargeStationCommand());
+
+        SmartDashboard.putData("Auto Chooser", autoChooser);
 
         // *** IMPORTANT: Call this method at the VERY END of robotInit!!! *** //
         robotContainer = new RobotContainer();

@@ -123,7 +123,8 @@ public class RobotContainer {
             )).andThen(Robot.swerveDrive.runOnce(() -> Robot.swerveDrive.stop())));
             */
         //return Autos.coneMiddleGetAdditionalCommand();
-        return Autos.coneMiddleChargeStationCommand();
+        //return Autos.coneMiddleChargeStationCommand();
+        return Robot.autoChooser.getSelected();
         //return new PIDRotateCommand(180);
     }
 }
