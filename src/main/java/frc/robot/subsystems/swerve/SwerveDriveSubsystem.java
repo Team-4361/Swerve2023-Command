@@ -38,7 +38,12 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     private final SwerveOdometry odometry;
     private Rotation2d robotHeading;
 
+    public double gyroRollOffset = 0;
+    public boolean hasSetOffset = false;
+
     public static boolean fieldOriented = true, precisionMode = false, closedLoop = false;
+
+    private long gyroOffsetTime = System.currentTimeMillis() + 5000;
 
 
     public Command holdPrecisionModeCommand() {
@@ -101,6 +106,10 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         resetPosition();
     }
 
+    public double getGyroRoll() {
+        return gyro.getRoll() - gyroRollOffset;
+    }
+
     /**
      * @return A {@link Rotation2d} containing the current rotation of the robot
      */
@@ -117,7 +126,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
             odometry.update();
 
         SmartDashboard.putNumber("Robot Angle", robotHeading.getDegrees());
-        SmartDashboard.putNumber("Gyro Pitch", new Rotation2d(gyro.getPitch()).getDegrees());
+        SmartDashboard.putNumber("Gyro Pitch", getGyroRoll());
 
         if (TEST_MODE) {
             SmartDashboard.putString("Robot Position", odometry.getPose().toString());
@@ -200,6 +209,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
      */
     public void resetPosition() {
         odometry.resetOdometry();
+        gyroRollOffset = gyro.getRoll();
     }
 
     public void resetPositionPose(Pose2d pose) {

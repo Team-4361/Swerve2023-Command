@@ -72,11 +72,19 @@ public class Autos {
 
     public static Command coneMiddleChargeStationCommand() {
         return new SequentialCommandGroup(
-                autoConeMiddleFeature(),
-                Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
+                //autoConeMiddleFeature(),
+                Commands.runOnce(() -> {
+                        Robot.swerveDrive.resetGyroCommand();
+                        Robot.swerveDrive.resetPosition();
+                }),
+                //Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
                 new ParallelRaceGroup(
-                        new PIDGoToCommand(new Pose2d(new Translation2d(-20, 0), new Rotation2d(0))),
+                        new PIDGoToCommand(new Pose2d(new Translation2d(-22, 0), new Rotation2d(0))),
                         new WaitCommand(3)
+                ),
+                new ParallelRaceGroup(
+                        Commands.run(() -> Robot.swerveDrive.stop()),
+                        new WaitCommand(2)
                 ),
                 new ParallelRaceGroup(
                         new PIDGoToCommand(new Pose2d(new Translation2d(-8.75, 0), new Rotation2d(0))),
@@ -94,7 +102,7 @@ public class Autos {
                 autoConeMiddleFeature(),
                 Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
                 new ParallelRaceGroup(
-                        new PIDGoToCommand(new Pose2d(new Translation2d(-6.0, 0), new Rotation2d(0))),
+                        new PIDGoToCommand(new Pose2d(new Translation2d(-18.8, 0), new Rotation2d(0))),
                         new WaitCommand(3)
                 ),
                 new ParallelRaceGroup(

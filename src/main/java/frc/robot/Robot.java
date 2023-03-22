@@ -8,6 +8,7 @@ package frc.robot;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.CommandScheduler;
+import edu.wpi.first.wpilibj2.command.PrintCommand;
 import frc.robot.subsystems.climber.ClimberArmSubsystem;
 import frc.robot.subsystems.climber.ClimberWristSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
@@ -37,7 +38,7 @@ public class Robot extends TimedRobot {
     public static VacuumSubsystem pump;
     public static CameraSubsystem camera;
 
-    public static boolean pidControlEnabled = true; //true;
+    public static boolean pidControlEnabled = false; //true;
 
     /**
      * This method is run when the robot is first started up and should be used for any
@@ -82,6 +83,12 @@ public class Robot extends TimedRobot {
         if (TEST_MODE) {
             CLIMBER_PRESET_GROUP.updateDashboard();
         }
+
+        if (!Robot.swerveDrive.gyro.isCalibrating() && !Robot.swerveDrive.hasSetOffset) {
+            Robot.swerveDrive.gyroRollOffset = Robot.swerveDrive.gyro.getRoll();
+            new PrintCommand("SET ROLL OFFSET TO " + Robot.swerveDrive.gyroRollOffset).execute();
+            Robot.swerveDrive.hasSetOffset = true;
+        }
     }
 
 
@@ -108,6 +115,8 @@ public class Robot extends TimedRobot {
 
         Robot.arm.getRotation().resetEncoder();
         Robot.arm.getExtension().resetEncoder();
+
+        Robot.swerveDrive.hasSetOffset = false;
 
         Command autonomousCommand = robotContainer.getAutonomousCommand();
 

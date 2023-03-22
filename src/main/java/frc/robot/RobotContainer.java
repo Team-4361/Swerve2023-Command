@@ -7,7 +7,9 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
+import frc.robot.commands.assist.PIDRotateCommand;
 import frc.robot.commands.auto.Autos;
+import frc.robot.commands.auto.PIDAutoBalanceCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
 import edu.wpi.first.wpilibj2.command.button.Trigger;
@@ -62,6 +64,8 @@ public class RobotContainer {
         //xyStick.button(10).onTrue(Commands.runOnce(()->Robot.pidControlEnabled = !Robot.pidControlEnabled));
         xyStick.trigger().or(zStick.trigger()).whileTrue(Robot.swerveDrive.holdPrecisionModeCommand());
         xyStick.button(3).whileTrue(Robot.swerveDrive.lockWheelCommand());
+
+        xyStick.button(4).whileTrue(new PIDAutoBalanceCommand());
 
         xyStick.button(5).or(zStick.button(6)).onTrue(Robot.pump.toggleLEDCommand());
 
@@ -120,5 +124,6 @@ public class RobotContainer {
             */
         //return Autos.coneMiddleGetAdditionalCommand();
         return Autos.coneMiddleChargeStationCommand();
+        //return new PIDRotateCommand(180);
     }
 }

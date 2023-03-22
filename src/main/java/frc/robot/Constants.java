@@ -57,7 +57,7 @@ public final class Constants {
     }
 
     public static class VacuumValues {
-        public static int[] VACUUM_MOTOR_ID = new int[]{20, 13, 11};
+        public static int[] VACUUM_MOTOR_ID = new int[]{20, 16, 13, 11};
         public static double VACUUM_PUMP_SPEED = 0.45;
         public static MotorType VACUUM_MOTOR_TYPE = kBrushed;
         public static int VACUUM_SOLENOID_ONE = 6;
@@ -127,7 +127,7 @@ public final class Constants {
         // PRESET 1 = AUTO CONE FLOOR (NO TELEOP)
         // PRESET 2 = HUMAN STATION PICKUP
         // PRESET 3 = CONE DROP OFF
-        // PRESET 4 = LOW POSITION
+        // PRESET 4 = CONE FLOOR POSITION
         // PRESET 5 = CUBE FLOOR POSITION
 
 
@@ -138,7 +138,7 @@ public final class Constants {
         //public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
-        public static final PresetList WRIST_PRESETS = new PresetList(0.0, 4.76, 0.0, 0.0);
+        public static final PresetList WRIST_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
         public static final PresetGroup CLIMBER_PRESET_GROUP = new PresetGroup()
                 .addPreset(ROTATION_NAME, ROTATION_PRESETS)
@@ -157,7 +157,7 @@ public final class Constants {
         public static final PIDConstants X_CONSTANTS = new PIDConstants(5.0, 0.0, 0.0);
         public static final PIDConstants Y_CONSTANTS = new PIDConstants(0.5, 0.0, 0.0);
 
-        public static final PIDController PITCH_CONTROLLER = new PIDController(0.2, 0, 0);
+        public static final PIDController PITCH_CONTROLLER = new PIDController(0.01, 0, 0);
 
         public static final Map<String, Command> AUTO_EVENT_MAP = new HashMap<>();
 

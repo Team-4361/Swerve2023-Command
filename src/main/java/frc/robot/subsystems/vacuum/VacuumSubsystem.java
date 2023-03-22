@@ -36,7 +36,8 @@ public class VacuumSubsystem extends SubsystemBase {
         this.motor = new MotorControllerGroup(
             new CANSparkMax(VACUUM_MOTOR_ID[0], VACUUM_MOTOR_TYPE),
             new CANSparkMax(VACUUM_MOTOR_ID[1], VACUUM_MOTOR_TYPE),
-            new CANSparkMax(VACUUM_MOTOR_ID[2], VACUUM_MOTOR_TYPE)
+            new CANSparkMax(VACUUM_MOTOR_ID[2], VACUUM_MOTOR_TYPE),
+            new CANSparkMax(VACUUM_MOTOR_ID[3], VACUUM_MOTOR_TYPE)
         );
         pdh = new PowerDistribution();
         solenoidOne = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_ONE);

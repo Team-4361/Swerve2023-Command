@@ -18,7 +18,7 @@ public class PIDAutoBalanceCommand extends CommandBase {
     public void execute() {
         Robot.swerveDrive.autoDrive(
                 MathUtil.clamp(
-                        PITCH_CONTROLLER.calculate(Robot.swerveDrive.gyro.getRoll(), 0), -0.35, 0.35
+                        -PITCH_CONTROLLER.calculate(Robot.swerveDrive.getGyroRoll(), 0), -0.3, 0.3
                 ),
                 0,
                 0
