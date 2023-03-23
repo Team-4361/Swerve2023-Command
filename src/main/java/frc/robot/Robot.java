@@ -41,7 +41,7 @@ public class Robot extends TimedRobot {
     public static VacuumSubsystem pump;
     public static CameraSubsystem camera;
 
-    public static boolean pidControlEnabled = false; //true;
+    public static boolean pidControlEnabled = true; //true;
 
     public static SendableChooser<Command> autoChooser = new SendableChooser<>();
 

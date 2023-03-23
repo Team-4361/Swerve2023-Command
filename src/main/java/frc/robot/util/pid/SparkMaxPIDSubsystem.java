@@ -181,12 +181,12 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         }
     }
 
-    private double setAdjustedPosition(double position) {
+    private void setAdjustedPosition(double position) {
         if (encoder == null && encoderAdapter != null) {
-            return encoderAdapter.getPosition();
+            encoderAdapter.setPosition(position);
         } else {
             assert encoder != null;
-            return encoder.getPosition();
+            encoder.setPosition(position);
         }
     }
 
