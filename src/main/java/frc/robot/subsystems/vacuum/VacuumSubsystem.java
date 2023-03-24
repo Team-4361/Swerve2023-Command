@@ -13,7 +13,7 @@ public class VacuumSubsystem extends SubsystemBase {
     public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
 
     private final MotorControllerGroup motor;
-    private final Solenoid solenoidOne, solenoidTwo, solenoidThree;
+    private final Solenoid solenoidOne, solenoidTwo, solenoidThree, solenoidFour;
     private final PowerDistribution pdh;
     private final AnalogInput sensorOne, sensorTwo;
 
@@ -43,6 +43,7 @@ public class VacuumSubsystem extends SubsystemBase {
         solenoidOne = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_ONE);
         solenoidTwo = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_TWO);
         solenoidThree = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_THREE);
+        solenoidFour = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_FOUR);
 
         sensorOne = new AnalogInput(VACUUM_SENSOR_HORIZONTAL);
         sensorTwo = new AnalogInput(VACUUM_SENSOR_VERTICAL);
@@ -56,12 +57,14 @@ public class VacuumSubsystem extends SubsystemBase {
                     solenoidOne.set(true);
                     solenoidTwo.set(true);
                     solenoidThree.set(true);
+                    solenoidFour.set(true);
                 }),
                 new WaitCommand(2)
         ).andThen(Commands.runOnce(() -> {
             solenoidOne.set(false);
             solenoidTwo.set(false);
             solenoidThree.set(false);
+            solenoidFour.set(false);
             if (vacEnabled) {
                 motor.set(VACUUM_PUMP_SPEED);
             }

@@ -3,6 +3,8 @@ package frc.robot.util.pid;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
+import com.revrobotics.CANSparkMax.SoftLimitDirection;
+
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.Encoder;
@@ -49,6 +51,13 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
      * @see #translateMotor(double)
      */
     public void setTarget(double rotation) { this.targetRotation = rotation; }
+
+    public SparkMaxPIDSubsystem setLimit(float min, float max) {
+        assert motor != null;
+        motor.setSoftLimit(SoftLimitDirection.kForward, max);
+        motor.setSoftLimit(SoftLimitDirection.kReverse, min);
+        return this;
+    }
 
     public SparkMaxPIDSubsystem enableDashboard(boolean dashEnabled) {
         this.dashEnabled = dashEnabled;

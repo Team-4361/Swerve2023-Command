@@ -20,8 +20,9 @@ public class ClimberArmSubsystem extends SubsystemBase {
         rotation.setPresetList(CLIMBER_PRESET_GROUP.get(EXTENSION_NAME), () -> CLIMBER_PRESET_GROUP.getCurrentPreset(ROTATION_NAME));
 
         extension.setPIDControlSupplier(() -> Robot.pidControlEnabled);
-        rotation.setPIDControlSupplier(() -> Robot.
-        pidControlEnabled);
+        rotation.setPIDControlSupplier(() -> Robot.pidControlEnabled);
+
+        extension.setLimit(0f, 88.36f);
 
         extension.setPID(0.03, 0, 0.01);
 
