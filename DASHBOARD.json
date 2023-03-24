@@ -11,23 +11,7 @@
         "vgap": 16.0,
         "titleType": 0,
         "tiles": {
-          "3,0": {
-            "size": [
-              1,
-              2
-            ],
-            "content": {
-              "_type": "Simple Dial",
-              "_source0": "network_table:///SmartDashboard/Robot Angle",
-              "_title": "Robot Angle",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Range/Min": -360.0,
-              "Range/Max": 360.0,
-              "Visuals/Show value": true
-            }
-          },
-          "2,2": {
+          "1,2": {
             "size": [
               2,
               1
@@ -61,28 +45,9 @@
               "Visuals/Orientation": "HORIZONTAL"
             }
           },
-          "1,2": {
-            "size": [
-              1,
-              1
-            ],
-            "content": {
-              "_type": "Number Bar",
-              "_source0": "network_table:///SmartDashboard/Vacuum: Sensor 2",
-              "_title": "Vacuum: Sensor 2",
-              "_glyph": 148,
-              "_showGlyph": false,
-              "Range/Min": -1.0,
-              "Range/Max": 1.0,
-              "Range/Center": 0.0,
-              "Visuals/Num tick marks": 5,
-              "Visuals/Show text": true,
-              "Visuals/Orientation": "HORIZONTAL"
-            }
-          },
           "4,0": {
             "size": [
-              2,
+              1,
               2
             ],
             "content": {
@@ -189,7 +154,7 @@
               "Colors/Color when false": "#8B0000FF"
             }
           },
-          "4,2": {
+          "3,2": {
             "size": [
               2,
               1
@@ -202,6 +167,96 @@
               "_showGlyph": false,
               "Colors/Color when true": "#7CFC00FF",
               "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "5,0": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/Auto Chooser",
+              "_title": "SmartDashboard/Auto Chooser",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "5,1": {
+            "size": [
+              2,
+              1
+            ],
+            "content": {
+              "_type": "ComboBox Chooser",
+              "_source0": "network_table:///SmartDashboard/After Auto",
+              "_title": "SmartDashboard/After Auto",
+              "_glyph": 148,
+              "_showGlyph": false
+            }
+          },
+          "3,0": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///SmartDashboard/CLIM WST Rotation",
+              "_title": "SmartDashboard/CLIM WST Rotation",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -90.0,
+              "Range/Max": 90.0,
+              "Visuals/Show value": true
+            }
+          },
+          "3,1": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///SmartDashboard/CLIM WST Target Rotation",
+              "_title": "SmartDashboard/CLIM WST Target Rotation",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": -90.0,
+              "Range/Max": 90.0,
+              "Visuals/Show value": true
+            }
+          },
+          "5,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///SmartDashboard/Gyro Pitch",
+              "_title": "SmartDashboard/Gyro Pitch",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 100.0,
+              "Visuals/Show value": true
+            }
+          },
+          "6,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Simple Dial",
+              "_source0": "network_table:///SmartDashboard/Robot Angle",
+              "_title": "SmartDashboard/Robot Angle",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Range/Min": 0.0,
+              "Range/Max": 100.0,
+              "Visuals/Show value": true
             }
           }
         }
@@ -222,9 +277,9 @@
     }
   ],
   "windowGeometry": {
-    "x": 0.0,
-    "y": 0.0,
-    "width": 1463.4285888671875,
-    "height": 783.4285888671875
+    "x": -6.857142925262451,
+    "y": -6.857142925262451,
+    "width": 1476.5714111328125,
+    "height": 796.5714111328125
   }
 }

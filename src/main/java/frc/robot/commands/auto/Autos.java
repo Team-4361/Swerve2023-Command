@@ -5,120 +5,80 @@ import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
-import frc.robot.commands.assist.PIDRotateCommand;
-import frc.robot.commands.assist.VerticalGrabCommand;
 
-import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
+import static frc.robot.Constants.ClimberPresets.*;
 
 public class Autos {
 
-    public static Command autoConePushCommand() {
-        return Commands.runOnce(() -> {
-            Robot.swerveDrive.resetGyroCommand();
-            Robot.swerveDrive.resetPosition();
-            CLIMBER_PRESET_GROUP.setCurrentPreset(0);
-        }).andThen(new ParallelRaceGroup(
-                Commands.run(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(1)),
-                new WaitCommand(3)
-        ).andThen(new ParallelRaceGroup(
-                Commands.run(() -> Robot.swerveDrive.stop()),
-                new WaitCommand(2)
-        )));
+    public static class Feature {
+        public static Command initAutoFeature() {
+            return Commands.runOnce(() -> {
+                Robot.swerveDrive.resetGyroCommand();
+                Robot.swerveDrive.resetPosition();
+                CLIMBER_PRESET_GROUP.setCurrentPreset(ZERO_POSITION_INDEX);
+            });
+        }
+
+        public static Command middleConeDropFeature() {
+            return new SequentialCommandGroup(
+                    Commands.runOnce(() -> {
+                        Robot.pump.activate();
+                        CLIMBER_PRESET_GROUP.setCurrentPreset(MID_CONE_INDEX);
+                    }),
+                    new WaitCommand(3),
+                    Commands.runOnce(() -> Robot.pump.deactivate()),
+                    Robot.pump.openVacuumCommand()
+            );
+        }
+
+        public static Command endPresetFeature(int preset) {
+            return Commands.runOnce(() -> {
+                if (preset >= 0) {
+                    CLIMBER_PRESET_GROUP.setCurrentPreset(preset);
+                }
+            });
+        }
     }
 
-    public static Command autoConeMiddleFeature() {
-        /*
-        return Commands.runOnce(() -> {
-            Robot.swerveDrive.resetGyroCommand();
-            Robot.swerveDrive.resetPosition();
-            Robot.pump.activate();
-            CLIMBER_PRESET_GROUP.setCurrentPreset(0);
-        }).andThen(new ParallelRaceGroup(Commands.run(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(3)), new WaitCommand(3))
-        ).andThen(new SequentialCommandGroup(
-            Commands.runOnce(() -> Robot.pump.deactivate())),
-            Robot.pump.openVacuumCommand()
-        );
+    public static class AutoCommand {
+        public static Command midConeNoStationCommand(int nextPreset) {
+            return new SequentialCommandGroup(
+                    Feature.initAutoFeature(),
+                    Feature.middleConeDropFeature(),
+                    new ParallelRaceGroup(
+                            new PIDGoToCommand(new Pose2d(new Translation2d(-18.8, 0), new Rotation2d(0))),
+                            new WaitCommand(3)
+                    ),
+                    Feature.endPresetFeature(nextPreset)
+            );
+        }
 
-         */
-        return new SequentialCommandGroup(
-                Commands.runOnce(() -> {
-                    Robot.swerveDrive.resetGyroCommand();
-                    Robot.swerveDrive.resetPosition();
-                    Robot.pump.activate();
-                    CLIMBER_PRESET_GROUP.setCurrentPreset(3);
-                }),
-                new WaitCommand(3),
-                Commands.runOnce(() -> Robot.pump.deactivate()),
-                Robot.pump.openVacuumCommand()
-        );
-    }
+        public static Command midConeNoStationCommand() {
+            return midConeNoStationCommand(-1);
+        }
 
-    ///////////////////////////////////////////
-
-    public static Command simpleAutoCommand() {
-        return Commands.runOnce(() -> {
-            Robot.swerveDrive.resetGyroCommand();
-            Robot.swerveDrive.resetPosition();
-            CLIMBER_PRESET_GROUP.setCurrentPreset(0);
-        }).andThen(new ParallelRaceGroup(
-                Commands.run(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(1)),
-                new WaitCommand(3)
-        ).andThen(new ParallelRaceGroup(
-                Robot.swerveDrive.run(() -> Robot.swerveDrive.autoDrive(-0.5, 0, 0)),
-                new WaitCommand(3)
-        )).andThen(Robot.swerveDrive.runOnce(() -> Robot.swerveDrive.stop())));
-    }
-
-
-    public static Command coneMiddleChargeStationCommand() {
-        return new SequentialCommandGroup(
-                //autoConeMiddleFeature(),
-                Commands.runOnce(() -> {
-                        Robot.swerveDrive.resetGyroCommand();
-                        Robot.swerveDrive.resetPosition();
-                }),
-                //Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
-                new ParallelRaceGroup(
-                        new PIDGoToCommand(new Pose2d(new Translation2d(-22, 0), new Rotation2d(0))),
-                        new WaitCommand(3)
-                ),
-                new ParallelRaceGroup(
-                        Commands.run(() -> Robot.swerveDrive.stop()),
-                        new WaitCommand(2)
-                ),
-                new ParallelRaceGroup(
-                        new PIDGoToCommand(new Pose2d(new Translation2d(-8.75, 0), new Rotation2d(0))),
-                        new WaitCommand(3)
-                ),
-                new ParallelRaceGroup(
-                        new PIDAutoBalanceCommand(),
-                        new WaitCommand(5)
-                )
-        );
-    }
-
-    public static Command coneMiddleGetAdditionalCommand() {
-        return new SequentialCommandGroup(
-                autoConeMiddleFeature(),
-                Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
-                new ParallelRaceGroup(
-                        new PIDGoToCommand(new Pose2d(new Translation2d(-18.8, 0), new Rotation2d(0))),
-                        new WaitCommand(3)
-                ),
-                new ParallelRaceGroup(
-                        new PIDRotateCommand(0),
-                        new WaitCommand(3)
-                ),
-                new ParallelRaceGroup(
-                        Commands.run(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(5)),
-                        new WaitCommand(3)
-                ),
-                new VerticalGrabCommand(),
-                new ParallelRaceGroup(
-                        Commands.run(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
-                        new WaitCommand(3)
-                )
-                // TODO: add auto go back
-        );
+        public static Command midConeAutoBalanceCommand(int nextPreset) {
+            return new SequentialCommandGroup(
+                    Feature.initAutoFeature(),
+                    Feature.middleConeDropFeature(),
+                    new ParallelRaceGroup(
+                            new PIDGoToCommand(new Pose2d(new Translation2d(-22, 0), new Rotation2d(0))),
+                            new WaitCommand(3)
+                    ),
+                    new ParallelRaceGroup(
+                            Commands.run(() -> Robot.swerveDrive.stop()),
+                            new WaitCommand(2)
+                    ),
+                    new ParallelRaceGroup(
+                            new PIDGoToCommand(new Pose2d(new Translation2d(-8.75, 0), new Rotation2d(0))),
+                            new WaitCommand(3)
+                    ),
+                    new ParallelRaceGroup(
+                            new PIDAutoBalanceCommand(),
+                            new WaitCommand(5)
+                    ),
+                    Feature.endPresetFeature(nextPreset)
+            );
+        }
     }
 }

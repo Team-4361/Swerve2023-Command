@@ -7,8 +7,6 @@ package frc.robot;
 
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
-import frc.robot.commands.assist.PIDRotateCommand;
-import frc.robot.commands.auto.Autos;
 import frc.robot.commands.auto.PIDAutoBalanceCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
 import edu.wpi.first.wpilibj2.command.button.CommandXboxController;
@@ -16,7 +14,7 @@ import edu.wpi.first.wpilibj2.command.button.Trigger;
 import frc.robot.Constants.Control;
 
 import static frc.robot.Constants.Chassis.DRIVE_DEAD_ZONE;
-import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
+import static frc.robot.Constants.ClimberPresets.*;
 import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
 
 
@@ -71,12 +69,13 @@ public class RobotContainer {
 
         ///////////////////////////////// XBOX CONTROLS
 
-        xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)));
-        xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(2)));
-        xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(8)));
-        xbox.x().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(7)));
+        // TODO: CHANGE!
+        xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(ZERO_POSITION_INDEX)));
+        xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(FLOOR_CUBE_INDEX)));
+        xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(HUMAN_STATION_INDEX)));
+        xbox.x().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(MID_CONE_INDEX)));
 
-        xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(5)));
+        xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(HIGH_CONE_INDEX)));
 
 
         xbox.rightTrigger().whileTrue(Commands.runEnd(() -> {
@@ -100,31 +99,5 @@ public class RobotContainer {
         xbox.leftBumper().onTrue(Commands.runOnce(() -> Robot.pump.toggleVacuum()));
     
         xbox.povUp().onTrue(Robot.pump.openVacuumCommand());
-    }
-
-
-    /**
-     * Use this to pass the autonomous command to the main {@link Robot} class.
-     *
-     * @return the command to run in autonomous
-     */
-    public Command getAutonomousCommand() {
-        /* 
-            return Commands.runOnce(() -> {
-                Robot.swerveDrive.resetGyroCommand();
-                Robot.swerveDrive.resetPosition();
-                CLIMBER_PRESET_GROUP.setCurrentPreset(0);
-            }).andThen(new ParallelRaceGroup(
-                Commands.run(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(1)),
-                new WaitCommand(3)
-            ).andThen(new ParallelRaceGroup(
-                Robot.swerveDrive.run(() -> Robot.swerveDrive.autoDrive(-0.5, 0, 0)),
-                new WaitCommand(3)
-            )).andThen(Robot.swerveDrive.runOnce(() -> Robot.swerveDrive.stop())));
-            */
-        //return Autos.coneMiddleGetAdditionalCommand();
-        //return Autos.coneMiddleChargeStationCommand();
-        return Robot.autoChooser.getSelected();
-        //return new PIDRotateCommand(180);
     }
 }

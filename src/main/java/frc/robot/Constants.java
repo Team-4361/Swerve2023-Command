@@ -33,7 +33,7 @@ import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
  */
 public final class Constants {
 
-    public static final boolean TEST_MODE = true;
+    public static final boolean TEST_MODE = false;
 
     /**
      * This {@link FrontCamera} class is designed to contain the required values for the PhotonVision
@@ -124,6 +124,7 @@ public final class Constants {
         public static final String EXTENSION_NAME = "CLI EXT";
         public static final String WRIST_NAME = "CLIM WST";
 
+        /* OLD
         // PRESET 0 = ZERO POSITION
         // PRESET 1 = AUTO CONE FLOOR (NO TELEOP)
         // PRESET 2 = HUMAN STATION PICKUP
@@ -141,8 +142,30 @@ public final class Constants {
 
         //public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+         */
 
-        public static final PresetList WRIST_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.685, 1.2, -55.285);
+        ///////////////////////////////////////////////////////////// NEW WARREN HILLS (3/24/23)
+
+
+        // PRESET 0 = ZERO POSITION         (ZERO_POSITION_INDEX)
+        // PRESET 1 = HUMAN STATION PICKUP  (HUMAN_STATION_INDEX)
+        // PRESET 2 = FLOOR CONE            (FLOOR_CONE_INDEX)
+        // PRESET 3 = MID CONE              (MID_CONE_INDEX)
+        // PRESET 4 = HIGH CONE             (HIGH_CONE_INDEX)
+        // PRESET 5 = FLOOR CUBE            (FLOOR_CUBE_INDEX)
+        // PRESET 6 = CUBE HIGH             (HIGH_CUBE_INDEX)
+
+        public static final int ZERO_POSITION_INDEX = 0;
+        public static final int HUMAN_STATION_INDEX = 1;
+        public static final int FLOOR_CONE_INDEX = 2;
+        public static final int MID_CONE_INDEX = 3;
+        public static final int HIGH_CONE_INDEX = 4;
+        public static final int FLOOR_CUBE_INDEX = 5;
+        public static final int HIGH_CUBE_INDEX = 6;
+
+        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, -47.987, -124.0, -65.03, -59.0, -105.0, -65.0);
+        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 30.261, 49.0, 67.049, 86.7, 10.619, 67.049);
+        public static final PresetList WRIST_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.685, 1.2, -55.285);
 
         public static final PresetGroup CLIMBER_PRESET_GROUP = new PresetGroup()
                 .addPreset(ROTATION_NAME, ROTATION_PRESETS)

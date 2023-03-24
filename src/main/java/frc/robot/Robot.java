@@ -17,12 +17,10 @@ import frc.robot.subsystems.climber.ClimberWristSubsystem;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.subsystems.vacuum.VacuumSubsystem;
 import frc.robot.subsystems.vision.CameraSubsystem;
-import frc.robot.util.camera.PhotonCameraModule;
 import frc.robot.util.math.CameraQuality;
 
 import static frc.robot.Constants.Chassis.*;
-import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
-import static frc.robot.Constants.FrontCamera.CAMERA_CONFIG;
+import static frc.robot.Constants.ClimberPresets.*;
 import static frc.robot.Constants.TEST_MODE;
 import static frc.robot.subsystems.swerve.SwerveDriveSubsystem.deadzone;
 
@@ -43,7 +41,8 @@ public class Robot extends TimedRobot {
 
     public static boolean pidControlEnabled = true; //true;
 
-    public static SendableChooser<Command> autoChooser = new SendableChooser<>();
+    public static SendableChooser<Boolean> autoMode = new SendableChooser<>();
+    public static SendableChooser<Integer> endAutoPreset = new SendableChooser<>();
 
     /**
      * This method is run when the robot is first started up and should be used for any
@@ -63,14 +62,22 @@ public class Robot extends TimedRobot {
         wrist = new ClimberWristSubsystem();
         pump = new VacuumSubsystem();
         camera = new CameraSubsystem(CameraQuality.VERY_FAST);//.addCamera(
-                //new PhotonCameraModule(CAMERA_CONFIG)
+        //new PhotonCameraModule(CAMERA_CONFIG)
 
-        autoChooser.addOption("Charge Station Auto", Autos.coneMiddleChargeStationCommand());
-        autoChooser.addOption("Cone Grab Auto", Autos.coneMiddleGetAdditionalCommand());
+        endAutoPreset.addOption("Zero", ZERO_POSITION_INDEX);
+        endAutoPreset.addOption("Human Station", HUMAN_STATION_INDEX);
+        endAutoPreset.addOption("Floor Cone", FLOOR_CONE_INDEX);
+        endAutoPreset.addOption("Floor Cube", FLOOR_CUBE_INDEX);
 
-        autoChooser.setDefaultOption("Charge Station Auto", Autos.coneMiddleChargeStationCommand());
+        endAutoPreset.setDefaultOption("Zero", ZERO_POSITION_INDEX);
 
-        SmartDashboard.putData("Auto Chooser", autoChooser);
+        autoMode.addOption("CHARGE YES", true);
+        autoMode.addOption("CHARGE NO", false);
+
+        autoMode.setDefaultOption("CHARGE YES", true);
+
+        SmartDashboard.putData("Auto Chooser", autoMode);
+        SmartDashboard.putData("After Auto", endAutoPreset);
 
         // *** IMPORTANT: Call this method at the VERY END of robotInit!!! *** //
         robotContainer = new RobotContainer();
@@ -129,11 +136,12 @@ public class Robot extends TimedRobot {
 
         Robot.swerveDrive.hasSetOffset = false;
 
-        Command autonomousCommand = robotContainer.getAutonomousCommand();
-
-        // schedule the autonomous command (example)
-        if (autonomousCommand != null) {
-            autonomousCommand.schedule();
+        // Autos.AutoCommand.midConeNoStationCommand().schedule();
+        int preset = endAutoPreset.getSelected();
+        if (autoMode.getSelected()) {
+            Autos.AutoCommand.midConeAutoBalanceCommand(preset).schedule();
+        } else {
+            Autos.AutoCommand.midConeNoStationCommand(preset).schedule();
         }
     }
 
@@ -149,7 +157,7 @@ public class Robot extends TimedRobot {
     @Override
     public void teleopInit() {
         CommandScheduler.getInstance().cancelAll();
-      
+
     }
 
 
@@ -158,7 +166,7 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void teleopPeriodic() {
-        Robot.arm.getExtension().translateMotor(deadzone(-RobotContainer.xbox.getLeftY()/2, 0.1));
+        Robot.arm.getExtension().translateMotor(deadzone(-RobotContainer.xbox.getLeftY() / 2, 0.1));
         Robot.arm.getRotation().translateMotor(deadzone(-RobotContainer.xbox.getRightY(), 0.1));
     }
 
