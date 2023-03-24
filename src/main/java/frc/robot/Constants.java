@@ -131,16 +131,18 @@ public final class Constants {
         // PRESET 4 = CONE FLOOR POSITION
         // PRESET 5 = CUBE FLOOR POSITION
         // PRESET 6 = CUBE HIGH POSITION
+        // PRESET 7 = MID CONE
+        // PRESET 8 = HIGH CONE
+        // PRESET 9 = CONE FLOOR
 
 
-
-        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -62.0, -124.0, -105.0, -65.0);
-        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 27.5, 49.0, 25.0, 88.35);
+        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -62.0, -124.0, -105.0, -65.0, -65.03, -59.0, -135.616);
+        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 27.5, 49.0, 25.0, 88.35, 67.049, 86.7, 10.619);
 
         //public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
         //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
 
-        public static final PresetList WRIST_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
+        public static final PresetList WRIST_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.685, 1.2, -55.285);
 
         public static final PresetGroup CLIMBER_PRESET_GROUP = new PresetGroup()
                 .addPreset(ROTATION_NAME, ROTATION_PRESETS)
