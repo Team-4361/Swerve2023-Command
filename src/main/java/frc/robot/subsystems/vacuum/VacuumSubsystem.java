@@ -5,6 +5,7 @@ import edu.wpi.first.wpilibj.*;
 import edu.wpi.first.wpilibj.motorcontrol.MotorControllerGroup;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.util.solenoid.SolenoidGroup;
 
 import static frc.robot.Constants.TEST_MODE;
 import static frc.robot.Constants.VacuumValues.*;
@@ -13,9 +14,9 @@ public class VacuumSubsystem extends SubsystemBase {
     public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
 
     private final MotorControllerGroup motor;
-    private final Solenoid solenoidOne, solenoidTwo, solenoidThree, solenoidFour;
+    private final SolenoidGroup solenoids;
     private final PowerDistribution pdh;
-    private final AnalogInput sensorOne, sensorTwo;
+    private final AnalogInput sensorOne, sensorTwo, sensorThree, sensorFour;
 
     private boolean ledStatus = false;
     private boolean vacEnabled = false;
@@ -29,7 +30,7 @@ public class VacuumSubsystem extends SubsystemBase {
     }
 
     public boolean hasPressure() {
-        return sensorOne.getVoltage()<=VACUUM_THRESHOLD || sensorTwo.getVoltage()<=VACUUM_THRESHOLD;
+        return sensorOne.getVoltage()<=VACUUM_THRESHOLD || sensorTwo.getVoltage()<=VACUUM_THRESHOLD || sensorThree.getVoltage()<=VACUUM_THRESHOLD || sensorFour.getVoltage()<+VACUUM_THRESHOLD;
     }
 
     public VacuumSubsystem() {
@@ -39,14 +40,20 @@ public class VacuumSubsystem extends SubsystemBase {
             new CANSparkMax(VACUUM_MOTOR_ID[2], VACUUM_MOTOR_TYPE),
             new CANSparkMax(VACUUM_MOTOR_ID[3], VACUUM_MOTOR_TYPE)
         );
-        pdh = new PowerDistribution();
-        solenoidOne = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_ONE);
-        solenoidTwo = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_TWO);
-        solenoidThree = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_THREE);
-        solenoidFour = new Solenoid(MODULE_TYPE, VACUUM_SOLENOID_FOUR);
 
-        sensorOne = new AnalogInput(VACUUM_SENSOR_HORIZONTAL);
-        sensorTwo = new AnalogInput(VACUUM_SENSOR_VERTICAL);
+        solenoids = new SolenoidGroup(
+            new Solenoid(0, MODULE_TYPE, VACUUM_SOLENOID_ONE),
+            new Solenoid(0, MODULE_TYPE, VACUUM_SOLENOID_TWO),
+            new Solenoid(0, MODULE_TYPE, VACUUM_SOLENOID_THREE),
+            new Solenoid(2, MODULE_TYPE, VACUUM_SOLENOID_FOUR)
+        );
+
+        pdh = new PowerDistribution();
+
+        sensorOne = new AnalogInput(VACUUM_SENSOR_ONE);
+        sensorTwo = new AnalogInput(VACUUM_SENSOR_TWO);
+        sensorThree = new AnalogInput(VACUUM_SENSOR_THREE);
+        sensorFour = new AnalogInput(VACUUM_SENSOR_FOUR);
     }
 
     public Command openVacuumCommand() {
@@ -54,17 +61,11 @@ public class VacuumSubsystem extends SubsystemBase {
                 Commands.run(() -> {
                     // disable the vacuum until the solenoid shuts off.
                     motor.set(0);
-                    solenoidOne.set(true);
-                    solenoidTwo.set(true);
-                    solenoidThree.set(true);
-                    solenoidFour.set(true);
+                    solenoids.set(true);
                 }),
                 new WaitCommand(2)
         ).andThen(Commands.runOnce(() -> {
-            solenoidOne.set(false);
-            solenoidTwo.set(false);
-            solenoidThree.set(false);
-            solenoidFour.set(false);
+            solenoids.set(false);
             if (vacEnabled) {
                 motor.set(VACUUM_PUMP_SPEED);
             }
@@ -102,9 +103,11 @@ public class VacuumSubsystem extends SubsystemBase {
 
         SmartDashboard.putNumber("Vacuum: Sensor 1", sensorOne.getVoltage());
         SmartDashboard.putNumber("Vacuum: Sensor 2", sensorTwo.getVoltage());
+        SmartDashboard.putNumber("Vacuum: Sensor 3", sensorThree.getVoltage());
+        SmartDashboard.putNumber("Vacuum: Sensor 4", sensorFour.getVoltage());
 
         SmartDashboard.putBoolean("Vacuum: Bound", hasPressure());
-        SmartDashboard.putBoolean("Vacuum: Solenoid", solenoidOne.get() || solenoidTwo.get() || solenoidThree.get());
+        SmartDashboard.putBoolean("Vacuum: Solenoid", solenoids.get());
         pdh.setSwitchableChannel(ledStatus);
     }
 }

@@ -3,7 +3,6 @@ package frc.robot.util.pid;
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
 import com.revrobotics.SparkMaxRelativeEncoder;
-import com.revrobotics.CANSparkMax.SoftLimitDirection;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -36,12 +35,14 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
 
     private Supplier<Double> presetSupplier;
     private Supplier<Boolean> pidEnabledSupplier;
+    private Supplier<Boolean> limitBypassSupplier;
 
     private double lastTarget = Double.MAX_VALUE;
 
     private double targetRotation, maxSpeed, tolerance;
+    private double forwardLimit = Double.MAX_VALUE, reverseLimit = Double.MIN_VALUE;
 
-    private boolean teleopMode = false;
+    private boolean teleopMode;
 
     /**
      * Sets the Target Rotation that the {@link Encoder} should be set to. While teleoperation mode is disabled,
@@ -50,14 +51,29 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
      * @param rotation The amount of rotations to set the Target for.
      * @see #translateMotor(double)
      */
-    public void setTarget(double rotation) { this.targetRotation = rotation; }
+    public void setTarget(double rotation) {
+        this.targetRotation = getLimitAdjustedTarget(rotation);
+    }
 
-    public SparkMaxPIDSubsystem setLimit(float min, float max) {
-        assert motor != null;
-        motor.setSoftLimit(SoftLimitDirection.kForward, max);
-        motor.setSoftLimit(SoftLimitDirection.kReverse, min);
+    public SparkMaxPIDSubsystem setReverseLimit(double limit) {
+        this.reverseLimit = limit;
         return this;
     }
+
+    public SparkMaxPIDSubsystem setForwardLimit(double limit) {
+        this.forwardLimit = limit;
+        return this;
+    }
+
+    public SparkMaxPIDSubsystem setLimitBypassSupplier(Supplier<Boolean> supplier) {
+        this.limitBypassSupplier = supplier;
+        return this;
+    }
+
+    public double getReverseLimit() { return this.reverseLimit; }
+    public double getForwardLimit() { return this.forwardLimit; }
+
+    public Supplier<Boolean> getLimitBypassSupplier() { return this.limitBypassSupplier; }
 
     public SparkMaxPIDSubsystem enableDashboard(boolean dashEnabled) {
         this.dashEnabled = dashEnabled;
@@ -91,21 +107,21 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
      * PID control is disabled, allowing manual rotation to occur. The Target Rotation is set to the current {@link Encoder}
      * reading during non-zero operation.
      *
-     * @param speed A motor speed from -1.0 to +1.0 to spin the motor.
+     * @param power A motor power from -1.0 to +1.0 to spin the motor.
      */
-    public void translateMotor(double speed) {
+    public void translateMotor(double power) {
         if (DriverStation.isTeleop())
         {
-            if (speed == 0 && teleopMode) {
+            if (power == 0 && teleopMode) {
                 // Set the target angle to the current rotations to freeze the value and prevent the PIDController from
                 // automatically adjusting to the previous value.
                 setTarget(getRotation());
                 teleopMode = false;
             }
-            if (speed != 0 && !teleopMode)
+            if (power != 0 && !teleopMode)
                 teleopMode = true;
     
-            motor.set(speed);
+            motor.set(getLimitAdjustedPower(power));
         }
        
     }
@@ -140,6 +156,48 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     public SparkMaxPIDSubsystem setMaxSpeed(double speed) {
         this.maxSpeed = speed;
         return this;
+    }
+
+    private double getLimitAdjustedTarget(double angle) {
+        // Do not perform any calculatiosn if the limit bypass supplier is true.
+        if (limitBypassSupplier.get()) return angle;
+
+        if (forwardLimit != Double.MAX_VALUE) {
+            if (angle > forwardLimit) {
+                angle = forwardLimit-0.1;
+            }
+        }
+        if (reverseLimit != Double.MIN_VALUE) {
+            if (angle < reverseLimit) {
+                angle = reverseLimit+0.1;
+            }
+        }
+
+        return angle;
+    }
+
+    private double getLimitAdjustedPower(double power) {
+        if (power == 0) return 0;
+
+        // Do not perform any calculations if the limit bypass supplier is true.
+        if (limitBypassSupplier.get()) return power;
+
+        if (forwardLimit != Double.MAX_VALUE) {
+            if (power > 0 && getAdjustedPosition() >= forwardLimit) {
+                return 0;
+            } else {
+                return power;
+            }
+        } else if (reverseLimit != Double.MIN_VALUE) {
+            if (power < 0 && getAdjustedPosition() <= reverseLimit) {
+                return 0;
+            } else {
+                return power;
+            }
+        } else {
+            // At the stage, no limit has been set. Do not perform calculations and return the initial power.
+            return power;
+        }
     }
 
     /* The tolerance used for the {@link PIDController}. */
@@ -207,6 +265,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         this.name = name;
         this.teleopMode = false;
         this.pidEnabledSupplier = () -> true;
+        this.limitBypassSupplier = () -> false;
         this.maxSpeed = 1;
         this.tolerance = 0.5;
 
@@ -218,17 +277,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
             encoder = motor.getEncoder();
         }
 
-        /*
-        if (motor.getMotorType() == kBrushed) {
-            encoderAdapter = new RelativeEncoderAdapter(motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 2048));
-        } else {
-            encoderAdapter = new RelativeEncoderAdapter(motor.getEncoder());
-        }
-
-         */
-
-
-        this.targetRotation = getAdjustedPosition();
+        targetRotation = getAdjustedPosition();
 
         controller.setP(kP);
         controller.setI(kI);
@@ -264,7 +313,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         }
 
         if (!teleopMode && !atTarget() && pidEnabledSupplier.get())
-            motor.set(clamp(controller.calculate(getRotation(), getTargetRotation()), -maxSpeed, maxSpeed));
+            motor.set(getLimitAdjustedPower(clamp(controller.calculate(getRotation(), getTargetRotation()), -maxSpeed, maxSpeed)));
 
         if (dashEnabled) {
             SmartDashboard.putNumber(name + " Rotation", getRotation());

@@ -40,9 +40,9 @@ public class Robot extends TimedRobot {
     public static CameraSubsystem camera;
 
     public static boolean pidControlEnabled = true; //true;
+    public static boolean limitSwitchBypass = false;
 
-    public static SendableChooser<Boolean> autoMode = new SendableChooser<>();
-    public static SendableChooser<Integer> endAutoPreset = new SendableChooser<>();
+    public static SendableChooser<Integer> autoMode = new SendableChooser<>();
 
     /**
      * This method is run when the robot is first started up and should be used for any
@@ -64,20 +64,13 @@ public class Robot extends TimedRobot {
         camera = new CameraSubsystem(CameraQuality.VERY_FAST);//.addCamera(
         //new PhotonCameraModule(CAMERA_CONFIG)
 
-        endAutoPreset.addOption("Zero", ZERO_POSITION_INDEX);
-        endAutoPreset.addOption("Human Station", HUMAN_STATION_INDEX);
-        endAutoPreset.addOption("Floor Cone", FLOOR_CONE_INDEX);
-        endAutoPreset.addOption("Floor Cube", FLOOR_CUBE_INDEX);
+        autoMode.addOption("CHARGE YES", 2);
+        autoMode.addOption("CHARGE NO", 1);
+        autoMode.addOption("HIGH ONLY", 0);
 
-        endAutoPreset.setDefaultOption("Zero", ZERO_POSITION_INDEX);
-
-        autoMode.addOption("CHARGE YES", true);
-        autoMode.addOption("CHARGE NO", false);
-
-        autoMode.setDefaultOption("CHARGE YES", true);
+        autoMode.setDefaultOption("CHARGE YES", 2);
 
         SmartDashboard.putData("Auto Chooser", autoMode);
-        SmartDashboard.putData("After Auto", endAutoPreset);
 
         // *** IMPORTANT: Call this method at the VERY END of robotInit!!! *** //
         robotContainer = new RobotContainer();
@@ -137,11 +130,18 @@ public class Robot extends TimedRobot {
         Robot.swerveDrive.hasSetOffset = false;
 
         // Autos.AutoCommand.midConeNoStationCommand().schedule();
-        int preset = endAutoPreset.getSelected();
+        /* 
         if (autoMode.getSelected()) {
-            Autos.AutoCommand.midConeAutoBalanceCommand(preset).schedule();
+            Autos.AutoCommand.highCubeAutoBalanceCommand().schedule();
         } else {
-            Autos.AutoCommand.midConeNoStationCommand(preset).schedule();
+            Autos.AutoCommand.highCubeNoStationCommand().schedule();
+        }
+        */
+        switch (autoMode.getSelected()) {
+            case 0: Autos.AutoCommand.highDropOnlyCommand().schedule(); break;
+            case 1: Autos.AutoCommand.highCubeNoStationCommand().schedule(); break;
+            case 2: Autos.AutoCommand.highCubeAutoBalanceCommand().schedule(); break;
+            default: break;
         }
     }
 

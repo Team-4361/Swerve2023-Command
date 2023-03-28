@@ -31,6 +31,19 @@ public class Autos {
             );
         }
 
+        public static Command highCubeDropFeature() {
+            return new SequentialCommandGroup(
+                    Commands.runOnce(() -> {
+                        Robot.pump.activate();
+                        // NOTE: this is normal! high cone preset works with high cube
+                        CLIMBER_PRESET_GROUP.setCurrentPreset(HIGH_CONE_INDEX);
+                    }),
+                    new WaitCommand(2),
+                    Commands.runOnce(() -> Robot.pump.deactivate()),
+                    Robot.pump.openVacuumCommand()
+            );
+        }
+
         public static Command endPresetFeature(int preset) {
             return Commands.runOnce(() -> {
                 if (preset >= 0) {
@@ -41,33 +54,34 @@ public class Autos {
     }
 
     public static class AutoCommand {
-        public static Command midConeNoStationCommand(int nextPreset) {
-            return new SequentialCommandGroup(
-                    Feature.initAutoFeature(),
-                    Feature.middleConeDropFeature(),
-                    new ParallelRaceGroup(
-                            new PIDGoToCommand(new Pose2d(new Translation2d(-18.8, 0), new Rotation2d(0))),
-                            new WaitCommand(3)
-                    ),
-                    Feature.endPresetFeature(nextPreset)
-            );
-        }
-
         public static Command midConeNoStationCommand() {
-            return midConeNoStationCommand(-1);
-        }
-
-        public static Command midConeAutoBalanceCommand(int nextPreset) {
             return new SequentialCommandGroup(
                     Feature.initAutoFeature(),
                     Feature.middleConeDropFeature(),
                     new ParallelRaceGroup(
                             new PIDGoToCommand(new Pose2d(new Translation2d(-22, 0), new Rotation2d(0))),
-                            new WaitCommand(3)
+                            new WaitCommand(5)
                     ),
                     new ParallelRaceGroup(
                             Commands.run(() -> Robot.swerveDrive.stop()),
                             new WaitCommand(2)
+                    )
+                    //Feature.endPresetFeature(nextPreset)
+            );
+        }
+
+        public static Command midConeAutoBalanceCommand() {
+            return new SequentialCommandGroup(
+                    Feature.initAutoFeature(),
+                    Feature.middleConeDropFeature(),
+                    Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
+                    new ParallelRaceGroup(
+                            new PIDGoToCommand(new Pose2d(new Translation2d(-22, 0), new Rotation2d(0))),
+                            new WaitCommand(5)
+                    ),
+                    new ParallelRaceGroup(
+                            Commands.run(() -> Robot.swerveDrive.stop()),
+                            new WaitCommand(0.5)
                     ),
                     new ParallelRaceGroup(
                             new PIDGoToCommand(new Pose2d(new Translation2d(-8.75, 0), new Rotation2d(0))),
@@ -77,7 +91,55 @@ public class Autos {
                             new PIDAutoBalanceCommand(),
                             new WaitCommand(5)
                     ),
-                    Feature.endPresetFeature(nextPreset)
+                    new PrintCommand("CHARGE STATION AUTO COMPLETE")
+            );
+        }
+
+        public static Command highCubeAutoBalanceCommand() {
+            return new SequentialCommandGroup(
+                    Feature.initAutoFeature(),
+                    Feature.highCubeDropFeature(),
+                    Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
+                    new ParallelRaceGroup(
+                            new PIDGoToCommand(new Pose2d(new Translation2d(-22, 0), new Rotation2d(0))),
+                            new WaitCommand(4)
+                    ),
+                    Commands.runOnce(() -> Robot.swerveDrive.stop()),
+                    new ParallelRaceGroup(
+                            new PIDGoToCommand(new Pose2d(new Translation2d(-8.75, 0), new Rotation2d(0))),
+                            new WaitCommand(3)
+                    ),
+                    new ParallelRaceGroup(
+                            new PIDAutoBalanceCommand(),
+                            new WaitCommand(5)
+                    ),
+                    new PrintCommand("CHARGE STATION AUTO COMPLETE")
+            );
+        }
+
+        public static Command highDropOnlyCommand() {
+            return new SequentialCommandGroup(
+                Feature.initAutoFeature(),
+                Feature.highCubeDropFeature(),
+                new WaitCommand(4),
+                Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0))
+            );
+        }
+
+        public static Command highCubeNoStationCommand() {
+            return new SequentialCommandGroup(
+                    Feature.initAutoFeature(),
+                    Feature.highCubeDropFeature(),
+                    Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
+                    new ParallelRaceGroup(
+                            new PIDGoToCommand(new Pose2d(new Translation2d(-22, 0), new Rotation2d(0))),
+                            new WaitCommand(5)
+                    ),
+                    new ParallelRaceGroup(
+                            Commands.run(() -> Robot.swerveDrive.stop()),
+                            new WaitCommand(0.5)
+                    ),
+                    new PrintCommand("NO CHARGE STATION AUTO COMPLETE")
             );
         }
     }

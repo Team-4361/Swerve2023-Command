@@ -10,8 +10,9 @@ import static frc.robot.Constants.AutoValues.*;
 
 public class PIDGoToCommand extends CommandBase {
     private final Pose2d desiredPose;
+    private Pose2d currentPose;
 
-    public static final double DEFAULT_MAXIMUM_SPEED = 0.5;
+    public static final double DEFAULT_MAXIMUM_SPEED = 0.4;
 
     public PIDGoToCommand(Pose2d pose) {
         this.desiredPose = pose;
@@ -20,17 +21,25 @@ public class PIDGoToCommand extends CommandBase {
 
     @Override
     public void execute() {
-        Pose2d currentPose = Robot.swerveDrive.getPose();
+        currentPose = Robot.swerveDrive.getPose();
         Robot.swerveDrive.autoDrive(
                 MathUtil.clamp(X_CONTROLLER.calculate(currentPose.getX(), desiredPose.getX()), -DEFAULT_MAXIMUM_SPEED, DEFAULT_MAXIMUM_SPEED),
                 MathUtil.clamp(Y_CONTROLLER.calculate(currentPose.getY(), desiredPose.getY()), -DEFAULT_MAXIMUM_SPEED, DEFAULT_MAXIMUM_SPEED),
                 0
         );
     }
+    
+    private boolean xInTolerance() {
+        return PIDTargetCommand.inTolerance(desiredPose.getX(), currentPose.getX(), 1);
+    }
+
+    private boolean yInTolerance() {
+        return PIDTargetCommand.inTolerance(desiredPose.getY(), currentPose.getY(), 1);
+    }
 
     @Override
     public boolean isFinished() {
-        return false;
+        return xInTolerance() && yInTolerance();
     }
 
     @Override

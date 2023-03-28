@@ -2,6 +2,8 @@ package frc.robot.util.pid;
 
 import java.util.HashMap;
 
+import edu.wpi.first.wpilibj2.command.PrintCommand;
+
 import static frc.robot.Constants.TEST_MODE;
 
 public class PresetGroup extends HashMap<String, PresetList> {
@@ -19,6 +21,7 @@ public class PresetGroup extends HashMap<String, PresetList> {
     public PresetGroup setCurrentPreset(int index) {
         this.index = index;
         this.forEach((name, preset) -> preset.setCurrentPreset(index));
+        new PrintCommand("SETTING PRESET TO " + index).schedule();
         return this;
     }
 

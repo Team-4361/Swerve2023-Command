@@ -15,6 +15,7 @@ import frc.robot.util.camera.PhotonCameraConfig;
 import frc.robot.util.math.GearRatio;
 import frc.robot.util.pid.PresetGroup;
 import frc.robot.util.pid.PresetList;
+import frc.robot.util.pid.TunablePIDController;
 import frc.robot.util.swerve.SwerveModule;
 
 import java.util.HashMap;
@@ -60,40 +61,22 @@ public final class Constants {
         public static int[] VACUUM_MOTOR_ID = new int[]{20, 16, 13, 11};
         public static double VACUUM_PUMP_SPEED = 0.45;
         public static MotorType VACUUM_MOTOR_TYPE = kBrushed;
-        public static int VACUUM_SOLENOID_ONE = 6;
-        public static int VACUUM_SOLENOID_TWO = 7;
-        public static int VACUUM_SOLENOID_THREE = 5;
-        public static int VACUUM_SOLENOID_FOUR = 4;
+        public static int VACUUM_SOLENOID_ONE = 7;
+        public static int VACUUM_SOLENOID_TWO = 3;
+        public static int VACUUM_SOLENOID_THREE = 1;
+        
+        public static int VACUUM_SOLENOID_FOUR = 2;
 
-        public static int VACUUM_SENSOR_HORIZONTAL = 2;
-        public static int VACUUM_SENSOR_VERTICAL = 3;
+        public static int VACUUM_SENSOR_ONE = 0;
+        public static int VACUUM_SENSOR_TWO = 1;
+        public static int VACUUM_SENSOR_THREE = 2;
+        public static int VACUUM_SENSOR_FOUR = 3;
 
         public static double VACUUM_THRESHOLD = 1;
 
     }
 
-    public static class FourBarArmValues {
-        public static final int ARM_MOTOR_ID = 1;
-        public static final MotorType ARM_MOTOR_TYPE = kBrushless;
-
-        // The feed forward values for the arm. These can be automatically calculated by using ReCalc. Having
-        // a correct feed forward is important as it compensates for the gravity and resistance that will push
-        // the arm down when power is cut.
-        public static final double ARM_kS = 0;
-        public static final double ARM_kG = 0;
-        public static final double ARM_kV = 0;
-        public static final double ARM_kA = 0;
-
-        public static final double ARM_kP = 0.01;
-        public static final double ARM_kI = 0.00;
-        public static final double ARM_kD = 0.00;
-
-        public static final double ARM_GEAR_RATIO = 686; /*:1*/
-
-        public static final double ARM_ANGLE_DEGREES = 10;
-    }
-
-    public static class FourBarWristValues {
+    public static class ClimberWristValues {
         public static final int WRIST_GEAR_RATIO = 100;
         public static final int WRIST_MOTOR_ID = 22; // TODO: change!
 
@@ -104,13 +87,11 @@ public final class Constants {
                 20
         };
     }
-    public static class FourBarGripperValues {
-        public static final int GRIPPER_MOTOR_VALUE_ID = 0;
-    }
+
     public static class ClimberArmValues {
         public static final int ROTATION_MOTOR_ID = 10;
         public static final int EXTENSION_MOTOR_ID = 21;
-        //public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029);
+        //public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029); OLD
         public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(735);
 
         public static final double WRIST_ROLLOVER_VALUE = 13180.0;
@@ -163,9 +144,9 @@ public final class Constants {
         public static final int FLOOR_CUBE_INDEX = 5;
         public static final int HIGH_CUBE_INDEX = 6;
 
-        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, -47.987, -124.0, -65.03, -59.0, -105.0, -65.0);
-        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 30.261, 49.0, 67.049, 86.7, 10.619, 67.049);
-        public static final PresetList WRIST_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.685, 1.2, -55.285);
+        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, -47.987, -137.0, -57.0, -59.0, -110.0, -65.0);
+        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 30.261, 22.0, 17.0, 86.7, 10.619, 67.049);
+        public static final PresetList WRIST_PRESETS = new PresetList(0.0, 33.0, -48.0, 10.0, 0.685, 58.0, -55.285);
 
         public static final PresetGroup CLIMBER_PRESET_GROUP = new PresetGroup()
                 .addPreset(ROTATION_NAME, ROTATION_PRESETS)
@@ -184,7 +165,7 @@ public final class Constants {
         public static final PIDConstants X_CONSTANTS = new PIDConstants(5.0, 0.0, 0.0);
         public static final PIDConstants Y_CONSTANTS = new PIDConstants(0.5, 0.0, 0.0);
 
-        public static final PIDController PITCH_CONTROLLER = new PIDController(0.01, 0, 0);
+        public static final TunablePIDController PITCH_CONTROLLER = new TunablePIDController("Charge Pitch", 0.0081, 0.0, 0.0);
 
         public static final Map<String, Command> AUTO_EVENT_MAP = new HashMap<>();
 

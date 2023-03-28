@@ -22,7 +22,8 @@ public class ClimberArmSubsystem extends SubsystemBase {
         extension.setPIDControlSupplier(() -> Robot.pidControlEnabled);
         rotation.setPIDControlSupplier(() -> Robot.pidControlEnabled);
 
-        extension.setLimit(0f, 88.36f);
+        extension.setForwardLimit(88.0);
+        extension.setLimitBypassSupplier(() -> Robot.limitSwitchBypass);
 
         extension.setPID(0.03, 0, 0.01);
 

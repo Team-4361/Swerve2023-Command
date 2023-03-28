@@ -182,19 +182,6 @@
               "_showGlyph": false
             }
           },
-          "5,1": {
-            "size": [
-              2,
-              1
-            ],
-            "content": {
-              "_type": "ComboBox Chooser",
-              "_source0": "network_table:///SmartDashboard/After Auto",
-              "_title": "SmartDashboard/After Auto",
-              "_glyph": 148,
-              "_showGlyph": false
-            }
-          },
           "3,0": {
             "size": [
               1,
@@ -227,7 +214,7 @@
               "Visuals/Show value": true
             }
           },
-          "5,2": {
+          "5,1": {
             "size": [
               1,
               1
@@ -243,7 +230,7 @@
               "Visuals/Show value": true
             }
           },
-          "6,2": {
+          "6,1": {
             "size": [
               1,
               1
@@ -257,6 +244,34 @@
               "Range/Min": 0.0,
               "Range/Max": 100.0,
               "Visuals/Show value": true
+            }
+          },
+          "5,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Boolean Box",
+              "_source0": "network_table:///SmartDashboard/CLIM WST At Target",
+              "_title": "CLIM WST At Target",
+              "_glyph": 148,
+              "_showGlyph": false,
+              "Colors/Color when true": "#7CFC00FF",
+              "Colors/Color when false": "#8B0000FF"
+            }
+          },
+          "6,2": {
+            "size": [
+              1,
+              1
+            ],
+            "content": {
+              "_type": "Text View",
+              "_source0": "network_table:///SmartDashboard/Vacuum: Sensor 2",
+              "_title": "Vacuum: Sensor 2",
+              "_glyph": 148,
+              "_showGlyph": false
             }
           }
         }
@@ -277,9 +292,9 @@
     }
   ],
   "windowGeometry": {
-    "x": -6.857142925262451,
-    "y": -6.857142925262451,
-    "width": 1476.5714111328125,
-    "height": 796.5714111328125
+    "x": -6.285714149475098,
+    "y": 1.1428571939468384,
+    "width": 1474.2857666015625,
+    "height": 788.0
   }
 }

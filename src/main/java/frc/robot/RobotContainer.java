@@ -43,6 +43,11 @@ public class RobotContainer {
                     deadzone(zStick.getTwist(), 0.20)
             );
         }));
+
+        // failsafe?
+        if (Robot.wrist.getTargetRotation() > 500) {
+            Robot.wrist.setTarget(0);
+        }
     }
 
     /**
@@ -75,6 +80,8 @@ public class RobotContainer {
         xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(HUMAN_STATION_INDEX)));
         xbox.x().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(MID_CONE_INDEX)));
 
+        xbox.povDown().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(FLOOR_CONE_INDEX)));
+
         xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(HIGH_CONE_INDEX)));
 
 
@@ -99,5 +106,8 @@ public class RobotContainer {
         xbox.leftBumper().onTrue(Commands.runOnce(() -> Robot.pump.toggleVacuum()));
     
         xbox.povUp().onTrue(Robot.pump.openVacuumCommand());
+        xbox.povLeft().onTrue(Commands.runOnce(() -> {
+            Robot.limitSwitchBypass = !Robot.limitSwitchBypass;
+        }));
     }
 }

@@ -9,8 +9,8 @@ import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
 import static frc.robot.Constants.ClimberPresets.WRIST_NAME;
-import static frc.robot.Constants.FourBarWristValues.WRIST_GEAR_RATIO;
-import static frc.robot.Constants.FourBarWristValues.WRIST_MOTOR_ID;
+import static frc.robot.Constants.ClimberWristValues.WRIST_GEAR_RATIO;
+import static frc.robot.Constants.ClimberWristValues.WRIST_MOTOR_ID;
 
 public class ClimberWristSubsystem extends SparkMaxAngledPIDSubsystem {
 
