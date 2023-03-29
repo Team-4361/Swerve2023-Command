@@ -5,6 +5,7 @@
 
 package frc.robot;
 
+import edu.wpi.first.wpilibj.PowerDistribution;
 import edu.wpi.first.wpilibj.TimedRobot;
 import edu.wpi.first.wpilibj.smartdashboard.SendableChooser;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
@@ -38,6 +39,7 @@ public class Robot extends TimedRobot {
     public static ClimberWristSubsystem wrist;
     public static VacuumSubsystem pump;
     public static CameraSubsystem camera;
+    //public static PowerDistribution power;
 
     public static boolean pidControlEnabled = true; //true;
     public static boolean limitSwitchBypass = false;
@@ -51,6 +53,7 @@ public class Robot extends TimedRobot {
     @Override
     public void robotInit() {
         // Call this method at the very end!
+        //power = new PowerDistribution();
         swerveDrive = new SwerveDriveSubsystem(
                 FL_MODULE,
                 FR_MODULE,
@@ -100,6 +103,8 @@ public class Robot extends TimedRobot {
             new PrintCommand("SET ROLL OFFSET TO " + Robot.swerveDrive.gyroRollOffset).execute();
             Robot.swerveDrive.hasSetOffset = true;
         }
+
+        //SmartDashboard.putNumber("Total Watts", power.getTotalPower());
     }
 
 

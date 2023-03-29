@@ -3,6 +3,7 @@ package frc.robot.subsystems.climber;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
 import frc.robot.Robot;
 import frc.robot.util.pid.SparkMaxAngledPIDSubsystem;
+import frc.robot.util.pid.SparkMaxDistancePIDSubsystem;
 import frc.robot.util.pid.SparkMaxPIDSubsystem;
 
 import static frc.robot.Constants.ClimberArmValues.*;
@@ -13,7 +14,7 @@ public class ClimberArmSubsystem extends SubsystemBase {
     private final SparkMaxAngledPIDSubsystem rotation;
 
     public ClimberArmSubsystem() {
-        this.extension = new SparkMaxPIDSubsystem(EXTENSION_NAME, EXTENSION_MOTOR_ID);
+        this.extension = new SparkMaxDistancePIDSubsystem(EXTENSION_NAME, EXTENSION_LIMIT, EXTENSION_MOTOR_ID);
         this.rotation = new SparkMaxAngledPIDSubsystem(ROTATION_NAME, ROTATION_GEAR_RATIO, ROTATION_MOTOR_ID);
     
         extension.setPresetList(CLIMBER_PRESET_GROUP.get(EXTENSION_NAME), () -> CLIMBER_PRESET_GROUP.getCurrentPreset(EXTENSION_NAME));
@@ -22,10 +23,9 @@ public class ClimberArmSubsystem extends SubsystemBase {
         extension.setPIDControlSupplier(() -> Robot.pidControlEnabled);
         rotation.setPIDControlSupplier(() -> Robot.pidControlEnabled);
 
-        extension.setForwardLimit(88.0);
         extension.setLimitBypassSupplier(() -> Robot.limitSwitchBypass);
 
-        extension.setPID(0.03, 0, 0.01);
+        extension.setPID(0.05, 0, 0.01);
 
         //rotation.setPID(0.03, 0, 0.01); Worked but slow
         rotation.setPID(0.04, 0, 0.01); // Working in competition 3/11/23

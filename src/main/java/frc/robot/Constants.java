@@ -12,10 +12,11 @@ import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
 import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.util.camera.PhotonCameraConfig;
+import frc.robot.util.math.Distance;
+import frc.robot.util.math.DistanceUnit;
 import frc.robot.util.math.GearRatio;
-import frc.robot.util.pid.PresetGroup;
-import frc.robot.util.pid.PresetList;
-import frc.robot.util.pid.TunablePIDController;
+import frc.robot.util.math.PeakMotorDistance;
+import frc.robot.util.pid.*;
 import frc.robot.util.swerve.SwerveModule;
 
 import java.util.HashMap;
@@ -23,6 +24,8 @@ import java.util.Map;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
+import static frc.robot.util.math.DistanceUnit.INCHES;
+import static java.util.Map.entry;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -94,6 +97,12 @@ public final class Constants {
         //public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029); OLD
         public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(735);
 
+        public static final PeakMotorDistance EXTENSION_LIMIT = new PeakMotorDistance(
+                Distance.fromValue(50.5, INCHES),
+                DistanceUnit.INCHES,
+                88
+        );
+
         public static final double WRIST_ROLLOVER_VALUE = 13180.0;
     }
 
@@ -145,7 +154,11 @@ public final class Constants {
         public static final int HIGH_CUBE_INDEX = 6;
 
         public static final PresetList ROTATION_PRESETS = new PresetList(0.0, -47.987, -137.0, -57.0, -59.0, -110.0, -65.0);
-        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 30.261, 22.0, 17.0, 86.7, 10.619, 67.049);
+
+        // pre-distance measurements
+        //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 30.261, 22.0, 17.0, 86.7, 10.619, 67.049);
+        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 17.365, 12.625, 9.755, 49.753, 6.09, 38.47);
+
         public static final PresetList WRIST_PRESETS = new PresetList(0.0, 33.0, -48.0, 10.0, 0.685, 58.0, -55.285);
 
         public static final PresetGroup CLIMBER_PRESET_GROUP = new PresetGroup()
