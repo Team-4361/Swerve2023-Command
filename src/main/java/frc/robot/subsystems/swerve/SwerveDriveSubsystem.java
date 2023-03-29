@@ -2,11 +2,6 @@ package frc.robot.subsystems.swerve;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.PathPlanner;
-import com.pathplanner.lib.PathPlannerTrajectory;
-import com.pathplanner.lib.commands.PPSwerveControllerCommand;
-import com.pathplanner.lib.server.PathPlannerServer;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
@@ -88,10 +83,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         swerveChassis = new SwerveChassis(fl, fr, bl, br, sideLength);
         gyro = new AHRS(SPI.Port.kMXP);
         robotHeading = new Rotation2d(0);
-
-        // Don't run the PathPlannerServer during a competition to save bandwidth.
-        if (!DriverStation.isFMSAttached())
-            PathPlannerServer.startServer(5811);
 
         odometry = new SwerveOdometry(
                 swerveChassis,

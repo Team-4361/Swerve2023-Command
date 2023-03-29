@@ -5,8 +5,6 @@
 
 package frc.robot;
 
-import com.pathplanner.lib.PathConstraints;
-import com.pathplanner.lib.auto.PIDConstants;
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj2.command.Command;
@@ -172,11 +170,6 @@ public final class Constants {
         // fancy calculus type stuff, not sure what to do with it but play with the numbers ;)
         public static final PIDController X_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController Y_CONTROLLER = new PIDController(0.1, 0, 0);
-
-
-        public static final PathConstraints AUTO_CONSTRAINTS = new PathConstraints(4, 4);
-        public static final PIDConstants X_CONSTANTS = new PIDConstants(5.0, 0.0, 0.0);
-        public static final PIDConstants Y_CONSTANTS = new PIDConstants(0.5, 0.0, 0.0);
 
         public static final TunablePIDController PITCH_CONTROLLER = new TunablePIDController("Charge Pitch", 0.0081, 0.0, 0.0);
 

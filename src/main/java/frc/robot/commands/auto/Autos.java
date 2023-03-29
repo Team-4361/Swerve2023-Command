@@ -43,14 +43,6 @@ public class Autos {
                     Robot.pump.openVacuumCommand()
             );
         }
-
-        public static Command endPresetFeature(int preset) {
-            return Commands.runOnce(() -> {
-                if (preset >= 0) {
-                    CLIMBER_PRESET_GROUP.setCurrentPreset(preset);
-                }
-            });
-        }
     }
 
     public static class AutoCommand {
@@ -58,15 +50,11 @@ public class Autos {
             return new SequentialCommandGroup(
                     Feature.initAutoFeature(),
                     Feature.middleConeDropFeature(),
-                    new ParallelRaceGroup(
-                            new PIDGoToCommand(new Pose2d(new Translation2d(-22, 0), new Rotation2d(0))),
-                            new WaitCommand(5)
-                    ),
+                    new TimeoutCommand(new PIDTranslateCommand(new Translation2d(-22, 0)), 5),
                     new ParallelRaceGroup(
                             Commands.run(() -> Robot.swerveDrive.stop()),
                             new WaitCommand(2)
                     )
-                    //Feature.endPresetFeature(nextPreset)
             );
         }
 
@@ -75,18 +63,9 @@ public class Autos {
                     Feature.initAutoFeature(),
                     Feature.middleConeDropFeature(),
                     Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
-                    new ParallelRaceGroup(
-                            new PIDGoToCommand(new Pose2d(new Translation2d(-22, 0), new Rotation2d(0))),
-                            new WaitCommand(5)
-                    ),
-                    new ParallelRaceGroup(
-                            Commands.run(() -> Robot.swerveDrive.stop()),
-                            new WaitCommand(0.5)
-                    ),
-                    new ParallelRaceGroup(
-                            new PIDGoToCommand(new Pose2d(new Translation2d(-8.75, 0), new Rotation2d(0))),
-                            new WaitCommand(3)
-                    ),
+                    new TimeoutCommand(new PIDTranslateCommand(new Translation2d(-22, 0)), 5),
+                    new TimeoutCommand(Commands.runOnce(() -> Robot.swerveDrive.stop()), 0.5),
+                    new TimeoutCommand(new PIDTranslateCommand(new Translation2d(-8.75, 0)), 3),
                     new ParallelRaceGroup(
                             new PIDAutoBalanceCommand(),
                             new WaitCommand(5)
@@ -100,19 +79,10 @@ public class Autos {
                     Feature.initAutoFeature(),
                     Feature.highCubeDropFeature(),
                     Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
-                    new ParallelRaceGroup(
-                            new PIDGoToCommand(new Pose2d(new Translation2d(-22, 0), new Rotation2d(0))),
-                            new WaitCommand(4)
-                    ),
+                    new TimeoutCommand(new PIDTranslateCommand(new Translation2d(-22, 0)), 4),
                     Commands.runOnce(() -> Robot.swerveDrive.stop()),
-                    new ParallelRaceGroup(
-                            new PIDGoToCommand(new Pose2d(new Translation2d(-8.75, 0), new Rotation2d(0))),
-                            new WaitCommand(3)
-                    ),
-                    new ParallelRaceGroup(
-                            new PIDAutoBalanceCommand(),
-                            new WaitCommand(5)
-                    ),
+                    new TimeoutCommand(new PIDTranslateCommand(new Translation2d(-8.75, 0)), 3),
+                    new TimeoutCommand(new PIDAutoBalanceCommand(), 5),
                     new PrintCommand("CHARGE STATION AUTO COMPLETE")
             );
         }
@@ -131,14 +101,8 @@ public class Autos {
                     Feature.initAutoFeature(),
                     Feature.highCubeDropFeature(),
                     Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
-                    new ParallelRaceGroup(
-                            new PIDGoToCommand(new Pose2d(new Translation2d(-22, 0), new Rotation2d(0))),
-                            new WaitCommand(5)
-                    ),
-                    new ParallelRaceGroup(
-                            Commands.run(() -> Robot.swerveDrive.stop()),
-                            new WaitCommand(0.5)
-                    ),
+                    new TimeoutCommand(new PIDTranslateCommand(new Translation2d(-22, 0)), 5),
+                    new TimeoutCommand(Commands.run(() -> Robot.swerveDrive.stop()), 0.5),
                     new PrintCommand("NO CHARGE STATION AUTO COMPLETE")
             );
         }
