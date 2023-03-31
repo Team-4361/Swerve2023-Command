@@ -88,6 +88,8 @@ public final class Constants {
                 DistanceUnit.INCHES,
                 88
         );
+
+        public static final double WRIST_ROLLOVER_VALUE = 13180;
     }
 
     public static class ClimberPresets {
