@@ -84,7 +84,6 @@ public class RobotContainer {
 
         xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(HIGH_CONE_INDEX)));
 
-
         xbox.rightTrigger().whileTrue(Commands.runEnd(() -> {
             Robot.wrist.translateMotor(-xbox.getRightTriggerAxis()/2);
         }, () -> {
@@ -106,8 +105,6 @@ public class RobotContainer {
         xbox.leftBumper().onTrue(Commands.runOnce(() -> Robot.pump.toggleVacuum()));
     
         xbox.povUp().onTrue(Robot.pump.openVacuumCommand());
-        xbox.povLeft().onTrue(Commands.runOnce(() -> {
-            Robot.limitSwitchBypass = !Robot.limitSwitchBypass;
-        }));
+        xbox.povLeft().onTrue(Commands.runOnce(() -> Robot.limitSwitchBypass = !Robot.limitSwitchBypass));
     }
 }

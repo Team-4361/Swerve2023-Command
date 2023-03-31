@@ -21,9 +21,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
-import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 import static frc.robot.util.math.DistanceUnit.INCHES;
-import static java.util.Map.entry;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -59,19 +57,16 @@ public final class Constants {
     }
 
     public static class VacuumValues {
-        public static int[] VACUUM_MOTOR_ID = new int[]{20, 16, 13, 11};
+        public static int[] VACUUM_MOTOR_IDS = new int[]{20, 16, 13, 11};
         public static double VACUUM_PUMP_SPEED = 0.45;
         public static MotorType VACUUM_MOTOR_TYPE = kBrushed;
-        public static int VACUUM_SOLENOID_ONE = 7;
-        public static int VACUUM_SOLENOID_TWO = 3;
-        public static int VACUUM_SOLENOID_THREE = 1;
-        
-        public static int VACUUM_SOLENOID_FOUR = 2;
 
-        public static int VACUUM_SENSOR_ONE = 0;
-        public static int VACUUM_SENSOR_TWO = 1;
-        public static int VACUUM_SENSOR_THREE = 2;
-        public static int VACUUM_SENSOR_FOUR = 3;
+        public static int[][] VACUUM_SOLENOIDS = new int[][]{
+                new int[]{1, 7}, // PDH 0
+                new int[]{3, 4} // PDH 2
+        };
+
+        public static int[] VACUUM_SENSORS = new int[]{0, 1, 2, 3};
 
         public static double VACUUM_THRESHOLD = 1;
 
@@ -80,13 +75,6 @@ public final class Constants {
     public static class ClimberWristValues {
         public static final int WRIST_GEAR_RATIO = 100;
         public static final int WRIST_MOTOR_ID = 22; // TODO: change!
-
-        public static final double[] WRIST_ANGLE_PRESETS = new double[]{
-                5,
-                10,
-                15,
-                20
-        };
     }
 
     public static class ClimberArmValues {
@@ -100,8 +88,6 @@ public final class Constants {
                 DistanceUnit.INCHES,
                 88
         );
-
-        public static final double WRIST_ROLLOVER_VALUE = 13180.0;
     }
 
     public static class ClimberPresets {
@@ -172,10 +158,6 @@ public final class Constants {
         public static final PIDController Y_CONTROLLER = new PIDController(0.1, 0, 0);
 
         public static final TunablePIDController PITCH_CONTROLLER = new TunablePIDController("Charge Pitch", 0.0081, 0.0, 0.0);
-
-        public static final Map<String, Command> AUTO_EVENT_MAP = new HashMap<>();
-
-        public static final String CHARGE_STATION_AUTO = "CHARGE STATION AUTO";
     }
 
     /**
@@ -195,11 +177,8 @@ public final class Constants {
         /** The offset of the Back Right Motor */
         public static final double BR_OFFSET =  ((-3.345)+0.009)+(Math.PI/2) - (Math.PI / 2) - (2 * Math.PI);
 
-
-
         /** The offset of the Back Left Motor */
         public static final double BL_OFFSET = ((((6.12)+0.339057)+(Math.PI/2) - (2 * Math.PI) - (Math.PI / 2)) * Math.PI)-0.33;
-
 
         /** The dead-zone where anything below this value, nothing will happen. */
         public static final double DRIVE_DEAD_ZONE = 0.15;
@@ -300,5 +279,4 @@ public final class Constants {
         public static final int LEFT_STICK_ID = 0;
         public static final int RIGHT_STICK_ID = 1;
     }
-
 }

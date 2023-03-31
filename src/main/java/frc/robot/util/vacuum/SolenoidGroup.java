@@ -1,4 +1,4 @@
-package frc.robot.util.solenoid;
+package frc.robot.util.vacuum;
 
 import edu.wpi.first.wpilibj.Solenoid;
 
