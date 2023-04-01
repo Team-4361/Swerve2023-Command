@@ -105,6 +105,6 @@ public class RobotContainer {
         xbox.leftBumper().onTrue(Commands.runOnce(() -> Robot.pump.toggleVacuum()));
     
         xbox.povUp().onTrue(Robot.pump.openVacuumCommand());
-        xbox.povLeft().onTrue(Commands.runOnce(() -> Robot.limitSwitchBypass = !Robot.limitSwitchBypass));
+        xbox.povLeft().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(MANUAL_STATION_INDEX)));
     }
 }

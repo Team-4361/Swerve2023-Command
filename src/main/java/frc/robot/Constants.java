@@ -137,14 +137,15 @@ public final class Constants {
         public static final int HIGH_CONE_INDEX = 4;
         public static final int FLOOR_CUBE_INDEX = 5;
         public static final int HIGH_CUBE_INDEX = 6;
+        public static final int MANUAL_STATION_INDEX = 7;
 
-        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, -47.987, -137.0, -57.0, -59.0, -110.0, -65.0);
+        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, -45.0, -143.0, -57.0, -59.0, -102.0, -65.0, -66.0);
 
         // pre-distance measurements
         //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 30.261, 22.0, 17.0, 86.7, 10.619, 67.049);
-        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 17.365, 12.625, 9.755, 49.753, 6.09, 38.47);
+        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 17.365, 6.0, 9.755, 49.753, 12.0, 38.47, 0.0);
 
-        public static final PresetList WRIST_PRESETS = new PresetList(0.0, 33.0, -48.0, 10.0, 0.685, 58.0, -55.285);
+        public static final PresetList WRIST_PRESETS = new PresetList(0.0, -38.0, 56.0, 10.0, 0.685, -75.0, -55.285, 21.0);
 
         public static final PresetGroup CLIMBER_PRESET_GROUP = new PresetGroup()
                 .addPreset(ROTATION_NAME, ROTATION_PRESETS)
