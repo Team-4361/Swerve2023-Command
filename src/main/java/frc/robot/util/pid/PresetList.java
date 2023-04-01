@@ -1,8 +1,9 @@
 package frc.robot.util.pid;
 
 import edu.wpi.first.math.MathUtil;
-import edu.wpi.first.util.sendable.Sendable;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 
 import java.util.ArrayList;
 import java.util.Arrays;
@@ -29,7 +30,11 @@ public class PresetList extends ArrayList<Double> {
         return get(MathUtil.clamp(idx, 0, size()-1));
     }
 
-    public PresetList setCurrentPreset(int index) {
+    public Command setPresetCommand(int preset) {
+        return Commands.runOnce(() -> setPreset(preset));
+    }
+
+    public PresetList setPreset(int index) {
         this.index = index;
         updateListener();
         return this;

@@ -5,7 +5,6 @@
 
 package frc.robot;
 
-import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import frc.robot.commands.auto.PIDAutoBalanceCommand;
 import edu.wpi.first.wpilibj2.command.button.CommandJoystick;
@@ -62,39 +61,35 @@ public class RobotContainer {
     private void configureBindings() {
         xyStick.button(8).onTrue(Robot.swerveDrive.toggleFieldOrientedCommand());
         xyStick.button(12).onTrue(Robot.swerveDrive.resetGyroCommand());
-        //xyStick.button(9).onTrue(Robot.swerveDrive.toggleClosedLoopCommand());
 
-        //xyStick.button(10).onTrue(Commands.runOnce(()->Robot.pidControlEnabled = !Robot.pidControlEnabled));
         xyStick.trigger().or(zStick.trigger()).whileTrue(Robot.swerveDrive.holdPrecisionModeCommand());
+
         xyStick.button(3).whileTrue(Robot.swerveDrive.lockWheelCommand());
-
         xyStick.button(4).whileTrue(new PIDAutoBalanceCommand());
-
         xyStick.button(5).or(zStick.button(6)).onTrue(Robot.pump.toggleLEDCommand());
 
         ///////////////////////////////// XBOX CONTROLS
 
-        // TODO: CHANGE!
-        xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(ZERO_POSITION_INDEX)));
-        xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(FLOOR_CUBE_INDEX)));
-        xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(HUMAN_STATION_INDEX)));
-        xbox.x().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(MID_CONE_INDEX)));
+        xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(ZERO_POSITION_INDEX)));
+        xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(FLOOR_CUBE_INDEX)));
+        xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(HUMAN_STATION_INDEX)));
+        xbox.x().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(MID_CONE_INDEX)));
 
-        xbox.povDown().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(FLOOR_CONE_INDEX)));
+        xbox.povDown().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(FLOOR_CONE_INDEX)));
+        xbox.povLeft().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(MANUAL_STATION_INDEX)));
+        xbox.povUp().onTrue(Robot.pump.openVacuumCommand());
 
-        xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(HIGH_CONE_INDEX)));
+        xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(HIGH_CONE_INDEX)));
 
-        xbox.rightTrigger().whileTrue(Commands.runEnd(() -> {
-            Robot.wrist.translateMotor(-xbox.getRightTriggerAxis()/2);
-        }, () -> {
-            Robot.wrist.translateMotor(0);
-        }));
+        xbox.rightTrigger().whileTrue(Commands.runEnd(
+                () -> Robot.wrist.translateMotor(-xbox.getRightTriggerAxis()/2),
+                () -> Robot.wrist.translateMotor(0)
+        ));
 
-        xbox.leftTrigger().whileTrue(Commands.runEnd(() -> {
-            Robot.wrist.translateMotor(xbox.getLeftTriggerAxis()/2);
-        }, () -> {
-            Robot.wrist.translateMotor(0);
-        }));
+        xbox.leftTrigger().whileTrue(Commands.runEnd(
+                () -> Robot.wrist.translateMotor(xbox.getLeftTriggerAxis()/2),
+                () -> Robot.wrist.translateMotor(0)
+        ));
 
         xbox.leftStick().onTrue(Commands.runOnce(() -> {
             Robot.wrist.resetEncoder();
@@ -103,8 +98,5 @@ public class RobotContainer {
         }));
 
         xbox.leftBumper().onTrue(Commands.runOnce(() -> Robot.pump.toggleVacuum()));
-    
-        xbox.povUp().onTrue(Robot.pump.openVacuumCommand());
-        xbox.povLeft().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(MANUAL_STATION_INDEX)));
     }
 }

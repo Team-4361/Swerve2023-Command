@@ -1,21 +1,19 @@
 package frc.robot.commands.auto;
 
-import edu.wpi.first.math.geometry.Pose2d;
-import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
+import frc.robot.util.pid.VariablePose2d;
 
 import static frc.robot.Constants.ClimberPresets.*;
 
 public class Autos {
-
     public static class Feature {
         public static Command initAutoFeature() {
             return Commands.runOnce(() -> {
                 Robot.swerveDrive.resetGyroCommand();
                 Robot.swerveDrive.resetPosition();
-                CLIMBER_PRESET_GROUP.setCurrentPreset(ZERO_POSITION_INDEX);
+                CLIMBER_PRESET_GROUP.setPreset(ZERO_POSITION_INDEX);
             });
         }
 
@@ -23,7 +21,7 @@ public class Autos {
             return new SequentialCommandGroup(
                     Commands.runOnce(() -> {
                         Robot.pump.activate();
-                        CLIMBER_PRESET_GROUP.setCurrentPreset(MID_CONE_INDEX);
+                        CLIMBER_PRESET_GROUP.setPreset(MID_CONE_INDEX);
                     }),
                     new WaitCommand(3),
                     Commands.runOnce(() -> Robot.pump.deactivate()),
@@ -36,7 +34,7 @@ public class Autos {
                     Commands.runOnce(() -> {
                         Robot.pump.activate();
                         // NOTE: this is normal! high cone preset works with high cube
-                        CLIMBER_PRESET_GROUP.setCurrentPreset(HIGH_CONE_INDEX);
+                        CLIMBER_PRESET_GROUP.setPreset(HIGH_CONE_INDEX);
                     }),
                     new WaitCommand(2),
                     Commands.runOnce(() -> Robot.pump.deactivate()),
@@ -50,7 +48,7 @@ public class Autos {
             return new SequentialCommandGroup(
                     Feature.initAutoFeature(),
                     Feature.middleConeDropFeature(),
-                    new TimeoutCommand(new PIDTranslateCommand(new Translation2d(-22, 0)), 5),
+                    new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-22, 0)), 5),
                     new ParallelRaceGroup(
                             Commands.run(() -> Robot.swerveDrive.stop()),
                             new WaitCommand(2)
@@ -62,10 +60,10 @@ public class Autos {
             return new SequentialCommandGroup(
                     Feature.initAutoFeature(),
                     Feature.middleConeDropFeature(),
-                    Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
-                    new TimeoutCommand(new PIDTranslateCommand(new Translation2d(-22, 0)), 5),
+                    CLIMBER_PRESET_GROUP.setPresetCommand(0),
+                    new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-22, 0)), 5),
                     new TimeoutCommand(Commands.runOnce(() -> Robot.swerveDrive.stop()), 0.5),
-                    new TimeoutCommand(new PIDTranslateCommand(new Translation2d(-8.75, 0)), 3),
+                    new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-8.75, 0)), 3),
                     new ParallelRaceGroup(
                             new PIDAutoBalanceCommand(),
                             new WaitCommand(5)
@@ -78,10 +76,10 @@ public class Autos {
             return new SequentialCommandGroup(
                     Feature.initAutoFeature(),
                     Feature.highCubeDropFeature(),
-                    Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
-                    new TimeoutCommand(new PIDTranslateCommand(new Translation2d(-22, 0)), 4),
+                    CLIMBER_PRESET_GROUP.setPresetCommand(0),
+                    new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-22, 0)), 4),
                     Commands.runOnce(() -> Robot.swerveDrive.stop()),
-                    new TimeoutCommand(new PIDTranslateCommand(new Translation2d(-8.75, 0)), 3),
+                    new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-8.75, 0)), 3),
                     new TimeoutCommand(new PIDAutoBalanceCommand(), 5),
                     new PrintCommand("CHARGE STATION AUTO COMPLETE")
             );
@@ -92,7 +90,16 @@ public class Autos {
                 Feature.initAutoFeature(),
                 Feature.highCubeDropFeature(),
                 new WaitCommand(4),
-                Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0))
+                CLIMBER_PRESET_GROUP.setPresetCommand(0)
+            );
+        }
+
+        public static Command highCubeAdditionalCommand() {
+            return new SequentialCommandGroup(
+                    highCubeNoStationCommand(),
+                    CLIMBER_PRESET_GROUP.setPresetCommand(FLOOR_CUBE_INDEX),
+                    new GrabCubeCommand(),
+                    CLIMBER_PRESET_GROUP.setPresetCommand(0)
             );
         }
 
@@ -100,8 +107,8 @@ public class Autos {
             return new SequentialCommandGroup(
                     Feature.initAutoFeature(),
                     Feature.highCubeDropFeature(),
-                    Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setCurrentPreset(0)),
-                    new TimeoutCommand(new PIDTranslateCommand(new Translation2d(-22, 0)), 5),
+                    CLIMBER_PRESET_GROUP.setPresetCommand(0),
+                    new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-22, 0)), 5),
                     new TimeoutCommand(Commands.run(() -> Robot.swerveDrive.stop()), 0.5),
                     new PrintCommand("NO CHARGE STATION AUTO COMPLETE")
             );

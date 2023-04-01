@@ -158,6 +158,7 @@ public final class Constants {
         // fancy calculus type stuff, not sure what to do with it but play with the numbers ;)
         public static final PIDController X_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController Y_CONTROLLER = new PIDController(0.1, 0, 0);
+        public static final PIDController HEADING_CONTROLLER = new PIDController(0.1, 0, 0);
 
         public static final TunablePIDController PITCH_CONTROLLER = new TunablePIDController("Charge Pitch", 0.0081, 0.0, 0.0);
     }

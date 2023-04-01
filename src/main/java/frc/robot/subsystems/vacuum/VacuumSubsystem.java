@@ -15,9 +15,11 @@ public class VacuumSubsystem extends SubsystemBase {
     public static final PneumaticsModuleType MODULE_TYPE = PneumaticsModuleType.CTREPCM;
 
     private final MotorControllerGroup motor;
-    private final SolenoidGroup solenoids;
+
     private final PowerDistribution pdh;
-    private final VacuumSensorGroup sensors;
+
+    public VacuumSensorGroup sensors;
+    public SolenoidGroup solenoids;
 
     private boolean ledStatus = false;
     private boolean vacEnabled = false;

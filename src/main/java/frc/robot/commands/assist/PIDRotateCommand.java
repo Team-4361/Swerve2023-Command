@@ -9,7 +9,7 @@ import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 
-import static frc.robot.commands.auto.PIDTargetCommand.inTolerance;
+import static frc.robot.util.math.ExtendedMath.inTolerance;
 
 public class PIDRotateCommand extends CommandBase {
     private final ProfiledPIDController controller = new ProfiledPIDController(0.01, 0, 0, new Constraints(0.5, 0.5));

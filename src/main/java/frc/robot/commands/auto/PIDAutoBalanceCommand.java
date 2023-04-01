@@ -6,7 +6,6 @@ import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 
 import static frc.robot.Constants.AutoValues.PITCH_CONTROLLER;
-import static frc.robot.commands.auto.PIDTargetCommand.inTolerance;
 
 public class PIDAutoBalanceCommand extends CommandBase {
 

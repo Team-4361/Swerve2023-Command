@@ -2,6 +2,8 @@ package frc.robot.util.pid;
 
 import java.util.HashMap;
 
+import edu.wpi.first.wpilibj2.command.Command;
+import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
 
 import static frc.robot.Constants.TEST_MODE;
@@ -14,13 +16,17 @@ public class PresetGroup extends HashMap<String, PresetList> {
         return this;
     }
 
+    public Command setPresetCommand(int index) {
+        return Commands.runOnce(() -> setPreset(index));
+    }
+
     public Double getCurrentPreset(String name) {
         return get(name).getCurrentPreset();
     }
 
-    public PresetGroup setCurrentPreset(int index) {
+    public PresetGroup setPreset(int index) {
         this.index = index;
-        this.forEach((name, preset) -> preset.setCurrentPreset(index));
+        this.forEach((name, preset) -> preset.setPreset(index));
         new PrintCommand("SETTING PRESET TO " + index).schedule();
         return this;
     }
@@ -33,14 +39,14 @@ public class PresetGroup extends HashMap<String, PresetList> {
 
     public PresetGroup nextPreset() {
         if (index+1 <= size()) {
-            setCurrentPreset(index+1);
+            setPreset(index+1);
         }
         return this;
     }
 
     public PresetGroup prevPreset() {
         if (index-1 >= 0) {
-            setCurrentPreset(index-1);
+            setPreset(index-1);
         }
         return this;
     }
