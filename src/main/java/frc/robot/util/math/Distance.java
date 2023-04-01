@@ -2,18 +2,29 @@ package frc.robot.util.math;
 
 public class Distance {
     private double meterValue;
+    private DistanceUnit unit;
 
     public Distance(double value, DistanceUnit unit) {
         this.meterValue = convert(value, unit, DistanceUnit.METERS);
+        this.unit = unit;
     }
 
     public Distance setDistance(double value, DistanceUnit unit) {
         this.meterValue = convert(value, unit, DistanceUnit.METERS);
+        this.unit = unit;
         return this;
+    }
+
+    public DistanceUnit getDistanceUnit() {
+        return this.unit;
     }
 
     public double getValue(DistanceUnit unit) {
         return convert(meterValue, DistanceUnit.METERS, unit);
+    }
+
+    public double getValue() {
+        return convert(meterValue, DistanceUnit.METERS, this.unit);
     }
 
     public static Distance fromValue(double value, DistanceUnit unit) {

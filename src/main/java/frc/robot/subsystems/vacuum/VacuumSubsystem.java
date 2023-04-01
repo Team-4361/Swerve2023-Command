@@ -41,8 +41,8 @@ public class VacuumSubsystem extends SubsystemBase {
         solenoids = new SolenoidGroup(
             new Solenoid(0, MODULE_TYPE, VACUUM_SOLENOIDS[0][0]),
             new Solenoid(0, MODULE_TYPE, VACUUM_SOLENOIDS[0][1]),
-            new Solenoid(2, MODULE_TYPE, VACUUM_SOLENOIDS[1][0]),
-            new Solenoid(2, MODULE_TYPE, VACUUM_SOLENOIDS[1][1])
+            new Solenoid(1, MODULE_TYPE, VACUUM_SOLENOIDS[1][0]),
+            new Solenoid(1, MODULE_TYPE, VACUUM_SOLENOIDS[1][1])
         );
 
         pdh = new PowerDistribution();

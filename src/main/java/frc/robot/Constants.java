@@ -63,7 +63,7 @@ public final class Constants {
 
         public static int[][] VACUUM_SOLENOIDS = new int[][]{
                 new int[]{1, 7}, // PDH 0
-                new int[]{3, 4} // PDH 2
+                new int[]{3, 4} // PDH 1
         };
 
         public static int[] VACUUM_SENSORS = new int[]{0, 1, 2, 3};
@@ -85,8 +85,7 @@ public final class Constants {
 
         public static final PeakMotorDistance EXTENSION_LIMIT = new PeakMotorDistance(
                 Distance.fromValue(50.5, INCHES),
-                DistanceUnit.INCHES,
-                88
+                88.0
         );
 
         public static final double WRIST_ROLLOVER_VALUE = 13180;
