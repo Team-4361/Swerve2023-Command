@@ -26,7 +26,7 @@ import static frc.robot.util.math.DistanceUnit.INCHES;
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
  * constants. This class should not be used for any other purpose. All constants should be declared
- * globally (i.e. public static). Do not put anything functional in this class.
+ * globally (i.e. public static). Do not put functional statements in this class.
  *
  * <p>It is advised to statically import this class (or one of its inner classes) wherever the
  * constants are needed, to reduce verbosity.
@@ -98,29 +98,6 @@ public final class Constants {
         public static final String ROTATION_NAME = "CLI ROT";
         public static final String EXTENSION_NAME = "CLI EXT";
         public static final String WRIST_NAME = "CLIM WST";
-
-        /* OLD
-        // PRESET 0 = ZERO POSITION
-        // PRESET 1 = AUTO CONE FLOOR (NO TELEOP)
-        // PRESET 2 = HUMAN STATION PICKUP
-        // PRESET 3 = CONE DROP OFF
-        // PRESET 4 = CONE FLOOR POSITION
-        // PRESET 5 = CUBE FLOOR POSITION
-        // PRESET 6 = CUBE HIGH POSITION
-        // PRESET 7 = MID CONE
-        // PRESET 8 = HIGH CONE
-        // PRESET 9 = CONE FLOOR
-
-
-        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 30.0, -47.987, -62.0, -124.0, -105.0, -65.0, -65.03, -59.0, -135.616);
-        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 30.261, 27.5, 49.0, 25.0, 88.35, 67.049, 86.7, 10.619);
-
-        //public static final PresetList ROTATION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-        //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 0.0, 0.0, 0.0, 0.0, 0.0);
-         */
-
-        ///////////////////////////////////////////////////////////// NEW WARREN HILLS (3/24/23)
-
 
         // PRESET 0 = ZERO POSITION         (ZERO_POSITION_INDEX)
         // PRESET 1 = HUMAN STATION PICKUP  (HUMAN_STATION_INDEX)

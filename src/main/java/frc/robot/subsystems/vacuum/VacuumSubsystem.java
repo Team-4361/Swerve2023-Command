@@ -16,12 +16,9 @@ public class VacuumSubsystem extends SubsystemBase {
 
     private final MotorControllerGroup motor;
 
-    private final PowerDistribution pdh;
-
     public VacuumSensorGroup sensors;
     public SolenoidGroup solenoids;
 
-    private boolean ledStatus = false;
     private boolean vacEnabled = false;
 
     public void toggleVacuum() {
@@ -47,7 +44,6 @@ public class VacuumSubsystem extends SubsystemBase {
             new Solenoid(1, MODULE_TYPE, VACUUM_SOLENOIDS[1][1])
         );
 
-        pdh = new PowerDistribution();
         sensors = new VacuumSensorGroup(VACUUM_SENSORS);
     }
 
@@ -65,11 +61,6 @@ public class VacuumSubsystem extends SubsystemBase {
                 motor.set(VACUUM_PUMP_SPEED);
             }
         }));
-    }
-
-
-    public Command toggleLEDCommand() {
-        return this.runOnce(() -> ledStatus = !ledStatus);
     }
 
     public void activate() {
@@ -106,7 +97,6 @@ public class VacuumSubsystem extends SubsystemBase {
 
         SmartDashboard.putBoolean("Vacuum: Bound", sensors.isAnyBound());
         SmartDashboard.putBoolean("Vacuum: Solenoid", solenoids.get());
-        pdh.setSwitchableChannel(ledStatus);
     }
 }
 

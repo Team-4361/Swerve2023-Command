@@ -84,7 +84,7 @@ public class Autos {
         public static Command highCubeAutoBalanceCommand() {
             return new SequentialCommandGroup(
                     Feature.initAutoFeature(),
-                    Feature.highCubeSyncDropFeature(),
+                    Feature.highCubeDropFeature(),
                     CLIMBER_PRESET_GROUP.setPresetCommand(0),
                     new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-22, 0)), 4),
                     Commands.runOnce(() -> Robot.swerveDrive.stop()),
@@ -97,7 +97,7 @@ public class Autos {
         public static Command highDropOnlyCommand() {
             return new SequentialCommandGroup(
                 Feature.initAutoFeature(),
-                Feature.highCubeSyncDropFeature(),
+                Feature.highCubeDropFeature(),
                 new WaitCommand(4),
                 CLIMBER_PRESET_GROUP.setPresetCommand(0)
             );
@@ -115,7 +115,7 @@ public class Autos {
         public static Command highCubeNoStationCommand() {
             return new SequentialCommandGroup(
                     Feature.initAutoFeature(),
-                    Feature.highCubeSyncDropFeature(),
+                    Feature.highCubeDropFeature(),
                     CLIMBER_PRESET_GROUP.setPresetCommand(0),
                     new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-22, 0)), 5),
                     new TimeoutCommand(Commands.run(() -> Robot.swerveDrive.stop()), 0.5),

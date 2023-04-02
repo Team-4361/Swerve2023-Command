@@ -73,7 +73,6 @@ public class RobotContainer {
 
         xyStick.button(3).whileTrue(Robot.swerveDrive.lockWheelCommand());
         xyStick.button(4).whileTrue(new PIDAutoBalanceCommand());
-        xyStick.button(5).or(zStick.button(6)).onTrue(Robot.pump.toggleLEDCommand());
 
         ///////////////////////////////// XBOX CONTROLS
 

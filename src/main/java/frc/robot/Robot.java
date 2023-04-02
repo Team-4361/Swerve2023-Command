@@ -39,7 +39,7 @@ public class Robot extends TimedRobot {
     public static ClimberWristSubsystem wrist;
     public static VacuumSubsystem pump;
     public static CameraSubsystem camera;
-    //public static PowerDistribution power;
+    public static PowerDistribution power;
 
     public static boolean pidControlEnabled = true; //true;
     public static boolean limitSwitchBypass = false;
@@ -74,6 +74,8 @@ public class Robot extends TimedRobot {
         autoMode.setDefaultOption("CHARGE YES", 2);
 
         SmartDashboard.putData("Auto Chooser", autoMode);
+
+        power = new PowerDistribution();
 
         // *** IMPORTANT: Call this method at the VERY END of robotInit!!! *** //
         robotContainer = new RobotContainer();
