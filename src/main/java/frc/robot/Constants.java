@@ -80,13 +80,15 @@ public final class Constants {
     public static class ClimberArmValues {
         public static final int ROTATION_MOTOR_ID = 10;
         public static final int EXTENSION_MOTOR_ID = 21;
+
         //public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029); OLD
         public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(735);
 
         public static final PeakMotorDistance EXTENSION_LIMIT = new PeakMotorDistance(
-                Distance.fromValue(50.5, INCHES),
-                88.0
+                Distance.fromValue(54.0, INCHES),
+                94.09
         );
+        // old was 88 rot and 50.5 inches
 
         public static final double WRIST_ROLLOVER_VALUE = 13180;
     }
@@ -139,7 +141,7 @@ public final class Constants {
         public static final int HIGH_CUBE_INDEX = 6;
         public static final int MANUAL_STATION_INDEX = 7;
 
-        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, -45.0, -143.0, -57.0, -59.0, -102.0, -65.0, -66.0);
+        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, -45.0, -143.0, -57.0, -59.0, -102.0, -65.0, -58.0);
 
         // pre-distance measurements
         //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 30.261, 22.0, 17.0, 86.7, 10.619, 67.049);
