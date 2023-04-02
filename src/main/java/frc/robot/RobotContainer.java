@@ -47,6 +47,13 @@ public class RobotContainer {
         if (Robot.wrist.getTargetRotation() > 500) {
             Robot.wrist.setTarget(0);
         }
+
+        // Set the target reached supplier in the PresetList for synchronization.
+        ROTATION_PRESETS.setTargetReachedSupplier(() -> Robot.arm.getRotation().atTarget());
+        EXTENSION_PRESETS.setTargetReachedSupplier(() -> Robot.arm.getExtension().atTarget());
+        WRIST_PRESETS.setTargetReachedSupplier(() -> Robot.wrist.atTarget());
+
+        CLIMBER_PRESET_GROUP.setDefaultSyncOrder(EXTENSION_NAME, ROTATION_NAME, WRIST_NAME);
     }
 
     /**

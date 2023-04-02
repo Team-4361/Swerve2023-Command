@@ -82,6 +82,9 @@ public class VacuumSubsystem extends SubsystemBase {
         vacEnabled = false;
     }
 
+    public Command activateCommand() { return runOnce(this::activate); }
+    public Command deactivateCommand() { return runOnce(this::deactivate); }
+
     /**
      * This method is called periodically by the {@link CommandScheduler}. Useful for updating
      * subsystem-specific state that you don't want to offload to a {@link Command}. Teams should try

@@ -5,14 +5,21 @@ import java.util.HashMap;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.PrintCommand;
+import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import static frc.robot.Constants.TEST_MODE;
 
 public class PresetGroup extends HashMap<String, PresetList> {
     private int index = 0;
+    private String[] defaultSyncOrder;
 
     public PresetGroup addPreset(String name, PresetList extensionPresets) {
         this.put(name, extensionPresets);
+        return this;
+    }
+
+    public PresetGroup setDefaultSyncOrder(String... order) {
+        this.defaultSyncOrder = order;
         return this;
     }
 
@@ -29,6 +36,21 @@ public class PresetGroup extends HashMap<String, PresetList> {
         this.forEach((name, preset) -> preset.setPreset(index));
         new PrintCommand("SETTING PRESET TO " + index).schedule();
         return this;
+    }
+
+    public Command setPresetSyncCommand(int index) {
+        return setPresetSyncCommand(index, defaultSyncOrder);
+    }
+
+    public Command setPresetSyncCommand(int index, String[] order) {
+        if (order.length == 0) return setPresetCommand(index);
+
+        SequentialCommandGroup group = new SequentialCommandGroup();
+
+        for (String name : order) {
+            group.addCommands(get(name).awaitPresetCommand(index));
+        }
+        return group;
     }
 
     public void updateDashboard() {

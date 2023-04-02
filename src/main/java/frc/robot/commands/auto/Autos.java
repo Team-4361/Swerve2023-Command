@@ -1,6 +1,5 @@
 package frc.robot.commands.auto;
 
-import edu.wpi.first.math.geometry.Translation2d;
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
 import frc.robot.util.pid.VariablePose2d;
@@ -25,6 +24,16 @@ public class Autos {
                     }),
                     new WaitCommand(3),
                     Commands.runOnce(() -> Robot.pump.deactivate()),
+                    Robot.pump.openVacuumCommand()
+            );
+        }
+
+        public static Command highCubeSyncDropFeature() {
+            return new SequentialCommandGroup(
+                    Robot.pump.activateCommand(),
+                    CLIMBER_PRESET_GROUP.setPresetSyncCommand(HIGH_CONE_INDEX),
+                    new WaitCommand(2),
+                    Robot.pump.deactivateCommand(),
                     Robot.pump.openVacuumCommand()
             );
         }
@@ -75,7 +84,7 @@ public class Autos {
         public static Command highCubeAutoBalanceCommand() {
             return new SequentialCommandGroup(
                     Feature.initAutoFeature(),
-                    Feature.highCubeDropFeature(),
+                    Feature.highCubeSyncDropFeature(),
                     CLIMBER_PRESET_GROUP.setPresetCommand(0),
                     new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-22, 0)), 4),
                     Commands.runOnce(() -> Robot.swerveDrive.stop()),
@@ -88,7 +97,7 @@ public class Autos {
         public static Command highDropOnlyCommand() {
             return new SequentialCommandGroup(
                 Feature.initAutoFeature(),
-                Feature.highCubeDropFeature(),
+                Feature.highCubeSyncDropFeature(),
                 new WaitCommand(4),
                 CLIMBER_PRESET_GROUP.setPresetCommand(0)
             );
@@ -106,7 +115,7 @@ public class Autos {
         public static Command highCubeNoStationCommand() {
             return new SequentialCommandGroup(
                     Feature.initAutoFeature(),
-                    Feature.highCubeDropFeature(),
+                    Feature.highCubeSyncDropFeature(),
                     CLIMBER_PRESET_GROUP.setPresetCommand(0),
                     new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-22, 0)), 5),
                     new TimeoutCommand(Commands.run(() -> Robot.swerveDrive.stop()), 0.5),

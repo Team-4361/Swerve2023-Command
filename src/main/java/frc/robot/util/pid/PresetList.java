@@ -2,12 +2,14 @@ package frc.robot.util.pid;
 
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
-import edu.wpi.first.wpilibj2.command.Command;
-import edu.wpi.first.wpilibj2.command.Commands;
+import edu.wpi.first.wpilibj2.command.*;
+import frc.robot.commands.auto.TimeoutCommand;
 
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Objects;
+import java.util.Set;
+import java.util.function.Supplier;
 
 import static frc.robot.Constants.TEST_MODE;
 
@@ -17,9 +19,19 @@ public class PresetList extends ArrayList<Double> {
     private boolean dashAdded = false;
 
     private final ArrayList<PresetEventListener> listeners = new ArrayList<>();
+    private Supplier<Boolean> targetReachedSupplier = () -> true;
 
     public PresetList(Double... elements) {
         this.addAll(Arrays.asList(elements));
+    }
+
+    public PresetList setTargetReachedSupplier(Supplier<Boolean> supplier) {
+        this.targetReachedSupplier = supplier;
+        return this;
+    }
+
+    public boolean hasReachedTarget() {
+        return targetReachedSupplier.get();
     }
 
     public double getCurrentPreset() {
@@ -32,6 +44,15 @@ public class PresetList extends ArrayList<Double> {
 
     public Command setPresetCommand(int preset) {
         return Commands.runOnce(() -> setPreset(preset));
+    }
+
+    public Command awaitPresetCommand(int preset) {
+        return new TimeoutCommand(new FunctionalCommand(
+                () -> setPreset(preset),
+                () -> {},
+                (i) -> {},
+                this::hasReachedTarget
+        ), 1.5);
     }
 
     public PresetList setPreset(int index) {
