@@ -97,7 +97,7 @@ public class Robot extends TimedRobot {
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
         if (TEST_MODE) {
-            CLIMBER_PRESET_GROUP.updateDashboard();
+            //CLIMBER_PRESET_GROUP.updateDashboard();
         }
 
         if (!Robot.swerveDrive.gyro.isCalibrating() && !Robot.swerveDrive.hasSetOffset) {

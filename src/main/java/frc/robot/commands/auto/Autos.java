@@ -12,7 +12,7 @@ public class Autos {
             return Commands.runOnce(() -> {
                 Robot.swerveDrive.resetGyroCommand();
                 Robot.swerveDrive.resetPosition();
-                CLIMBER_PRESET_GROUP.setPreset(ZERO_POSITION_INDEX);
+                CLIMBER_PRESET_GROUP.setPreset(ZERO_POSITION_NAME);
             });
         }
 
@@ -20,7 +20,7 @@ public class Autos {
             return new SequentialCommandGroup(
                     Commands.runOnce(() -> {
                         Robot.pump.activate();
-                        CLIMBER_PRESET_GROUP.setPreset(MID_CONE_INDEX);
+                        CLIMBER_PRESET_GROUP.setPreset(MID_CONE_NAME);
                     }),
                     new WaitCommand(3),
                     Commands.runOnce(() -> Robot.pump.deactivate()),
@@ -31,7 +31,7 @@ public class Autos {
         public static Command highCubeSyncDropFeature() {
             return new SequentialCommandGroup(
                     Robot.pump.activateCommand(),
-                    CLIMBER_PRESET_GROUP.setPresetSyncCommand(HIGH_CONE_INDEX),
+                    CLIMBER_PRESET_GROUP.setPresetSyncCommand(HIGH_CONE_NAME),
                     new WaitCommand(2),
                     Robot.pump.deactivateCommand(),
                     Robot.pump.openVacuumCommand()
@@ -43,7 +43,7 @@ public class Autos {
                     Commands.runOnce(() -> {
                         Robot.pump.activate();
                         // NOTE: this is normal! high cone preset works with high cube
-                        CLIMBER_PRESET_GROUP.setPreset(HIGH_CONE_INDEX);
+                        CLIMBER_PRESET_GROUP.setPreset(HIGH_CONE_NAME);
                     }),
                     new WaitCommand(2),
                     Commands.runOnce(() -> Robot.pump.deactivate()),
@@ -69,7 +69,7 @@ public class Autos {
             return new SequentialCommandGroup(
                     Feature.initAutoFeature(),
                     Feature.middleConeDropFeature(),
-                    CLIMBER_PRESET_GROUP.setPresetCommand(0),
+                    CLIMBER_PRESET_GROUP.setPresetCommand(ZERO_POSITION_NAME),
                     new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-22, 0)), 5),
                     new TimeoutCommand(Commands.runOnce(() -> Robot.swerveDrive.stop()), 0.5),
                     new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-8.75, 0)), 3),
@@ -85,7 +85,7 @@ public class Autos {
             return new SequentialCommandGroup(
                     Feature.initAutoFeature(),
                     Feature.highCubeDropFeature(),
-                    CLIMBER_PRESET_GROUP.setPresetCommand(0),
+                    CLIMBER_PRESET_GROUP.setPresetCommand(ZERO_POSITION_NAME),
                     new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-22, 0)), 4),
                     Commands.runOnce(() -> Robot.swerveDrive.stop()),
                     new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-8.75, 0)), 3),
@@ -99,16 +99,16 @@ public class Autos {
                 Feature.initAutoFeature(),
                 Feature.highCubeDropFeature(),
                 new WaitCommand(4),
-                CLIMBER_PRESET_GROUP.setPresetCommand(0)
+                CLIMBER_PRESET_GROUP.setPresetCommand(ZERO_POSITION_NAME)
             );
         }
 
         public static Command highCubeAdditionalCommand() {
             return new SequentialCommandGroup(
                     highCubeNoStationCommand(),
-                    CLIMBER_PRESET_GROUP.setPresetCommand(FLOOR_CUBE_INDEX),
+                    CLIMBER_PRESET_GROUP.setPresetCommand(FLOOR_CUBE_NAME),
                     new GrabCubeCommand(),
-                    CLIMBER_PRESET_GROUP.setPresetCommand(0)
+                    CLIMBER_PRESET_GROUP.setPresetCommand(ZERO_POSITION_NAME)
             );
         }
 
@@ -116,7 +116,7 @@ public class Autos {
             return new SequentialCommandGroup(
                     Feature.initAutoFeature(),
                     Feature.highCubeDropFeature(),
-                    CLIMBER_PRESET_GROUP.setPresetCommand(0),
+                    CLIMBER_PRESET_GROUP.setPresetCommand(ZERO_POSITION_NAME),
                     new TimeoutCommand(new PIDTranslateCommand(new VariablePose2d(-22, 0)), 5),
                     new TimeoutCommand(Commands.run(() -> Robot.swerveDrive.stop()), 0.5),
                     new PrintCommand("NO CHARGE STATION AUTO COMPLETE")

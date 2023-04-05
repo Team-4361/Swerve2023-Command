@@ -7,21 +7,16 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
-import edu.wpi.first.wpilibj2.command.Command;
-import frc.robot.subsystems.swerve.SwerveDriveSubsystem;
 import frc.robot.util.camera.PhotonCameraConfig;
 import frc.robot.util.math.Distance;
-import frc.robot.util.math.DistanceUnit;
 import frc.robot.util.math.GearRatio;
 import frc.robot.util.math.PeakMotorDistance;
 import frc.robot.util.pid.*;
 import frc.robot.util.swerve.SwerveModule;
 
-import java.util.HashMap;
-import java.util.Map;
-
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
 import static frc.robot.util.math.DistanceUnit.INCHES;
+import static java.util.Map.*;
 
 /**
  * The Constants class provides a convenient place for teams to hold robot-wide numerical or boolean
@@ -80,24 +75,26 @@ public final class Constants {
     public static class ClimberArmValues {
         public static final int ROTATION_MOTOR_ID = 10;
         public static final int EXTENSION_MOTOR_ID = 21;
-        //public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(1029); OLD
         public static final GearRatio ROTATION_GEAR_RATIO = GearRatio.fromRatio(735);
 
         public static final PeakMotorDistance EXTENSION_LIMIT = new PeakMotorDistance(
                 Distance.fromValue(54.0, INCHES),
                 94.09
         );
-
-        public static final double WRIST_ROLLOVER_VALUE = 13180;
     }
 
     public static class ClimberPresets {
-        //public static final String ROTATION_NAME = "Climber Rotation";
-        //public static final String EXTENSION_NAME = "Climber Extension";
-        //public static final String WRIST_NAME = "Climber Wrist";
         public static final String ROTATION_NAME = "CLI ROT";
         public static final String EXTENSION_NAME = "CLI EXT";
         public static final String WRIST_NAME = "CLIM WST";
+
+        public static final String ZERO_POSITION_NAME = "ZERO_POSITION_INDEX";
+        public static final String HUMAN_STATION_NAME = "HUMAN_STATION_INDEX";
+        public static final String FLOOR_CONE_NAME = "FLOOR_CONE_INDEX";
+        public static final String MID_CONE_NAME = "MID_CONE_INDEX";
+        public static final String HIGH_CONE_NAME = "HIGH_CONE_INDEX";
+        public static final String FLOOR_CUBE_NAME = "FLOOR_CUBE_INDEX";
+        public static final String MANUAL_STATION_NAME = "MANUAL_STATION_INDEX";
 
         // PRESET 0 = ZERO POSITION         (ZERO_POSITION_INDEX)
         // PRESET 1 = HUMAN STATION PICKUP  (HUMAN_STATION_INDEX)
@@ -105,30 +102,72 @@ public final class Constants {
         // PRESET 3 = MID CONE              (MID_CONE_INDEX)
         // PRESET 4 = HIGH CONE             (HIGH_CONE_INDEX)
         // PRESET 5 = FLOOR CUBE            (FLOOR_CUBE_INDEX)
-        // PRESET 6 = CUBE HIGH             (HIGH_CUBE_INDEX)
-
+        // PRESET 6 = LOAD IN STATION       (MANUAL_STATION_INDEX)
         public static final int ZERO_POSITION_INDEX = 0;
         public static final int HUMAN_STATION_INDEX = 1;
         public static final int FLOOR_CONE_INDEX = 2;
         public static final int MID_CONE_INDEX = 3;
         public static final int HIGH_CONE_INDEX = 4;
         public static final int FLOOR_CUBE_INDEX = 5;
-        public static final int HIGH_CUBE_INDEX = 6;
-        public static final int MANUAL_STATION_INDEX = 7;
+        public static final int MANUAL_STATION_INDEX = 6;
 
-        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, -45.0, -143.0, -57.0, -59.0, -102.0, -65.0, -66.0);
-        // pre-distance measurements
-        //public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 30.261, 22.0, 17.0, 86.7, 10.619, 67.049);
-        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 17.365, 6.0, 9.755, 49.753, 12.0, 38.47, 0.0);
 
-        public static final PresetList WRIST_PRESETS = new PresetList(0.0, -38.0, 56.0, 10.0, 0.685, -75.0, -55.285, 21.0);
+        /*
+        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, -45.0, -143.0, -57.0, -59.0, -102.0, -66.0);
+        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 17.365, 6.0, 9.755, 49.753, 12.0, 0.0);
+        public static final PresetList WRIST_PRESETS = new PresetList(0.0, -38.0, 56.0, 10.0, 0.685, -75.0, 21.0);
 
-        public static final PresetGroup CLIMBER_PRESET_GROUP = new PresetGroup()
+        public static final PresetListGroup CLIMBER_PRESET_GROUP = new PresetListGroup()
                 .addPreset(ROTATION_NAME, ROTATION_PRESETS)
                 .addPreset(EXTENSION_NAME, EXTENSION_PRESETS)
                 .addPreset(WRIST_NAME, WRIST_PRESETS);
-    }
 
+         */
+
+
+        public static final PresetMap ROTATION_PRESETS = new PresetMap(
+                ofEntries(
+                        entry(ZERO_POSITION_NAME, 0.0),
+                        entry(HUMAN_STATION_NAME, -45.0),
+                        entry(FLOOR_CONE_NAME, -143.0),
+                        entry(MID_CONE_NAME, -57.0),
+                        entry(HIGH_CONE_NAME, -59.0),
+                        entry(FLOOR_CUBE_NAME, -102.0),
+                        entry(MANUAL_STATION_NAME, -66.0)
+                )
+        );
+
+        public static final PresetMap EXTENSION_PRESETS = new PresetMap(
+                ofEntries(
+                        entry(ZERO_POSITION_NAME, 0.0),
+                        entry(HUMAN_STATION_NAME, 17.365),
+                        entry(FLOOR_CONE_NAME, 6.0),
+                        entry(MID_CONE_NAME, 9.755),
+                        entry(HIGH_CONE_NAME, 49.753),
+                        entry(FLOOR_CUBE_NAME, 12.0),
+                        entry(MANUAL_STATION_NAME, 0.0)
+                )
+        );
+
+        public static final PresetMap WRIST_PRESETS = new PresetMap(
+                ofEntries(
+                        entry(ZERO_POSITION_NAME, 0.0),
+                        entry(HUMAN_STATION_NAME, -38.0),
+                        entry(FLOOR_CONE_NAME, 56.0),
+                        entry(MID_CONE_NAME, 10.0),
+                        entry(HIGH_CONE_NAME, 0.685),
+                        entry(FLOOR_CUBE_NAME, -75.0),
+                        entry(MANUAL_STATION_NAME, 21.0)
+                )
+        );
+
+        public static final PresetMapGroup CLIMBER_PRESET_GROUP = new PresetMapGroup()
+                .addPreset(ROTATION_NAME, ROTATION_PRESETS)
+                .addPreset(EXTENSION_NAME, EXTENSION_PRESETS)
+                .addPreset(WRIST_NAME, WRIST_PRESETS);
+
+
+    }
 
     public static class AutoValues {
         // fancy calculus type stuff, not sure what to do with it but play with the numbers ;)
@@ -146,8 +185,6 @@ public final class Constants {
      */
     public static class Chassis {
         /** The offset of the Front Right Motor */
-        //public static final double FR_OFFSET = 0;
-
         public static final double FR_OFFSET = ((-2.38)+0)+(Math.PI/2) - (2 * Math.PI) + (Math.PI);
 
         /** The offset of the Front Left Motor */
@@ -229,28 +266,28 @@ public final class Constants {
                 FL_DIO_ENCODER_PORT,
                 FL_OFFSET,
                 FL_ERROR_FACTOR
-        ).setClosedLoopSupplier(() -> SwerveDriveSubsystem.closedLoop);
+        );
         public static final SwerveModule FR_MODULE = new SwerveModule(
                 FR_DRIVE_ID,
                 FR_TURN_ID,
                 FR_DIO_ENCODER_PORT,
                 FR_OFFSET,
                 FR_ERROR_FACTOR
-        ).setClosedLoopSupplier(() -> SwerveDriveSubsystem.closedLoop);
+        );
         public static final SwerveModule BL_MODULE = new SwerveModule(
                 BL_DRIVE_ID,
                 BL_TURN_ID,
                 BL_DIO_ENCODER_PORT,
                 BL_OFFSET,
                 BL_ERROR_FACTOR
-        ).setClosedLoopSupplier(() -> SwerveDriveSubsystem.closedLoop);
+        );
         public static final SwerveModule BR_MODULE = new SwerveModule(
                 BR_DRIVE_ID,
                 BR_TURN_ID,
                 BR_DIO_ENCODER_PORT,
                 BR_OFFSET,
                 BR_ERROR_FACTOR
-        ).setClosedLoopSupplier(() -> SwerveDriveSubsystem.closedLoop);
+        );
     }
 
     public static class Control {

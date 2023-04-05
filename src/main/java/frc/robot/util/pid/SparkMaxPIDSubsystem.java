@@ -28,7 +28,6 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     private final CANSparkMax motor;
     private final PIDController controller;
     private RelativeEncoder encoder;
-    private RelativeEncoderAdapter encoderAdapter;
     private final String name;
 
     private boolean dashEnabled = true;
@@ -83,8 +82,15 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     public SparkMaxPIDSubsystem setPresetList(PresetList list, Supplier<Double> presetSupplier) {
         this.presetSupplier = presetSupplier;
 
-        list.addListener((index, value) -> updateTarget());
+        list.addListener((value) -> updateTarget());
 
+        return this;
+    }
+
+    public SparkMaxPIDSubsystem setPresetList(PresetMap list, Supplier<Double> presetSupplier) {
+        this.presetSupplier = presetSupplier;
+
+        list.addListener((value) -> updateTarget());
         return this;
     }
 
@@ -95,7 +101,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
 
 
     /** @return The current {@link Encoder} position of the {@link CANSparkMax} motor. */
-    public double getRotation() { return getAdjustedPosition(); }
+    public double getRotation() { return encoder.getPosition(); }
 
     public Supplier<Double> getPresetSupplier() { return presetSupplier; }
 
@@ -142,7 +148,8 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
      * Resets the {@link Encoder} used for measuring position.
      */
     public void resetEncoder() {
-        setAdjustedPosition(0);
+        assert encoder != null;
+        encoder.setPosition(0);
         targetRotation = 0;
     }
 
@@ -183,13 +190,13 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         if (limitBypassSupplier.get()) return power;
 
         if (forwardLimit != Double.MAX_VALUE) {
-            if (power > 0 && getAdjustedPosition() >= forwardLimit) {
+            if (power > 0 && encoder.getPosition() >= forwardLimit) {
                 return 0;
             } else {
                 return power;
             }
         } else if (reverseLimit != Double.MIN_VALUE) {
-            if (power < 0 && getAdjustedPosition() <= reverseLimit) {
+            if (power < 0 && encoder.getPosition() <= reverseLimit) {
                 return 0;
             } else {
                 return power;
@@ -239,24 +246,6 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         return this;
     }
 
-    private double getAdjustedPosition() {
-        if (encoder == null && encoderAdapter != null) {
-            return encoderAdapter.getPosition();
-        } else {
-            assert encoder != null;
-            return encoder.getPosition();
-        }
-    }
-
-    private void setAdjustedPosition(double position) {
-        if (encoder == null && encoderAdapter != null) {
-            encoderAdapter.setPosition(position);
-        } else {
-            assert encoder != null;
-            encoder.setPosition(position);
-        }
-    }
-
 
     public SparkMaxPIDSubsystem(String name, CANSparkMax motor, double kP, double kI, double kD) {
         this.controller = new PIDController(kP, kI, kD);
@@ -269,15 +258,12 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         this.maxSpeed = 1;
         this.tolerance = 0.5;
 
+        assert motor.getMotorType() != kBrushed;
 
-        if (motor.getMotorType() == kBrushed) {
-            encoderAdapter = new RelativeEncoderAdapter(motor.getEncoder(SparkMaxRelativeEncoder.Type.kQuadrature, 2048));
-            controller.enableContinuousInput(kI, kD);
-        } else {
-            encoder = motor.getEncoder();
-        }
+        this.encoder = motor.getEncoder();
 
-        targetRotation = getAdjustedPosition();
+
+        targetRotation = encoder.getPosition();
 
         controller.setP(kP);
         controller.setI(kI);

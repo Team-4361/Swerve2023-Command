@@ -3,7 +3,10 @@ package frc.robot.commands.auto;
 import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
+import frc.robot.util.math.ExtendedMath;
 import frc.robot.util.pid.VariablePose2d;
+
+import java.util.function.Supplier;
 
 import static frc.robot.Constants.AutoValues.*;
 import static frc.robot.util.math.ExtendedMath.inTolerance;
@@ -30,17 +33,16 @@ public class PIDTranslateCommand extends CommandBase {
         );
     }
     
-    private boolean xInTolerance() {
-        return inTolerance(desiredPose.getX(), currentPose.getX(), 1);
-    }
-
-    private boolean yInTolerance() {
-        return inTolerance(desiredPose.getY(), currentPose.getY(), 1);
+    public boolean inTolerance(Supplier<Boolean> hasValue, Supplier<Double> value, Supplier<Double> target, double tolerance) {
+        if (!hasValue.get()) return true;
+        return ExtendedMath.inTolerance(target.get(), value.get(), tolerance);
     }
 
     @Override
     public boolean isFinished() {
-        return xInTolerance() && yInTolerance();
+        return inTolerance(desiredPose::hasX, currentPose::getX, desiredPose::getX, 1) &&
+                inTolerance(desiredPose::hasY, currentPose::getY, desiredPose::getY, 1) &&
+                inTolerance(desiredPose::hasRotation, currentPose::getDegrees, desiredPose::getDegrees, 2);
     }
 
     @Override

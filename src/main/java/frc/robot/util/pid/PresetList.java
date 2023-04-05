@@ -62,9 +62,7 @@ public class PresetList extends ArrayList<Double> {
     }
 
     private void updateListener() {
-        listeners.forEach(((listener) -> {
-            listener.onPresetAdjust(index, getPreset(index));
-        }));
+        listeners.forEach(((listener) -> listener.onPresetAdjust(getPreset(index))));
     }
 
     public PresetList nextPreset() {

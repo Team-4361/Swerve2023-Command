@@ -2,18 +2,15 @@ package frc.robot.subsystems.swerve;
 
 import com.kauailabs.navx.frc.AHRS;
 
-import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.math.geometry.Pose2d;
 import edu.wpi.first.math.geometry.Rotation2d;
 import edu.wpi.first.math.kinematics.ChassisSpeeds;
 import edu.wpi.first.math.kinematics.SwerveModuleState;
-import edu.wpi.first.wpilibj.DriverStation;
 import edu.wpi.first.wpilibj.SPI;
 import edu.wpi.first.wpilibj.smartdashboard.SmartDashboard;
 import edu.wpi.first.wpilibj2.command.Command;
 import edu.wpi.first.wpilibj2.command.Commands;
 import edu.wpi.first.wpilibj2.command.SubsystemBase;
-import frc.robot.Robot;
 import frc.robot.util.swerve.SwerveChassis;
 import frc.robot.util.swerve.SwerveModule;
 import frc.robot.util.swerve.SwerveOdometry;
@@ -36,11 +33,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
     public double gyroRollOffset = 0;
     public boolean hasSetOffset = false;
 
-    public static boolean fieldOriented = true, precisionMode = false, closedLoop = false;
-
-    private long gyroOffsetTime = System.currentTimeMillis() + 5000;
-
-
+    public static boolean fieldOriented = true, precisionMode = false;
     public Command holdPrecisionModeCommand() {
         return Commands.runEnd(() -> precisionMode = true, () -> precisionMode = false);
     }
@@ -66,12 +59,6 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         return this.runOnce(() -> {
             fieldOriented = !fieldOriented;
         }).andThen(resetGyroCommand());
-    }
-
-    public Command toggleClosedLoopCommand() {
-        return this.runOnce(() -> {
-            closedLoop = !closedLoop;
-        });
     }
 
     public Command resetGyroCommand() {
@@ -203,7 +190,7 @@ public class SwerveDriveSubsystem extends SubsystemBase {
         gyroRollOffset = gyro.getRoll();
     }
 
-    public void resetPositionPose(Pose2d pose) {
+    public void resetPosition(Pose2d pose) {
         odometry.resetOdometry(pose);
     }
 

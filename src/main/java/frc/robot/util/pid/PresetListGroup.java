@@ -9,16 +9,16 @@ import edu.wpi.first.wpilibj2.command.SequentialCommandGroup;
 
 import static frc.robot.Constants.TEST_MODE;
 
-public class PresetGroup extends HashMap<String, PresetList> {
+public class PresetListGroup extends HashMap<String, PresetList> {
     private int index = 0;
     private String[] defaultSyncOrder;
 
-    public PresetGroup addPreset(String name, PresetList extensionPresets) {
+    public PresetListGroup addPreset(String name, PresetList extensionPresets) {
         this.put(name, extensionPresets);
         return this;
     }
 
-    public PresetGroup setDefaultSyncOrder(String... order) {
+    public PresetListGroup setDefaultSyncOrder(String... order) {
         this.defaultSyncOrder = order;
         return this;
     }
@@ -31,7 +31,7 @@ public class PresetGroup extends HashMap<String, PresetList> {
         return get(name).getCurrentPreset();
     }
 
-    public PresetGroup setPreset(int index) {
+    public PresetListGroup setPreset(int index) {
         this.index = index;
         this.forEach((name, preset) -> preset.setPreset(index));
         new PrintCommand("SETTING PRESET TO " + index).schedule();
@@ -59,14 +59,14 @@ public class PresetGroup extends HashMap<String, PresetList> {
         }
     }
 
-    public PresetGroup nextPreset() {
+    public PresetListGroup nextPreset() {
         if (index+1 <= size()) {
             setPreset(index+1);
         }
         return this;
     }
 
-    public PresetGroup prevPreset() {
+    public PresetListGroup prevPreset() {
         if (index-1 >= 0) {
             setPreset(index-1);
         }

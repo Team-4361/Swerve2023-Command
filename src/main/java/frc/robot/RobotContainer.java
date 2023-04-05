@@ -47,13 +47,6 @@ public class RobotContainer {
         if (Robot.wrist.getTargetRotation() > 500) {
             Robot.wrist.setTarget(0);
         }
-
-        // Set the target reached supplier in the PresetList for synchronization.
-        ROTATION_PRESETS.setTargetReachedSupplier(() -> Robot.arm.getRotation().atTarget());
-        EXTENSION_PRESETS.setTargetReachedSupplier(() -> Robot.arm.getExtension().atTarget());
-        WRIST_PRESETS.setTargetReachedSupplier(() -> Robot.wrist.atTarget());
-
-        CLIMBER_PRESET_GROUP.setDefaultSyncOrder(EXTENSION_NAME, ROTATION_NAME, WRIST_NAME);
     }
 
     /**
@@ -76,16 +69,16 @@ public class RobotContainer {
 
         ///////////////////////////////// XBOX CONTROLS
 
-        xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(ZERO_POSITION_INDEX)));
-        xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(FLOOR_CUBE_INDEX)));
-        xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(HUMAN_STATION_INDEX)));
-        xbox.x().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(MID_CONE_INDEX)));
+        xbox.a().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(ZERO_POSITION_NAME)));
+        xbox.b().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(FLOOR_CUBE_NAME)));
+        xbox.y().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(HUMAN_STATION_NAME)));
+        xbox.x().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(MID_CONE_NAME)));
 
-        xbox.povDown().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(FLOOR_CONE_INDEX)));
-        xbox.povLeft().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(MANUAL_STATION_INDEX)));
+        xbox.povDown().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(FLOOR_CONE_NAME)));
+        xbox.povLeft().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(MANUAL_STATION_NAME)));
         xbox.povUp().onTrue(Robot.pump.openVacuumCommand());
 
-        xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(HIGH_CONE_INDEX)));
+        xbox.rightBumper().onTrue(Commands.runOnce(() -> CLIMBER_PRESET_GROUP.setPreset(HIGH_CONE_NAME)));
 
         xbox.rightTrigger().whileTrue(Commands.runEnd(
                 () -> Robot.wrist.translateMotor(-xbox.getRightTriggerAxis()/2),
