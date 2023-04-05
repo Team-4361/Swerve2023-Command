@@ -96,35 +96,6 @@ public final class Constants {
         public static final String FLOOR_CUBE_NAME = "FLOOR_CUBE_INDEX";
         public static final String MANUAL_STATION_NAME = "MANUAL_STATION_INDEX";
 
-        // PRESET 0 = ZERO POSITION         (ZERO_POSITION_INDEX)
-        // PRESET 1 = HUMAN STATION PICKUP  (HUMAN_STATION_INDEX)
-        // PRESET 2 = FLOOR CONE            (FLOOR_CONE_INDEX)
-        // PRESET 3 = MID CONE              (MID_CONE_INDEX)
-        // PRESET 4 = HIGH CONE             (HIGH_CONE_INDEX)
-        // PRESET 5 = FLOOR CUBE            (FLOOR_CUBE_INDEX)
-        // PRESET 6 = LOAD IN STATION       (MANUAL_STATION_INDEX)
-        public static final int ZERO_POSITION_INDEX = 0;
-        public static final int HUMAN_STATION_INDEX = 1;
-        public static final int FLOOR_CONE_INDEX = 2;
-        public static final int MID_CONE_INDEX = 3;
-        public static final int HIGH_CONE_INDEX = 4;
-        public static final int FLOOR_CUBE_INDEX = 5;
-        public static final int MANUAL_STATION_INDEX = 6;
-
-
-        /*
-        public static final PresetList ROTATION_PRESETS = new PresetList(0.0, -45.0, -143.0, -57.0, -59.0, -102.0, -66.0);
-        public static final PresetList EXTENSION_PRESETS = new PresetList(0.0, 17.365, 6.0, 9.755, 49.753, 12.0, 0.0);
-        public static final PresetList WRIST_PRESETS = new PresetList(0.0, -38.0, 56.0, 10.0, 0.685, -75.0, 21.0);
-
-        public static final PresetListGroup CLIMBER_PRESET_GROUP = new PresetListGroup()
-                .addPreset(ROTATION_NAME, ROTATION_PRESETS)
-                .addPreset(EXTENSION_NAME, EXTENSION_PRESETS)
-                .addPreset(WRIST_NAME, WRIST_PRESETS);
-
-         */
-
-
         public static final PresetMap ROTATION_PRESETS = new PresetMap(
                 ofEntries(
                         entry(ZERO_POSITION_NAME, 0.0),
@@ -165,8 +136,6 @@ public final class Constants {
                 .addPreset(ROTATION_NAME, ROTATION_PRESETS)
                 .addPreset(EXTENSION_NAME, EXTENSION_PRESETS)
                 .addPreset(WRIST_NAME, WRIST_PRESETS);
-
-
     }
 
     public static class AutoValues {
