@@ -42,7 +42,7 @@ public class Robot extends TimedRobot {
     public static PowerDistribution power;
 
     public static boolean pidControlEnabled = true; //true;
-    public static boolean limitSwitchBypass = false;
+    public static boolean limitSwitchBypass = false; //false;
 
     public static SendableChooser<Integer> autoMode = new SendableChooser<>();
 
@@ -52,8 +52,6 @@ public class Robot extends TimedRobot {
      */
     @Override
     public void robotInit() {
-        // Call this method at the very end!
-        //power = new PowerDistribution();
         swerveDrive = new SwerveDriveSubsystem(
                 FL_MODULE,
                 FR_MODULE,
@@ -64,23 +62,21 @@ public class Robot extends TimedRobot {
         arm = new ClimberArmSubsystem();
         wrist = new ClimberWristSubsystem();
         pump = new VacuumSubsystem();
-        camera = new CameraSubsystem(CameraQuality.VERY_FAST);//.addCamera(
-        //new PhotonCameraModule(CAMERA_CONFIG)
+        camera = new CameraSubsystem(CameraQuality.VERY_FAST);
+        power = new PowerDistribution();
 
         autoMode.addOption("CHARGE YES", 2);
         autoMode.addOption("CHARGE NO", 1);
         autoMode.addOption("HIGH ONLY", 0);
+        autoMode.addOption("EXPERIMENT", 3);
 
         autoMode.setDefaultOption("CHARGE YES", 2);
 
         SmartDashboard.putData("Auto Chooser", autoMode);
 
-        power = new PowerDistribution();
-
         // *** IMPORTANT: Call this method at the VERY END of robotInit!!! *** //
         robotContainer = new RobotContainer();
     }
-
 
     /**
      * This method is called every 20 ms, no matter the mode. Use this for items like diagnostics
@@ -96,33 +92,13 @@ public class Robot extends TimedRobot {
         // and running subsystem periodic() methods.  This must be called from the robot's periodic
         // block in order for anything in the Command-based framework to work.
         CommandScheduler.getInstance().run();
-        if (TEST_MODE) {
-            //CLIMBER_PRESET_GROUP.updateDashboard();
-        }
 
         if (!Robot.swerveDrive.gyro.isCalibrating() && !Robot.swerveDrive.hasSetOffset) {
             Robot.swerveDrive.gyroRollOffset = Robot.swerveDrive.gyro.getRoll();
             new PrintCommand("SET ROLL OFFSET TO " + Robot.swerveDrive.gyroRollOffset).execute();
             Robot.swerveDrive.hasSetOffset = true;
         }
-
-        //SmartDashboard.putNumber("Total Watts", power.getTotalPower());
     }
-
-
-    /**
-     * This method is called once each time the robot enters Disabled mode.
-     */
-    @Override
-    public void disabledInit() {
-        CommandScheduler.getInstance().cancelAll();
-    }
-
-
-    @Override
-    public void disabledPeriodic() {
-    }
-
 
     /**
      * This autonomous runs the autonomous command selected by your {@link RobotContainer} class.
@@ -134,39 +110,21 @@ public class Robot extends TimedRobot {
         Robot.arm.getRotation().resetEncoder();
         Robot.arm.getExtension().resetEncoder();
 
+        // Force the gyroscope pitch offset to be reset. Used for auto-balance capabilities.
         Robot.swerveDrive.hasSetOffset = false;
 
-        // Autos.AutoCommand.midConeNoStationCommand().schedule();
-        /* 
-        if (autoMode.getSelected()) {
-            Autos.AutoCommand.highCubeAutoBalanceCommand().schedule();
-        } else {
-            Autos.AutoCommand.highCubeNoStationCommand().schedule();
-        }
-        */
         switch (autoMode.getSelected()) {
             case 0: Autos.AutoCommand.highDropOnlyCommand().schedule(); break;
             case 1: Autos.AutoCommand.highCubeNoStationCommand().schedule(); break;
             case 2: Autos.AutoCommand.highCubeAutoBalanceCommand().schedule(); break;
+            case 3: Autos.AutoCommand.highCubeAdditionalCommand().schedule(); break;
             default: break;
         }
     }
 
-
-    /**
-     * This method is called periodically during autonomous.
-     */
-    @Override
-    public void autonomousPeriodic() {
-    }
-
-
-    @Override
-    public void teleopInit() {
-        CommandScheduler.getInstance().cancelAll();
-
-    }
-
+    @Override public void disabledInit() { CommandScheduler.getInstance().cancelAll(); }
+    @Override public void testInit() { CommandScheduler.getInstance().cancelAll(); }
+    @Override public void teleopInit() { CommandScheduler.getInstance().cancelAll(); }
 
     /**
      * This method is called periodically during operator control.
@@ -175,36 +133,5 @@ public class Robot extends TimedRobot {
     public void teleopPeriodic() {
         Robot.arm.getExtension().translateMotor(deadzone(-RobotContainer.xbox.getLeftY() / 2, 0.1));
         Robot.arm.getRotation().translateMotor(deadzone(-RobotContainer.xbox.getRightY(), 0.1));
-    }
-
-
-    @Override
-    public void testInit() {
-        // Cancels all running commands at the start of test mode.
-        CommandScheduler.getInstance().cancelAll();
-    }
-
-
-    /**
-     * This method is called periodically during test mode.
-     */
-    @Override
-    public void testPeriodic() {
-    }
-
-
-    /**
-     * This method is called once when the robot is first started up.
-     */
-    @Override
-    public void simulationInit() {
-    }
-
-
-    /**
-     * This method is called periodically whilst in simulation.
-     */
-    @Override
-    public void simulationPeriodic() {
     }
 }

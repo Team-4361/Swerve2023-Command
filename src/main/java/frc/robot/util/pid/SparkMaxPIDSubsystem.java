@@ -272,11 +272,6 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         return inTolerance(getRotation(), getTargetRotation(), tolerance);
     }
 
-    /**
-     *
-     * @param inverted
-     * @return
-     */
     public SparkMaxPIDSubsystem invert(boolean inverted) {
         motor.setInverted(inverted);
         return this;

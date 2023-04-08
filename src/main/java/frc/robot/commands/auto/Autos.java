@@ -2,7 +2,8 @@ package frc.robot.commands.auto;
 
 import edu.wpi.first.wpilibj2.command.*;
 import frc.robot.Robot;
-import frc.robot.util.pid.VariablePose2d;
+import frc.robot.commands.assist.PIDRotateCommand;
+import frc.robot.util.swerve.VariablePose2d;
 
 import static frc.robot.Constants.ClimberPresets.*;
 
@@ -24,16 +25,6 @@ public class Autos {
                     }),
                     new WaitCommand(3),
                     Commands.runOnce(() -> Robot.pump.deactivate()),
-                    Robot.pump.openVacuumCommand()
-            );
-        }
-
-        public static Command highCubeSyncDropFeature() {
-            return new SequentialCommandGroup(
-                    Robot.pump.activateCommand(),
-                    CLIMBER_PRESET_GROUP.setPresetSyncCommand(HIGH_CONE_NAME),
-                    new WaitCommand(2),
-                    Robot.pump.deactivateCommand(),
                     Robot.pump.openVacuumCommand()
             );
         }
@@ -106,9 +97,15 @@ public class Autos {
         public static Command highCubeAdditionalCommand() {
             return new SequentialCommandGroup(
                     highCubeNoStationCommand(),
-                    CLIMBER_PRESET_GROUP.setPresetCommand(FLOOR_CUBE_NAME),
-                    new GrabCubeCommand(),
-                    CLIMBER_PRESET_GROUP.setPresetCommand(ZERO_POSITION_NAME)
+                    new TimeoutCommand(new PIDRotateCommand(0), 2),
+                    new TimeoutCommand(new GrabCubeCommand(), 3),
+                    new TimeoutCommand(new PIDTranslateCommand(0, 0), 3),
+                    new TimeoutCommand(new PIDRotateCommand(180), 2),
+                    Feature.highCubeDropFeature(),
+                    CLIMBER_PRESET_GROUP.setPresetCommand(ZERO_POSITION_NAME),
+                    new TimeoutCommand(new PIDTranslateCommand(-22, 0), 5),
+                    Commands.runOnce(() -> Robot.swerveDrive.stop()),
+                    new PrintCommand("GRAB ADDITIONAL AUTO COMPLETE")
             );
         }
 

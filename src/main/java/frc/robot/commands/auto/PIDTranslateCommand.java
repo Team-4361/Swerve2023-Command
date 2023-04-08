@@ -4,12 +4,11 @@ import edu.wpi.first.math.MathUtil;
 import edu.wpi.first.wpilibj2.command.CommandBase;
 import frc.robot.Robot;
 import frc.robot.util.math.ExtendedMath;
-import frc.robot.util.pid.VariablePose2d;
+import frc.robot.util.swerve.VariablePose2d;
 
 import java.util.function.Supplier;
 
 import static frc.robot.Constants.AutoValues.*;
-import static frc.robot.util.math.ExtendedMath.inTolerance;
 
 public class PIDTranslateCommand extends CommandBase {
     private final VariablePose2d desiredPose;
@@ -20,6 +19,10 @@ public class PIDTranslateCommand extends CommandBase {
     public PIDTranslateCommand(VariablePose2d pose) {
         this.desiredPose = pose;
         addRequirements(Robot.swerveDrive);
+    }
+
+    public PIDTranslateCommand(double x, double y) {
+        this(VariablePose2d.fromCoordinates(x, y));
     }
 
     @Override

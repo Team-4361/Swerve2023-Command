@@ -7,6 +7,9 @@ package frc.robot;
 
 import com.revrobotics.CANSparkMaxLowLevel.MotorType;
 import edu.wpi.first.math.controller.PIDController;
+import edu.wpi.first.math.controller.ProfiledPIDController;
+import edu.wpi.first.math.trajectory.TrapezoidProfile;
+import edu.wpi.first.math.trajectory.TrapezoidProfile.Constraints;
 import frc.robot.util.camera.PhotonCameraConfig;
 import frc.robot.util.math.Distance;
 import frc.robot.util.math.GearRatio;
@@ -95,6 +98,7 @@ public final class Constants {
         public static final String HIGH_CONE_NAME = "HIGH_CONE_INDEX";
         public static final String FLOOR_CUBE_NAME = "FLOOR_CUBE_INDEX";
         public static final String MANUAL_STATION_NAME = "MANUAL_STATION_INDEX";
+        public static final String GRAB_FLOOR_CUBE_NAME = "GRAB_FLOOR_CUBE_INDEX";
 
         public static final PresetMap ROTATION_PRESETS = new PresetMap(
                 ofEntries(
@@ -104,7 +108,8 @@ public final class Constants {
                         entry(MID_CONE_NAME, -57.0),
                         entry(HIGH_CONE_NAME, -59.0),
                         entry(FLOOR_CUBE_NAME, -102.0),
-                        entry(MANUAL_STATION_NAME, -66.0)
+                        entry(MANUAL_STATION_NAME, -66.0),
+                        entry(GRAB_FLOOR_CUBE_NAME, -143.0)
                 )
         );
 
@@ -116,7 +121,8 @@ public final class Constants {
                         entry(MID_CONE_NAME, 9.755),
                         entry(HIGH_CONE_NAME, 49.753),
                         entry(FLOOR_CUBE_NAME, 12.0),
-                        entry(MANUAL_STATION_NAME, 0.0)
+                        entry(MANUAL_STATION_NAME, 0.0),
+                        entry(GRAB_FLOOR_CUBE_NAME, 12.0)
                 )
         );
 
@@ -128,7 +134,8 @@ public final class Constants {
                         entry(MID_CONE_NAME, 10.0),
                         entry(HIGH_CONE_NAME, 0.685),
                         entry(FLOOR_CUBE_NAME, -75.0),
-                        entry(MANUAL_STATION_NAME, 21.0)
+                        entry(MANUAL_STATION_NAME, 21.0),
+                        entry(GRAB_FLOOR_CUBE_NAME, -75.0)
                 )
         );
 
@@ -142,9 +149,11 @@ public final class Constants {
         // fancy calculus type stuff, not sure what to do with it but play with the numbers ;)
         public static final PIDController X_CONTROLLER = new PIDController(0.1, 0, 0);
         public static final PIDController Y_CONTROLLER = new PIDController(0.1, 0, 0);
-        public static final PIDController HEADING_CONTROLLER = new PIDController(0.1, 0, 0);
+        public static final ProfiledPIDController HEADING_CONTROLLER = new ProfiledPIDController(0.01, 0, 0,
+                new Constraints(0.5, 0.5));
 
-        public static final TunablePIDController PITCH_CONTROLLER = new TunablePIDController("Charge Pitch", 0.0081, 0.0, 0.0);
+        public static final TunablePIDController PITCH_CONTROLLER = new TunablePIDController("Charge Pitch",
+                0.0081, 0.0, 0.0);
     }
 
     /**
@@ -260,8 +269,8 @@ public final class Constants {
     }
 
     public static class Control {
-        public static final int XBOX_CONTROLLER_ID = 2;
         public static final int LEFT_STICK_ID = 0;
         public static final int RIGHT_STICK_ID = 1;
+        public static final int XBOX_CONTROLLER_ID = 2;
     }
 }

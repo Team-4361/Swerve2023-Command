@@ -26,13 +26,7 @@ public class ClimberArmSubsystem extends SubsystemBase {
         extension.setLimitBypassSupplier(() -> Robot.limitSwitchBypass);
 
         extension.setPID(0.05, 0, 0.01);
-
-        //rotation.setPID(0.03, 0, 0.01); Worked but slow
         rotation.setPID(0.04, 0, 0.01); // Working in competition 3/11/23
-        //rotation.setPID(0.01, 0, 0);
-
-        //extension.setPID(0.01, 0, 0);
-        //rotation.setPID(0.01, 0, 0);
 
         extension.setTolerance(0.25);
     }

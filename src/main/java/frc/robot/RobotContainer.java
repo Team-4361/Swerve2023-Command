@@ -43,7 +43,6 @@ public class RobotContainer {
             );
         }));
 
-        // failsafe?
         if (Robot.wrist.getTargetRotation() > 500) {
             Robot.wrist.setTarget(0);
         }

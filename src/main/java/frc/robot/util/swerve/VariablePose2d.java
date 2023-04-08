@@ -1,4 +1,4 @@
-package frc.robot.util.pid;
+package frc.robot.util.swerve;
 
 import edu.wpi.first.math.geometry.Pose2d;
 
@@ -13,6 +13,14 @@ public class VariablePose2d {
 
     public static VariablePose2d fromPose(Pose2d pose) {
         return new VariablePose2d(pose.getX(), pose.getY(), pose.getRotation().getDegrees());
+    }
+
+    public static VariablePose2d fromCoordinates(double x, double y, double degrees) {
+        return new VariablePose2d(x, y, degrees);
+    }
+
+    public static VariablePose2d fromCoordinates(double x, double y) {
+        return new VariablePose2d(x, y);
     }
 
     public VariablePose2d(double x, double y) { this(x, y, Double.MIN_VALUE); }
