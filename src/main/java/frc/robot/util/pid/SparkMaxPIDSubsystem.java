@@ -2,7 +2,6 @@ package frc.robot.util.pid;
 
 import com.revrobotics.CANSparkMax;
 import com.revrobotics.RelativeEncoder;
-import com.revrobotics.SparkMaxRelativeEncoder;
 
 import edu.wpi.first.math.controller.PIDController;
 import edu.wpi.first.wpilibj.DriverStation;
@@ -25,9 +24,13 @@ import static edu.wpi.first.math.MathUtil.clamp;
  * @author Eric Gold (ericg2)
  */
 public class SparkMaxPIDSubsystem extends SubsystemBase {
+    public static final PIDController DEFAULT_CONTROLLER = new PIDController(
+            0.01, 0, 0
+    );
+
     private final CANSparkMax motor;
     private final PIDController controller;
-    private RelativeEncoder encoder;
+    private final RelativeEncoder encoder;
     private final String name;
 
     private boolean dashEnabled = true;
@@ -36,10 +39,10 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     private Supplier<Boolean> pidEnabledSupplier;
     private Supplier<Boolean> limitBypassSupplier;
 
-    private double lastTarget = Double.MAX_VALUE;
-
     private double targetRotation, maxSpeed, tolerance;
-    private double forwardLimit = Double.MAX_VALUE, reverseLimit = Double.MIN_VALUE;
+    private double forwardLimit = Double.MAX_VALUE;
+    private double reverseLimit = Double.MIN_VALUE;
+    private double lastTarget = Double.MAX_VALUE;
 
     private boolean teleopMode;
 
@@ -54,40 +57,68 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         this.targetRotation = getLimitAdjustedTarget(rotation);
     }
 
+    /**
+     * Sets the <b>minimum</b> allowed value which the {@link Encoder} can reach. Any lower value
+     * will prevent the motor from retracting any further without a bypass enabled.
+     *
+     * @param limit The minimum allowed value for retraction, unit needs to match {@link #getRotation()}
+     * @return The {@link SparkMaxPIDSubsystem} instance.
+     */
     public SparkMaxPIDSubsystem setReverseLimit(double limit) {
         this.reverseLimit = limit;
         return this;
     }
 
+    /**
+     * Sets the <b>maximum</b> allowed value which the {@link Encoder} can reach. Any higher value
+     * will prevent the motor from extending any further without a bypass enabled.
+     *
+     * @param limit The minimum allowed value for extension, unit needs to match {@link #getRotation()}
+     * @return The {@link SparkMaxPIDSubsystem} instance.
+     */
     public SparkMaxPIDSubsystem setForwardLimit(double limit) {
         this.forwardLimit = limit;
         return this;
     }
 
+    /**
+     * Sets the {@link Supplier} used for determining the limit bypass switch. If enabled, no
+     * soft-limit will be applicable.
+     *
+     * @param supplier A boolean {@link Supplier} for limit bypass determination.
+     * @return The {@link SparkMaxPIDSubsystem} instance.
+     */
     public SparkMaxPIDSubsystem setLimitBypassSupplier(Supplier<Boolean> supplier) {
         this.limitBypassSupplier = supplier;
         return this;
     }
 
+    /** @return The minimum allowed reverse value. Unit matches {@link #getRotation()} */
     public double getReverseLimit() { return this.reverseLimit; }
+
+    /** @return The maximum allowed forward value. Unit matches {@link #getRotation()} */
     public double getForwardLimit() { return this.forwardLimit; }
 
+    /** @return The limit bypass {@link Supplier} used for determining the validity of the soft-limit. */
     public Supplier<Boolean> getLimitBypassSupplier() { return this.limitBypassSupplier; }
 
+    /**
+     * Controls the option for enabling Dashboard control of presets.
+     * @param dashEnabled A {@link Boolean} determining Dashboard control. Default is false.
+     * @return The {@link SparkMaxPIDSubsystem} instance.
+     */
     public SparkMaxPIDSubsystem enableDashboard(boolean dashEnabled) {
         this.dashEnabled = dashEnabled;
         return this;
     }
 
-    public SparkMaxPIDSubsystem setPresetList(PresetList list, Supplier<Double> presetSupplier) {
+    public SparkMaxPIDSubsystem setPresetMap(PresetList list, Supplier<Double> presetSupplier) {
         this.presetSupplier = presetSupplier;
-
         list.addListener((value) -> updateTarget());
-
         return this;
     }
 
-    public SparkMaxPIDSubsystem setPresetList(PresetMap list, Supplier<Double> presetSupplier) {
+    public SparkMaxPIDSubsystem setPresetMap(PresetMap list, Supplier<Double> presetSupplier) {
         this.presetSupplier = presetSupplier;
 
         list.addListener((value) -> updateTarget());
@@ -96,7 +127,7 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
 
     public SparkMaxPIDSubsystem setContInput(double start, double end) {
         controller.enableContinuousInput(start, end);
-        return  this;
+        return this;
     }
 
 
@@ -241,15 +272,21 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         return inTolerance(getRotation(), getTargetRotation(), tolerance);
     }
 
+    /**
+     *
+     * @param inverted
+     * @return
+     */
     public SparkMaxPIDSubsystem invert(boolean inverted) {
         motor.setInverted(inverted);
         return this;
     }
 
 
-    public SparkMaxPIDSubsystem(String name, CANSparkMax motor, double kP, double kI, double kD) {
-        this.controller = new PIDController(kP, kI, kD);
+    public SparkMaxPIDSubsystem(String name, CANSparkMax motor, PIDController controller) {
+        assert motor.getMotorType() != kBrushed;
 
+        this.controller = controller;
         this.motor = motor;
         this.name = name;
         this.teleopMode = false;
@@ -257,19 +294,22 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
         this.limitBypassSupplier = () -> false;
         this.maxSpeed = 1;
         this.tolerance = 0.5;
-
-        assert motor.getMotorType() != kBrushed;
-
         this.encoder = motor.getEncoder();
-
-
-        targetRotation = encoder.getPosition();
-
-        controller.setP(kP);
-        controller.setI(kI);
-        controller.setD(kD);
+        this.targetRotation = encoder.getPosition();
 
         motor.enableVoltageCompensation(12);
+    }
+
+    public SparkMaxPIDSubsystem(String name, CANSparkMax motor, double kP, double kI, double kD) {
+        this(name, motor, new PIDController(kP, kI, kD));
+    }
+
+    public SparkMaxPIDSubsystem(String name, int motorID, double kP, double kI, double kD) {
+        this(name, new CANSparkMax(motorID, kBrushless), kP, kI, kD);
+    }
+
+    public SparkMaxPIDSubsystem(String name, int motorID) {
+        this(name, new CANSparkMax(motorID, kBrushless), DEFAULT_CONTROLLER);
     }
 
     public SparkMaxPIDSubsystem setPIDControlSupplier(Supplier<Boolean> supplier) {
@@ -280,14 +320,6 @@ public class SparkMaxPIDSubsystem extends SubsystemBase {
     public void updateTarget() {
         setTarget(presetSupplier.get());
         lastTarget = presetSupplier.get();
-    }
-
-    public SparkMaxPIDSubsystem(String name, int motorID, double kP, double kI, double kD) {
-        this(name, new CANSparkMax(motorID, kBrushless), kP, kI, kD);
-    }
-
-    public SparkMaxPIDSubsystem(String name, int motorID) {
-        this(name, new CANSparkMax(motorID, kBrushless), 0.01, 0, 0);
     }
 
     public Command resetEncoderCommand() { return this.runOnce(this::resetEncoder); }

@@ -5,7 +5,6 @@ import frc.robot.Robot;
 import frc.robot.util.math.GearRatio;
 import frc.robot.util.pid.SparkMaxAngledPIDSubsystem;
 
-import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushed;
 import static com.revrobotics.CANSparkMaxLowLevel.MotorType.kBrushless;
 import static frc.robot.Constants.ClimberPresets.CLIMBER_PRESET_GROUP;
 import static frc.robot.Constants.ClimberPresets.WRIST_NAME;
@@ -24,7 +23,7 @@ public class ClimberWristSubsystem extends SparkMaxAngledPIDSubsystem {
                 0
         );
         setTolerance(0.2);
-        setPresetList(CLIMBER_PRESET_GROUP.get(WRIST_NAME), () -> CLIMBER_PRESET_GROUP.getCurrentPreset(WRIST_NAME));
+        setPresetMap(CLIMBER_PRESET_GROUP.get(WRIST_NAME), () -> CLIMBER_PRESET_GROUP.getCurrentPreset(WRIST_NAME));
         setPIDControlSupplier(() -> Robot.pidControlEnabled);
         setMaxSpeed(0.25);
         invert(true);

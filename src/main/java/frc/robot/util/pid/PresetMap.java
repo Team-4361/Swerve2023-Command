@@ -35,12 +35,8 @@ public class PresetMap extends LinkedHashMap<String, Double> {
 
     public double getPreset(String name) {
         if (name.equals("")) {
-            Optional<Map.Entry<String, Double>> o = this.entrySet().stream().findFirst();
-            if (o.isPresent()) {
-                return o.get().getValue();
-            } else {
-                return 0;
-            }
+            Optional<Map.Entry<String, Double>> o = entrySet().stream().findFirst();
+            return o.isPresent() ? o.get().getValue() : 0;
         } else {
             return get(name);
         }
